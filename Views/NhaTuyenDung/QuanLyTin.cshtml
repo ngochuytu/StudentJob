@@ -30,7 +30,6 @@
             <a asp-controller="NhaTuyenDung"
                asp-action="TaoTin"
                class="btn btn-primary btn-lg px-4">
-                <i class="bi bi-plus-circle me-2"></i>
                 Tạo tin mới
             </a>
         </div>
@@ -39,7 +38,6 @@
         {
             <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm"
                  role="alert">
-                <i class="bi bi-check-circle-fill me-2"></i>
                 @TempData["SuccessMessage"]
 
                 <button type="button"
@@ -64,10 +62,6 @@
                                     @tongSoTin
                                 </h2>
                             </div>
-
-                            <div class="recruiter-stat-icon bg-primary-subtle text-primary">
-                                <i class="bi bi-briefcase"></i>
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -79,13 +73,9 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <p class="text-secondary mb-2">Đã duyệt</p>
-                                <h2 class="display-6 fw-bold mb-0">
+                                <h2 class="display-6 fw-bold mb-0" id="approvedJobCount">
                                     @soTinDaDuyet
                                 </h2>
-                            </div>
-
-                            <div class="recruiter-stat-icon bg-success-subtle text-success">
-                                <i class="bi bi-check-circle"></i>
                             </div>
                         </div>
                     </div>
@@ -98,13 +88,9 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <p class="text-secondary mb-2">Chờ duyệt</p>
-                                <h2 class="display-6 fw-bold mb-0">
+                                <h2 class="display-6 fw-bold mb-0" id="pendingJobCount">
                                     @soTinChoDuyet
                                 </h2>
-                            </div>
-
-                            <div class="recruiter-stat-icon bg-warning-subtle text-warning">
-                                <i class="bi bi-clock-history"></i>
                             </div>
                         </div>
                     </div>
@@ -117,13 +103,9 @@
                         <div class="d-flex justify-content-between align-items-start">
                             <div>
                                 <p class="text-secondary mb-2">Từ chối</p>
-                                <h2 class="display-6 fw-bold mb-0">
+                                <h2 class="display-6 fw-bold mb-0" id="rejectedJobCount">
                                     @soTinTuChoi
                                 </h2>
-                            </div>
-
-                            <div class="recruiter-stat-icon bg-danger-subtle text-danger">
-                                <i class="bi bi-x-circle"></i>
                             </div>
                         </div>
                     </div>
@@ -138,10 +120,6 @@
                         <h2 class="h5 fw-bold mb-1">
                             Danh sách tin tuyển dụng
                         </h2>
-
-                        <p class="text-secondary small mb-0">
-                            Chỉnh sửa nội dung, theo dõi trạng thái hoặc xóa các tin chưa có ứng viên.
-                        </p>
                     </div>
                 </div>
             </div>
@@ -152,10 +130,6 @@
                 @if (Model.Count == 0)
                 {
                     <div class="text-center py-5 px-3" id="emptyJobState">
-                        <div class="recruiter-empty-icon mx-auto mb-4">
-                            <i class="bi bi-briefcase"></i>
-                        </div>
-
                         <h3 class="h5 fw-bold">
                             Bạn chưa có tin tuyển dụng
                         </h3>
@@ -167,7 +141,6 @@
                         <a asp-controller="NhaTuyenDung"
                            asp-action="TaoTin"
                            class="btn btn-primary">
-                            <i class="bi bi-plus-circle me-2"></i>
                             Tạo tin tuyển dụng
                         </a>
                     </div>
@@ -214,7 +187,6 @@
                                                     </span>
 
                                                     <span class="text-secondary small">
-                                                        <i class="bi bi-cash-stack me-1"></i>
                                                         @baiTuyenDung.sMucLuong
                                                     </span>
                                                 </div>
@@ -229,7 +201,6 @@
 
                                         <td>
                                             <span class="text-secondary">
-                                                <i class="bi bi-geo-alt me-1"></i>
                                                 @baiTuyenDung.KhuVuc.sTenKhuVuc
                                             </span>
                                         </td>
@@ -268,7 +239,6 @@
                                                            asp-action="ChinhSuaTin"
                                                            asp-route-id="@baiTuyenDung.PK_IdBaiTuyenDung"
                                                            class="dropdown-item">
-                                                            <i class="bi bi-pencil-square me-2"></i>
                                                             Chỉnh sửa
                                                         </a>
                                                     </li>
@@ -282,7 +252,6 @@
                                                                 class="dropdown-item text-danger btn-delete-job"
                                                                 data-job-id="@baiTuyenDung.PK_IdBaiTuyenDung"
                                                                 data-job-title="@baiTuyenDung.sTieuDeCongViec">
-                                                            <i class="bi bi-trash me-2"></i>
                                                             Xóa tin
                                                         </button>
                                                     </li>
@@ -321,10 +290,6 @@
             </div>
 
             <div class="modal-body py-4">
-                <div class="delete-warning-icon mx-auto mb-3">
-                    <i class="bi bi-exclamation-triangle"></i>
-                </div>
-
                 <p class="text-center mb-2">
                     Bạn có chắc muốn xóa tin:
                 </p>
@@ -345,7 +310,6 @@
                         class="btn btn-danger"
                         id="confirmDeleteJobButton">
                     <span class="delete-button-text">
-                        <i class="bi bi-trash me-2"></i>
                         Xóa tin
                     </span>
 

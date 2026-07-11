@@ -60,11 +60,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 `job-row-${selectedJobId}`
             );
 
+            let status = "";
             if (deletedRow) {
+                const statusBadge = deletedRow.querySelector(".badge.rounded-pill");
+                status = statusBadge ? statusBadge.textContent.trim() : "";
                 deletedRow.remove();
             }
 
-            updateTotalJobCount();
+            updateTotalJobCount(status);
             showAlert("success", result.message);
             deleteModal.hide();
             selectedJobId = null;
@@ -94,9 +97,15 @@ document.addEventListener("DOMContentLoaded", () => {
         loadingContent?.classList.toggle("d-none", !isLoading);
     }
 
-    function updateTotalJobCount() {
+    function updateTotalJobCount(status) {
         const totalJobCountElement =
             document.getElementById("totalJobCount");
+        const approvedJobCountElement =
+            document.getElementById("approvedJobCount");
+        const pendingJobCountElement =
+            document.getElementById("pendingJobCount");
+        const rejectedJobCountElement =
+            document.getElementById("rejectedJobCount");
 
         const remainingRows =
             document.querySelectorAll("#jobTableBody tr").length;
@@ -104,6 +113,19 @@ document.addEventListener("DOMContentLoaded", () => {
         if (totalJobCountElement) {
             totalJobCountElement.textContent =
                 remainingRows.toString();
+        }
+
+        if (status) {
+            if (status === "Đã duyệt" && approvedJobCountElement) {
+                const current = parseInt(approvedJobCountElement.textContent) || 0;
+                approvedJobCountElement.textContent = Math.max(0, current - 1).toString();
+            } else if (status === "Chờ duyệt" && pendingJobCountElement) {
+                const current = parseInt(pendingJobCountElement.textContent) || 0;
+                pendingJobCountElement.textContent = Math.max(0, current - 1).toString();
+            } else if (status === "Từ chối" && rejectedJobCountElement) {
+                const current = parseInt(rejectedJobCountElement.textContent) || 0;
+                rejectedJobCountElement.textContent = Math.max(0, current - 1).toString();
+            }
         }
 
         if (remainingRows === 0) {
@@ -119,11 +141,6 @@ document.addEventListener("DOMContentLoaded", () => {
         alertContainer.innerHTML = `
             <div class="alert alert-${type} alert-dismissible fade show border-0 shadow-sm"
                  role="alert">
-                <i class="bi ${
-                    type === "success"
-                        ? "bi-check-circle-fill"
-                        : "bi-exclamation-circle-fill"
-                } me-2"></i>
                 ${escapeHtml(message)}
                 <button type="button"
                         class="btn-close"
