@@ -43,8 +43,15 @@ public class HoSoUngTuyenRepository : IHoSoUngTuyenRepository
 
     public bool HasApplied(int sinhVienId, int baiTuyenDungId)
     {
-        return _context.DsHoSoUngTuyen
-            .Any(h => h.FK_IdSinhVien == sinhVienId && h.FK_IdBaiTuyenDung == baiTuyenDungId);
+        return _context.DsHoSoUngTuyen.Any(h =>
+            h.FK_IdSinhVien == sinhVienId &&
+            h.FK_IdBaiTuyenDung == baiTuyenDungId);
+    }
+
+    public bool HasApplicationsForJob(int baiTuyenDungId)
+    {
+        return _context.DsHoSoUngTuyen.Any(h =>
+            h.FK_IdBaiTuyenDung == baiTuyenDungId);
     }
 
     public void Add(HoSoUngTuyen hoSoUngTuyen)

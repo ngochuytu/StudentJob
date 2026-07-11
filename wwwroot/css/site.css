@@ -122,3 +122,132 @@ body {
         background-color: #f8f9fa;
     }
 }
+
+/* =========================================================
+   Recruiter job management
+   ========================================================= */
+
+.recruiter-page {
+    min-height: 70vh;
+}
+
+.recruiter-stat-card,
+.recruiter-list-card,
+.recruiter-form-card {
+    border-radius: 1rem;
+}
+
+.recruiter-stat-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.recruiter-stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 0.75rem 2rem rgba(33, 37, 41, 0.08) !important;
+}
+
+.recruiter-stat-icon {
+    width: 3rem;
+    height: 3rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.85rem;
+    font-size: 1.25rem;
+}
+
+.recruiter-job-table thead th {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+    background-color: #f8f9fa;
+    color: #6c757d;
+    border-bottom: 1px solid #e9ecef;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.03em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.recruiter-job-table tbody td {
+    padding-top: 1.25rem;
+    padding-bottom: 1.25rem;
+    border-color: #eef0f3;
+    vertical-align: middle;
+}
+
+.recruiter-job-table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.recruiter-job-table tbody tr:hover {
+    background-color: rgba(59, 94, 255, 0.025);
+}
+
+.job-title-cell {
+    min-width: 17rem;
+    max-width: 24rem;
+}
+
+.recruiter-empty-icon,
+.delete-warning-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+}
+
+.recruiter-empty-icon {
+    width: 5rem;
+    height: 5rem;
+    color: var(--bs-primary);
+    background-color: rgba(59, 94, 255, 0.1);
+    font-size: 2rem;
+}
+
+.delete-warning-icon {
+    width: 4rem;
+    height: 4rem;
+    color: var(--bs-danger);
+    background-color: rgba(220, 53, 69, 0.1);
+    font-size: 1.5rem;
+}
+
+.recruiter-form-card .form-control,
+.recruiter-form-card .form-select {
+    min-height: 3rem;
+    border-color: #dee2e6;
+    border-radius: 0.65rem;
+}
+
+.recruiter-form-card textarea.form-control {
+    min-height: 11rem;
+}
+
+.recruiter-form-card .form-control:focus,
+.recruiter-form-card .form-select:focus {
+    border-color: rgba(59, 94, 255, 0.65);
+    box-shadow: 0 0 0 0.25rem rgba(59, 94, 255, 0.12);
+}
+
+.dropdown-item {
+    padding-top: 0.65rem;
+    padding-bottom: 0.65rem;
+}
+
+@media (max-width: 991.98px) {
+    .recruiter-job-table {
+        min-width: 920px;
+    }
+}
+
+@media (max-width: 575.98px) {
+    .recruiter-page {
+        padding-top: 2rem !important;
+        padding-bottom: 2rem !important;
+    }
+
+    .recruiter-form-card .card-body {
+        padding: 1.25rem !important;
+    }
+}

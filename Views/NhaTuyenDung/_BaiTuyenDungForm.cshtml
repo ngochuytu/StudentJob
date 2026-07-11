@@ -1,0 +1,77 @@
+@model StudentJob.Models.BaiTuyenDungInputModel
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+<div class="row g-4">
+    <div class="col-12">
+        <label asp-for="sTieuDeCongViec" class="form-label fw-semibold"></label>
+        <input asp-for="sTieuDeCongViec"
+               class="form-control form-control-lg"
+               placeholder="Ví dụ: Thực tập sinh ASP.NET Core" />
+        <span asp-validation-for="sTieuDeCongViec" class="field-validation-error"></span>
+    </div>
+
+    <div class="col-12 col-md-6">
+        <label asp-for="sHinhThucLamViec" class="form-label fw-semibold"></label>
+        <select asp-for="sHinhThucLamViec" class="form-select">
+            <option value="">-- Chọn hình thức làm việc --</option>
+            <option value="Bán thời gian">Bán thời gian</option>
+            <option value="Thực tập">Thực tập</option>
+        </select>
+        <span asp-validation-for="sHinhThucLamViec" class="field-validation-error"></span>
+    </div>
+
+    <div class="col-12 col-md-6">
+        <label asp-for="sMucLuong" class="form-label fw-semibold"></label>
+        <input asp-for="sMucLuong"
+               class="form-control"
+               placeholder="Ví dụ: 3.000.000đ - 5.000.000đ" />
+        <span asp-validation-for="sMucLuong" class="field-validation-error"></span>
+    </div>
+
+    <div class="col-12 col-md-6">
+        <label asp-for="FK_IdNganhNghe" class="form-label fw-semibold"></label>
+        <select asp-for="FK_IdNganhNghe"
+                class="form-select"
+                asp-items="@(new SelectList(ViewBag.DsNganhNghe, "PK_IdNganhNghe", "sTenLinhVuc"))">
+            <option value="">-- Chọn ngành nghề --</option>
+        </select>
+        <span asp-validation-for="FK_IdNganhNghe" class="field-validation-error"></span>
+    </div>
+
+    <div class="col-12 col-md-6">
+        <label asp-for="FK_IdKhuVuc" class="form-label fw-semibold"></label>
+        <select asp-for="FK_IdKhuVuc"
+                class="form-select"
+                asp-items="@(new SelectList(ViewBag.DsKhuVuc, "PK_IdKhuVuc", "sTenKhuVuc"))">
+            <option value="">-- Chọn khu vực --</option>
+        </select>
+        <span asp-validation-for="FK_IdKhuVuc" class="field-validation-error"></span>
+    </div>
+
+    <div class="col-12 col-md-6">
+        <label asp-for="sCaLam" class="form-label fw-semibold"></label>
+        <input asp-for="sCaLam"
+               class="form-control"
+               placeholder="Ví dụ: 18:00 - 22:00, linh hoạt theo lịch học" />
+        <span asp-validation-for="sCaLam" class="field-validation-error"></span>
+    </div>
+
+    <div class="col-12 col-md-6">
+        <label asp-for="dHanNopHoSo" class="form-label fw-semibold"></label>
+        <input asp-for="dHanNopHoSo"
+               type="date"
+               class="form-control"
+               min="@DateTime.Today.ToString("yyyy-MM-dd")" />
+        <span asp-validation-for="dHanNopHoSo" class="field-validation-error"></span>
+    </div>
+
+    <div class="col-12">
+        <label asp-for="sMoTaCongViec" class="form-label fw-semibold"></label>
+        <textarea asp-for="sMoTaCongViec"
+                  class="form-control"
+                  rows="8"
+                  placeholder="Mô tả nhiệm vụ, yêu cầu, quyền lợi và môi trường làm việc..."></textarea>
+        <span asp-validation-for="sMoTaCongViec" class="field-validation-error"></span>
+    </div>
+</div>
