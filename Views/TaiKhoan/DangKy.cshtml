@@ -33,6 +33,20 @@
                     <input asp-for="sHoTen" class="form-control py-2 px-3" placeholder="Nguyễn Văn A" />
                     <span asp-validation-for="sHoTen" class="field-validation-error"></span>
                 </div>
+                <div class="mb-3">
+                    <label asp-for="sChuyenNganhHoc" class="form-label fw-semibold text-dark">Chuyên ngành học <span class="text-danger">*</span></label>
+                    <select asp-for="sChuyenNganhHoc" class="form-select py-2 px-3" id="sChuyenNganhHoc">
+                        <option value="">-- Chọn chuyên ngành học --</option>
+                        @if (ViewBag.DsNganhNghe != null)
+                        {
+                            foreach (var item in (List<StudentJob.Models.NganhNghe>)ViewBag.DsNganhNghe)
+                            {
+                                <option value="@item.sTenLinhVuc">@item.sTenLinhVuc</option>
+                            }
+                        }
+                    </select>
+                    <span asp-validation-for="sChuyenNganhHoc" class="field-validation-error"></span>
+                </div>
             </div>
 
             <div id="fieldsNhaTuyenDung" style="display: none;" class="mb-3">
@@ -138,6 +152,13 @@
                     const hoTenErr = document.querySelector('[data-valmsg-for="sHoTen"]');
                     if (!hoTenVal) {
                         hoTenErr.textContent = 'Họ và tên không được để trống.';
+                        isValid = false;
+                    }
+
+                    const chuyenNganhVal = document.getElementById('sChuyenNganhHoc').value;
+                    const chuyenNganhErr = document.querySelector('[data-valmsg-for="sChuyenNganhHoc"]');
+                    if (!chuyenNganhVal) {
+                        chuyenNganhErr.textContent = 'Vui lòng chọn chuyên ngành học.';
                         isValid = false;
                     }
                 } else if (role === 'NhaTuyenDung') {

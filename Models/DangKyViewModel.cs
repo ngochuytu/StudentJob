@@ -35,6 +35,10 @@ public class DangKyViewModel
     [Display(Name = "Họ và tên")]
     public string? sHoTen { get; set; }
 
+    [StringLength(100)]
+    [Display(Name = "Chuyên ngành học")]
+    public string? sChuyenNganhHoc { get; set; }
+
     [StringLength(150)]
     [Display(Name = "Tên doanh nghiệp")]
     public string? sTenDoanhNghiep { get; set; }

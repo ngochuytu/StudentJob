@@ -14,17 +14,20 @@ public class TaiKhoanController : Controller
     private readonly ISinhVienRepository _sinhVienRepository;
     private readonly INhaTuyenDungRepository _nhaTuyenDungRepository;
     private readonly IVaiTroRepository _vaiTroRepository;
+    private readonly INganhNgheRepository _nganhNgheRepository;
 
     public TaiKhoanController(
         ITaiKhoanRepository taiKhoanRepository,
         ISinhVienRepository sinhVienRepository,
         INhaTuyenDungRepository nhaTuyenDungRepository,
-        IVaiTroRepository vaiTroRepository)
+        IVaiTroRepository vaiTroRepository,
+        INganhNgheRepository nganhNgheRepository)
     {
         _taiKhoanRepository = taiKhoanRepository;
         _sinhVienRepository = sinhVienRepository;
         _nhaTuyenDungRepository = nhaTuyenDungRepository;
         _vaiTroRepository = vaiTroRepository;
+        _nganhNgheRepository = nganhNgheRepository;
     }
 
     [HttpGet("dang-nhap")]
@@ -78,6 +81,7 @@ public class TaiKhoanController : Controller
         {
             return RedirectToAction("Index", "Home");
         }
+        ViewBag.DsNganhNghe = _nganhNgheRepository.GetAll();
         return View(new DangKyViewModel());
     }
 
@@ -90,6 +94,10 @@ public class TaiKhoanController : Controller
             if (string.IsNullOrWhiteSpace(model.sHoTen))
             {
                 ModelState.AddModelError("sHoTen", "Họ và tên không được để trống.");
+            }
+            if (string.IsNullOrWhiteSpace(model.sChuyenNganhHoc))
+            {
+                ModelState.AddModelError("sChuyenNganhHoc", "Vui lòng chọn chuyên ngành học.");
             }
         }
         else if (model.LoaiTaiKhoan == "NhaTuyenDung")
@@ -106,6 +114,7 @@ public class TaiKhoanController : Controller
 
         if (!ModelState.IsValid)
         {
+            ViewBag.DsNganhNghe = _nganhNgheRepository.GetAll();
             return View(model);
         }
 
@@ -113,6 +122,7 @@ public class TaiKhoanController : Controller
         if (existingAccount != null)
         {
             ModelState.AddModelError("sEmail", "Email này đã được sử dụng.");
+            ViewBag.DsNganhNghe = _nganhNgheRepository.GetAll();
             return View(model);
         }
 
@@ -121,6 +131,7 @@ public class TaiKhoanController : Controller
         if (vaiTro == null)
         {
             ModelState.AddModelError(string.Empty, "Lỗi hệ thống: không tìm thấy vai trò. Vui lòng liên hệ quản trị viên.");
+            ViewBag.DsNganhNghe = _nganhNgheRepository.GetAll();
             return View(model);
         }
 
@@ -140,7 +151,8 @@ public class TaiKhoanController : Controller
             var sinhVien = new SinhVien
             {
                 FK_IdTaiKhoan = taiKhoan.PK_IdTaiKhoan,
-                sHoTen = model.sHoTen!
+                sHoTen = model.sHoTen!,
+                sChuyenNganhHoc = model.sChuyenNganhHoc!
             };
             _sinhVienRepository.Add(sinhVien);
         }
