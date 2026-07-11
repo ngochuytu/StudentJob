@@ -1,0 +1,85 @@
+@model StudentJob.Models.DangNhapViewModel
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<div class="py-5 d-flex align-items-center justify-content-center bg-light" style="min-height: calc(100vh - 70px - 200px);">
+    <div class="card shadow border-0 rounded-3 p-4 p-md-5 mx-auto" style="width: 100%; max-width: 450px;">
+        <div class="text-center mb-4">
+            <h1 class="h3 fw-extrabold text-dark mb-1">
+                Đăng nhập
+            </h1>
+        </div>
+
+        <form asp-controller="TaiKhoan" asp-action="DangNhap" method="post">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="All" class="validation-summary-errors"></div>
+
+            <div class="mb-3">
+                <label asp-for="sEmail" class="form-label fw-semibold text-dark">Email</label>
+                <input type="text" asp-for="sEmail" class="form-control py-2 px-3" placeholder="example@email.com" autocomplete="email" />
+                <span asp-validation-for="sEmail" class="field-validation-error"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="sMatKhau" class="form-label fw-semibold text-dark">Mật khẩu</label>
+                <input type="password" asp-for="sMatKhau" class="form-control py-2 px-3" placeholder="Nhập mật khẩu" autocomplete="current-password" />
+                <span asp-validation-for="sMatKhau" class="field-validation-error"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold d-flex align-items-center justify-content-center gap-2 mt-4">
+                Đăng nhập
+            </button>
+        </form>
+
+        <div class="text-center mt-4 small text-secondary">
+            Chưa có tài khoản? <a asp-controller="TaiKhoan" asp-action="DangKy" class="text-primary fw-semibold text-decoration-none">Đăng ký ngay</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const form = document.querySelector('form');
+            const emailInput = document.getElementById('sEmail');
+            const passwordInput = document.getElementById('sMatKhau');
+
+            form.addEventListener('submit', function (event) {
+                let isValid = true;
+
+                document.querySelectorAll('.field-validation-error').forEach(el => {
+                    el.textContent = '';
+                });
+
+                const summary = document.querySelector('.validation-summary-errors');
+                if (summary) {
+                    summary.innerHTML = '';
+                    summary.className = 'validation-summary-valid';
+                }
+
+                const email = emailInput.value.trim();
+                const emailErr = document.querySelector('[data-valmsg-for="sEmail"]');
+                if (!email) {
+                    emailErr.textContent = 'Email không được để trống.';
+                    isValid = false;
+                } else if (!/^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/.test(email)) {
+                    emailErr.textContent = 'Email không hợp lệ.';
+                    isValid = false;
+                }
+
+                const password = passwordInput.value.trim();
+                const passwordErr = document.querySelector('[data-valmsg-for="sMatKhau"]');
+                if (!password) {
+                    passwordErr.textContent = 'Mật khẩu không được để trống.';
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+}

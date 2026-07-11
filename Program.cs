@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.EntityFrameworkCore;
 using StudentJob.Data;
 using StudentJob.Repositories;
@@ -17,6 +18,19 @@ builder.Services.AddScoped<INganhNgheRepository, NganhNgheRepository>();
 builder.Services.AddScoped<IKhuVucRepository, KhuVucRepository>();
 builder.Services.AddScoped<IBaiTuyenDungRepository, BaiTuyenDungRepository>();
 builder.Services.AddScoped<IHoSoUngTuyenRepository, HoSoUngTuyenRepository>();
+
+// ===== Cookie Authentication =====
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.LoginPath = "/tai-khoan/dang-nhap";
+        options.LogoutPath = "/tai-khoan/dang-xuat";
+        options.AccessDeniedPath = "/tai-khoan/dang-nhap";
+        options.Cookie.Name = "StudentJob.Auth";
+        options.Cookie.HttpOnly = true;
+        options.ExpireTimeSpan = TimeSpan.FromDays(7);
+        options.SlidingExpiration = true;
+    });
 
 // ===== MVC =====
 builder.Services.AddControllersWithViews();

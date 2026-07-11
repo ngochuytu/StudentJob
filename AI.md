@@ -41,7 +41,7 @@ Follow these exact entity schema definitions (property prefixes: s = string, b =
    - FK_IdTaiKhoan [INT, Foreign Key referencing tbl_TaiKhoan]
    - sHoTen [NVARCHAR(100), NOT NULL]
    - sChuyenNganhHoc [NVARCHAR(100), NULL]
-   - sDuongDanCVMacDinh [VARCHAR(255), NULL]
+   - sDuongDanCVMacDinh [VARCHAR(255), NULL] (lưu ở /uploads/cvs/default/cv\_${PK_IdSinhVien}.pdf)
 
 4. C# Model: `NhaTuyenDung` (Maps to Database Table: `tbl_NhaTuyenDung`)
    - PK_IdNhaTuyenDung [INT, Identity]
@@ -77,7 +77,7 @@ Follow these exact entity schema definitions (property prefixes: s = string, b =
    - PK_IdHoSoUngTuyen [INT, Identity]
    - FK_IdSinhVien [INT, Foreign Key referencing tbl_SinhVien]
    - FK_IdBaiTuyenDung [INT, Foreign Key referencing tbl_BaiTuyenDung]
-   - sDuongDanCV [VARCHAR(255), NOT NULL]
+   - sDuongDanCV [VARCHAR(255), NOT NULL] (lưu ở /uploads/cvs/applied/post\_${FK_IdBaiTuyenDung}/cv*${FK_IdSinhVien}.pdf)
    - sThuXinViec [NVARCHAR(MAX), NULL]
    - sTrangThaiXetDuyet [NVARCHAR(50), NOT NULL] ('Chờ duyệt', 'Hẹn phỏng vấn', 'Từ chối')
    - sGhiChuPhanHoi [NVARCHAR(200), NULL]
@@ -174,7 +174,14 @@ Controllers must directly accept these specific contracts (e.g., `IJobPostReposi
 
 ---
 
-## VI. OUTPUT CONSTRAINTS
+## VI. DESIGN REFERENCES
+
+1. https://jobboardxtemplate.webflow.io/#pages
+2. https://jobstemplate.webflow.io/#pages
+
+---
+
+## VII. OUTPUT CONSTRAINTS
 
 1. DO NOT generate pseudo-code, abstract examples, or leave critical methods incomplete via statements like "// TODO: Implement later". All outputs must compile cleanly.
 2. If processing a structurally extensive request, systematically isolate components file-by-file while preserving full functional implementation.

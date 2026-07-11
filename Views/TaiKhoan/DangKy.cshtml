@@ -1,0 +1,205 @@
+@model StudentJob.Models.DangKyViewModel
+@{
+    ViewData["Title"] = "Đăng ký tài khoản";
+}
+
+<div class="py-5 d-flex align-items-center justify-content-center bg-light" style="min-height: calc(100vh - 70px - 200px);">
+    <div class="card shadow border-0 rounded-3 p-4 p-md-5 mx-auto" style="width: 100%; max-width: 540px;">
+        <div class="text-center mb-4">
+            <h1 class="h3 fw-extrabold text-dark mb-1">
+                Đăng ký tài khoản
+            </h1>
+        </div>
+
+        <form asp-controller="TaiKhoan" asp-action="DangKy" method="post" id="formDangKy">
+            @Html.AntiForgeryToken()
+
+            <div asp-validation-summary="All" class="validation-summary-errors"></div>
+
+            <div class="btn-group w-100 mb-4 p-1 bg-light rounded-pill border" role="group">
+                <button type="button" class="btn rounded-pill fw-semibold py-2 btn-primary" data-role="SinhVien" id="btnSinhVien">
+                    Sinh viên
+                </button>
+                <button type="button" class="btn rounded-pill fw-semibold py-2 btn-light text-secondary" data-role="NhaTuyenDung" id="btnNhaTuyenDung">
+                    Nhà tuyển dụng
+                </button>
+            </div>
+
+            <input type="hidden" asp-for="LoaiTaiKhoan" id="loaiTaiKhoan" />
+
+            <div id="fieldsSinhVien" class="mb-3">
+                <div class="mb-3">
+                    <label asp-for="sHoTen" class="form-label fw-semibold text-dark">Họ và tên <span class="text-danger">*</span></label>
+                    <input asp-for="sHoTen" class="form-control py-2 px-3" placeholder="Nguyễn Văn A" />
+                    <span asp-validation-for="sHoTen" class="field-validation-error"></span>
+                </div>
+            </div>
+
+            <div id="fieldsNhaTuyenDung" style="display: none;" class="mb-3">
+                <div class="mb-3">
+                    <label asp-for="sTenDoanhNghiep" class="form-label fw-semibold text-dark">Tên doanh nghiệp <span class="text-danger">*</span></label>
+                    <input asp-for="sTenDoanhNghiep" class="form-control py-2 px-3" placeholder="Công ty TNHH ABC" />
+                    <span asp-validation-for="sTenDoanhNghiep" class="field-validation-error"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="sDiaChiVanPhong" class="form-label fw-semibold text-dark">Địa chỉ văn phòng <span class="text-danger">*</span></label>
+                    <input asp-for="sDiaChiVanPhong" class="form-control py-2 px-3" placeholder="123 Đường ABC, Quận 1, TP.HCM" />
+                    <span asp-validation-for="sDiaChiVanPhong" class="field-validation-error"></span>
+                </div>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="sEmail" class="form-label fw-semibold text-dark">Email <span class="text-danger">*</span></label>
+                <input type="text" asp-for="sEmail" class="form-control py-2 px-3" placeholder="example@email.com" autocomplete="email" />
+                <span asp-validation-for="sEmail" class="field-validation-error"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="sSoDienThoai" class="form-label fw-semibold text-dark">Số điện thoại <span class="text-danger">*</span></label>
+                <input asp-for="sSoDienThoai" class="form-control py-2 px-3" placeholder="0901234567" autocomplete="tel" />
+                <span asp-validation-for="sSoDienThoai" class="field-validation-error"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="sMatKhau" class="form-label fw-semibold text-dark">Mật khẩu <span class="text-danger">*</span></label>
+                <input type="password" asp-for="sMatKhau" class="form-control py-2 px-3" placeholder="Tối thiểu 6 ký tự" autocomplete="new-password" />
+                <span asp-validation-for="sMatKhau" class="field-validation-error"></span>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="XacNhanMatKhau" class="form-label fw-semibold text-dark">Xác nhận mật khẩu <span class="text-danger">*</span></label>
+                <input type="password" asp-for="XacNhanMatKhau" class="form-control py-2 px-3" placeholder="Nhập lại mật khẩu" autocomplete="new-password" />
+                <span asp-validation-for="XacNhanMatKhau" class="field-validation-error"></span>
+            </div>
+
+            <button type="submit" class="btn btn-primary w-100 py-2 fw-bold d-flex align-items-center justify-content-center gap-2 mt-4">
+                Đăng ký
+            </button>
+        </form>
+
+        <div class="text-center mt-4 small text-secondary">
+            Đã có tài khoản? <a asp-controller="TaiKhoan" asp-action="DangNhap" class="text-primary fw-semibold text-decoration-none">Đăng nhập</a>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const btnSinhVien = document.getElementById('btnSinhVien');
+            const btnNhaTuyenDung = document.getElementById('btnNhaTuyenDung');
+            const fieldsSinhVien = document.getElementById('fieldsSinhVien');
+            const fieldsNhaTuyenDung = document.getElementById('fieldsNhaTuyenDung');
+            const loaiTaiKhoan = document.getElementById('loaiTaiKhoan');
+            const form = document.getElementById('formDangKy');
+
+            function setRole(role) {
+                loaiTaiKhoan.value = role;
+
+                if (role === 'SinhVien') {
+                    btnSinhVien.className = 'btn rounded-pill fw-semibold py-2 btn-primary';
+                    btnNhaTuyenDung.className = 'btn rounded-pill fw-semibold py-2 btn-light text-secondary';
+                    fieldsSinhVien.style.display = 'block';
+                    fieldsNhaTuyenDung.style.display = 'none';
+                } else {
+                    btnNhaTuyenDung.className = 'btn rounded-pill fw-semibold py-2 btn-primary';
+                    btnSinhVien.className = 'btn rounded-pill fw-semibold py-2 btn-light text-secondary';
+                    fieldsNhaTuyenDung.style.display = 'block';
+                    fieldsSinhVien.style.display = 'none';
+                }
+            }
+
+            btnSinhVien.addEventListener('click', function () {
+                setRole('SinhVien');
+            });
+
+            btnNhaTuyenDung.addEventListener('click', function () {
+                setRole('NhaTuyenDung');
+            });
+
+            setRole(loaiTaiKhoan.value || 'SinhVien');
+
+            form.addEventListener('submit', function (event) {
+                let isValid = true;
+
+                document.querySelectorAll('.field-validation-error').forEach(el => {
+                    el.textContent = '';
+                });
+
+                const summary = document.querySelector('.validation-summary-errors');
+                if (summary) {
+                    summary.innerHTML = '';
+                    summary.className = 'validation-summary-valid';
+                }
+
+                const role = loaiTaiKhoan.value;
+                if (role === 'SinhVien') {
+                    const hoTenVal = document.getElementById('sHoTen').value.trim();
+                    const hoTenErr = document.querySelector('[data-valmsg-for="sHoTen"]');
+                    if (!hoTenVal) {
+                        hoTenErr.textContent = 'Họ và tên không được để trống.';
+                        isValid = false;
+                    }
+                } else if (role === 'NhaTuyenDung') {
+                    const tenDoanhNghiepVal = document.getElementById('sTenDoanhNghiep').value.trim();
+                    const tenDoanhNghiepErr = document.querySelector('[data-valmsg-for="sTenDoanhNghiep"]');
+                    if (!tenDoanhNghiepVal) {
+                        tenDoanhNghiepErr.textContent = 'Tên doanh nghiệp không được để trống.';
+                        isValid = false;
+                    }
+
+                    const diaChiVanPhongVal = document.getElementById('sDiaChiVanPhong').value.trim();
+                    const diaChiVanPhongErr = document.querySelector('[data-valmsg-for="sDiaChiVanPhong"]');
+                    if (!diaChiVanPhongVal) {
+                        diaChiVanPhongErr.textContent = 'Địa chỉ văn phòng không được để trống.';
+                        isValid = false;
+                    }
+                }
+
+                const email = document.getElementById('sEmail').value.trim();
+                const emailErr = document.querySelector('[data-valmsg-for="sEmail"]');
+                if (!email) {
+                    emailErr.textContent = 'Email không được để trống.';
+                    isValid = false;
+                } else if (!/^[^\s@@]+@@[^\s@@]+\.[^\s@@]+$/.test(email)) {
+                    emailErr.textContent = 'Email không hợp lệ.';
+                    isValid = false;
+                }
+
+                const phone = document.getElementById('sSoDienThoai').value.trim();
+                const phoneErr = document.querySelector('[data-valmsg-for="sSoDienThoai"]');
+                if (!phone) {
+                    phoneErr.textContent = 'Số điện thoại không được để trống.';
+                    isValid = false;
+                } else if (!/^\d{8,15}$/.test(phone)) {
+                    phoneErr.textContent = 'Số điện thoại phải chứa từ 8 đến 15 chữ số.';
+                    isValid = false;
+                }
+
+                const password = document.getElementById('sMatKhau').value;
+                const passwordErr = document.querySelector('[data-valmsg-for="sMatKhau"]');
+                if (!password) {
+                    passwordErr.textContent = 'Mật khẩu không được để trống.';
+                    isValid = false;
+                } else if (password.length < 6) {
+                    passwordErr.textContent = 'Mật khẩu phải có ít nhất 6 ký tự.';
+                    isValid = false;
+                }
+
+                const confirmPassword = document.getElementById('XacNhanMatKhau').value;
+                const confirmPasswordErr = document.querySelector('[data-valmsg-for="XacNhanMatKhau"]');
+                if (!confirmPassword) {
+                    confirmPasswordErr.textContent = 'Xác nhận mật khẩu không được để trống.';
+                    isValid = false;
+                } else if (confirmPassword !== password) {
+                    confirmPasswordErr.textContent = 'Mật khẩu xác nhận không khớp.';
+                    isValid = false;
+                }
+
+                if (!isValid) {
+                    event.preventDefault();
+                }
+            });
+        });
+    </script>
+}
