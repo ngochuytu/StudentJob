@@ -1,0 +1,67 @@
+@model List<StudentJob.Models.TaiKhoan>
+@using System.Security.Claims
+@{
+    var currentUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+}
+
+@foreach (var account in Model)
+{
+    var isCurrentUser = currentUserId != null && account.PK_IdTaiKhoan.ToString() == currentUserId;
+    var activeLabel = account.bTrangThaiHoatDong ? "Hoạt động" : "Bị khóa";
+    var activeBadgeClass = account.bTrangThaiHoatDong ? "text-success border border-success" : "bg-danger-subtle text-danger border border-danger";
+    
+    var nameLabel = "-";
+    if (account.VaiTro.sTenVaiTro == "Sinh viên" && account.SinhVien != null)
+    {
+        nameLabel = account.SinhVien.sHoTen;
+    }
+    else if (account.VaiTro.sTenVaiTro == "Nhà tuyển dụng" && account.NhaTuyenDung != null)
+    {
+        nameLabel = account.NhaTuyenDung.sTenDoanhNghiep;
+    }
+    else if (account.VaiTro.sTenVaiTro == "Admin")
+    {
+        nameLabel = "Quản trị viên";
+    }
+
+    var roleBadgeClass = "bg-secondary-subtle text-secondary border border-secondary-subtle";
+    if (account.VaiTro.sTenVaiTro == "Admin") roleBadgeClass = "text-danger border border-danger-subtle";
+    else if (account.VaiTro.sTenVaiTro == "Sinh viên") roleBadgeClass = "text-primary border border-primary-subtle";
+    else if (account.VaiTro.sTenVaiTro == "Nhà tuyển dụng") roleBadgeClass = "text-warning border border-warning-subtle";
+
+    <tr data-id="@account.PK_IdTaiKhoan" data-email="@account.sEmail" data-name="@nameLabel" data-phone="@account.sSoDienThoai" data-role="@account.VaiTro.sTenVaiTro" data-status="@activeLabel">
+        <td class="py-3 px-3">
+            <div>
+                <h6 class="mb-0 fw-bold text-dark small">@nameLabel</h6>
+            </div>
+        </td>
+        <td class="py-3 px-3 text-secondary small">@account.sEmail</td>
+        <td class="py-3 px-3 text-secondary small">@account.sSoDienThoai</td>
+        <td class="py-3 px-3">
+            <span class="badge @roleBadgeClass px-3 py-1.5 rounded-pill fw-semibold">
+                @account.VaiTro.sTenVaiTro
+            </span>
+        </td>
+        <td class="py-3 px-3 text-secondary small">@account.dNgayTaoTaiKhoan.ToString("dd/MM/yyyy")</td>
+        <td class="py-3 px-3">
+            <span class="status-badge badge @activeBadgeClass px-3 py-1.5 rounded-pill fw-semibold">
+                @activeLabel
+            </span>
+        </td>
+        <td class="py-3 px-3 text-center">
+            @if (isCurrentUser)
+            {
+                <span class="badge bg-light text-secondary rounded-pill border py-1.5 px-3 fw-medium">
+                    Bạn
+                </span>
+            }
+            else
+            {
+                <button class="btn btn-sm rounded-pill px-3 py-1.5 fw-bold @(account.bTrangThaiHoatDong ? "btn-outline-danger" : "btn-outline-success")"
+                        onclick="toggleAccountStatus(@account.PK_IdTaiKhoan, @(account.bTrangThaiHoatDong ? "false" : "true"), this)">
+                    <span class="btn-text">@(account.bTrangThaiHoatDong ? "Khóa" : "Mở khóa")</span>
+                </button>
+            }
+        </td>
+    </tr>
+}

@@ -58,4 +58,9 @@ public class HoSoUngTuyenRepository : IHoSoUngTuyenRepository
         _context.DsHoSoUngTuyen.Update(hoSoUngTuyen);
         _context.SaveChanges();
     }
+
+    public List<HoSoUngTuyen> GetAll()
+    {
+        return _context.DsHoSoUngTuyen.ToList();
+    }
 }

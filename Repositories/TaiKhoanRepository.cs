@@ -31,6 +31,8 @@ public class TaiKhoanRepository : ITaiKhoanRepository
     {
         return _context.DsTaiKhoan
             .Include(t => t.VaiTro)
+            .Include(t => t.SinhVien)
+            .Include(t => t.NhaTuyenDung)
             .OrderByDescending(t => t.dNgayTaoTaiKhoan)
             .ToList();
     }

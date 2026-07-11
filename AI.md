@@ -161,7 +161,6 @@ Controllers must directly accept these specific contracts (e.g., `IJobPostReposi
      - [HttpPost("api/filter")] or [HttpPost("api/apply")] for data or async endpoints.
 
 2. Web Security & Forms:
-   - Include the [ValidateAntiForgeryToken] filter on all data-mutating POST actions matched to the forms inside Razor views.
    - Input Validation: Enforce clean Data Annotations ([Required], [StringLength], [EmailAddress]) on Input/ViewModels. Validate ModelState.IsValid explicitly inside controllers.
    - Cross-Site Scripting (XSS) Mitigation: Sanitize user inputs and rely on Razor's default automatic HTML encoding mechanism. Avoid @Html.Raw unless explicitly safe.
    - Cryptographic Protections: Never store text-based credentials. Meticulously encrypt passwords via BCrypt or .NET's native PasswordHasher framework before storage.

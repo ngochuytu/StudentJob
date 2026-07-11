@@ -10,4 +10,5 @@ public interface IHoSoUngTuyenRepository
     bool HasApplied(int sinhVienId, int baiTuyenDungId);
     void Add(HoSoUngTuyen hoSoUngTuyen);
     void Update(HoSoUngTuyen hoSoUngTuyen);
+    List<HoSoUngTuyen> GetAll();
 }
