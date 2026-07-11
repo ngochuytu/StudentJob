@@ -5,10 +5,16 @@ using StudentJob.Models;
 public interface IBaiTuyenDungRepository
 {
     List<BaiTuyenDung> GetAll();
-    BaiTuyenDung? GetById(int id);
+    List<BaiTuyenDung> GetApprovedJobs();
     List<BaiTuyenDung> GetByNhaTuyenDungId(int nhaTuyenDungId);
-    List<BaiTuyenDung> GetByCriteria(string? keyword, int? nganhNgheId, int? khuVucId);
-    List<BaiTuyenDung> GetPendingApproval();
+    BaiTuyenDung? GetById(int id);
+    List<BaiTuyenDung> GetJobsByCriteria(
+        string? keyword,
+        string? hinhThuc,
+        int? nganhNgheId,
+        int? khuVucId
+    );
     void Add(BaiTuyenDung baiTuyenDung);
     void Update(BaiTuyenDung baiTuyenDung);
+    void Delete(BaiTuyenDung baiTuyenDung);
 }

@@ -1,9 +1,366 @@
+@model List<StudentJob.Models.BaiTuyenDung>
+
 @{
     ViewData["Title"] = "Quản lý tin tuyển dụng";
+
+    int tongSoTin = Model.Count;
+    int soTinDaDuyet = Model.Count(x => x.sTrangThaiKiemDuyet == "Đã duyệt");
+    int soTinChoDuyet = Model.Count(x => x.sTrangThaiKiemDuyet == "Chờ duyệt");
+    int soTinTuChoi = Model.Count(x => x.sTrangThaiKiemDuyet == "Từ chối");
 }
 
-<div class="container py-5">
-    <div class="card shadow-sm border-0 rounded-3 p-4">
-        <h1 class="h3 fw-bold text-dark mb-3">Quản lý tin tuyển dụng</h1>
+<section class="recruiter-page py-5">
+    <div class="container">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+            <div>
+                <span class="text-primary fw-semibold text-uppercase small">
+                    Trung tâm nhà tuyển dụng
+                </span>
+
+                <h1 class="h2 fw-bold mb-2">
+                    Quản lý tin tuyển dụng
+                </h1>
+
+                <p class="text-secondary mb-0">
+                    Theo dõi và quản lý các tin tuyển dụng của
+                    <strong>@ViewBag.TenDoanhNghiep</strong>.
+                </p>
+            </div>
+
+            <a asp-controller="NhaTuyenDung"
+               asp-action="TaoTin"
+               class="btn btn-primary btn-lg px-4">
+                <i class="bi bi-plus-circle me-2"></i>
+                Tạo tin mới
+            </a>
+        </div>
+
+        @if (TempData["SuccessMessage"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm"
+                 role="alert">
+                <i class="bi bi-check-circle-fill me-2"></i>
+                @TempData["SuccessMessage"]
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="alert"
+                        aria-label="Đóng">
+                </button>
+            </div>
+        }
+
+        <div id="deleteAlertContainer"></div>
+
+        <div class="row g-4 mb-5">
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card border-0 shadow-sm recruiter-stat-card h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="text-secondary mb-2">Tổng số tin</p>
+                                <h2 class="display-6 fw-bold mb-0"
+                                    id="totalJobCount">
+                                    @tongSoTin
+                                </h2>
+                            </div>
+
+                            <div class="recruiter-stat-icon bg-primary-subtle text-primary">
+                                <i class="bi bi-briefcase"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card border-0 shadow-sm recruiter-stat-card h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="text-secondary mb-2">Đã duyệt</p>
+                                <h2 class="display-6 fw-bold mb-0">
+                                    @soTinDaDuyet
+                                </h2>
+                            </div>
+
+                            <div class="recruiter-stat-icon bg-success-subtle text-success">
+                                <i class="bi bi-check-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card border-0 shadow-sm recruiter-stat-card h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="text-secondary mb-2">Chờ duyệt</p>
+                                <h2 class="display-6 fw-bold mb-0">
+                                    @soTinChoDuyet
+                                </h2>
+                            </div>
+
+                            <div class="recruiter-stat-icon bg-warning-subtle text-warning">
+                                <i class="bi bi-clock-history"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card border-0 shadow-sm recruiter-stat-card h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="text-secondary mb-2">Từ chối</p>
+                                <h2 class="display-6 fw-bold mb-0">
+                                    @soTinTuChoi
+                                </h2>
+                            </div>
+
+                            <div class="recruiter-stat-icon bg-danger-subtle text-danger">
+                                <i class="bi bi-x-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm recruiter-list-card">
+            <div class="card-header bg-white border-0 p-4">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3">
+                    <div>
+                        <h2 class="h5 fw-bold mb-1">
+                            Danh sách tin tuyển dụng
+                        </h2>
+
+                        <p class="text-secondary small mb-0">
+                            Chỉnh sửa nội dung, theo dõi trạng thái hoặc xóa các tin chưa có ứng viên.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card-body p-0">
+                @Html.AntiForgeryToken()
+
+                @if (Model.Count == 0)
+                {
+                    <div class="text-center py-5 px-3" id="emptyJobState">
+                        <div class="recruiter-empty-icon mx-auto mb-4">
+                            <i class="bi bi-briefcase"></i>
+                        </div>
+
+                        <h3 class="h5 fw-bold">
+                            Bạn chưa có tin tuyển dụng
+                        </h3>
+
+                        <p class="text-secondary mb-4">
+                            Hãy tạo tin đầu tiên để tiếp cận các ứng viên sinh viên phù hợp.
+                        </p>
+
+                        <a asp-controller="NhaTuyenDung"
+                           asp-action="TaoTin"
+                           class="btn btn-primary">
+                            <i class="bi bi-plus-circle me-2"></i>
+                            Tạo tin tuyển dụng
+                        </a>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table align-middle recruiter-job-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4">Tin tuyển dụng</th>
+                                    <th>Ngành nghề</th>
+                                    <th>Khu vực</th>
+                                    <th>Hạn nộp</th>
+                                    <th>Trạng thái</th>
+                                    <th class="text-end pe-4">Thao tác</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="jobTableBody">
+                                @foreach (var baiTuyenDung in Model)
+                                {
+                                    string badgeClass = baiTuyenDung.sTrangThaiKiemDuyet switch
+                                    {
+                                        "Đã duyệt" => "text-bg-success",
+                                        "Từ chối" => "text-bg-danger",
+                                        _ => "text-bg-warning"
+                                    };
+
+                                    bool daHetHan =
+                                        baiTuyenDung.dHanNopHoSo <
+                                        DateOnly.FromDateTime(DateTime.Today);
+
+                                    <tr id="job-row-@baiTuyenDung.PK_IdBaiTuyenDung">
+                                        <td class="ps-4">
+                                            <div class="job-title-cell">
+                                                <h3 class="h6 fw-bold mb-2">
+                                                    @baiTuyenDung.sTieuDeCongViec
+                                                </h3>
+
+                                                <div class="d-flex flex-wrap gap-2">
+                                                    <span class="badge bg-primary-subtle text-primary">
+                                                        @baiTuyenDung.sHinhThucLamViec
+                                                    </span>
+
+                                                    <span class="text-secondary small">
+                                                        <i class="bi bi-cash-stack me-1"></i>
+                                                        @baiTuyenDung.sMucLuong
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <span class="text-dark">
+                                                @baiTuyenDung.NganhNghe.sTenLinhVuc
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <span class="text-secondary">
+                                                <i class="bi bi-geo-alt me-1"></i>
+                                                @baiTuyenDung.KhuVuc.sTenKhuVuc
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <span class="@(daHetHan ? "text-danger fw-semibold" : "text-secondary")">
+                                                @baiTuyenDung.dHanNopHoSo.ToString("dd/MM/yyyy")
+                                            </span>
+
+                                            @if (daHetHan)
+                                            {
+                                                <div class="small text-danger">
+                                                    Đã hết hạn
+                                                </div>
+                                            }
+                                        </td>
+
+                                        <td>
+                                            <span class="badge rounded-pill @badgeClass">
+                                                @baiTuyenDung.sTrangThaiKiemDuyet
+                                            </span>
+                                        </td>
+
+                                        <td class="text-end pe-4">
+                                            <div class="dropdown">
+                                                <button class="btn btn-sm btn-light border dropdown-toggle"
+                                                        type="button"
+                                                        data-bs-toggle="dropdown"
+                                                        aria-expanded="false">
+                                                    Thao tác
+                                                </button>
+
+                                                <ul class="dropdown-menu dropdown-menu-end shadow-sm">
+                                                    <li>
+                                                        <a asp-controller="NhaTuyenDung"
+                                                           asp-action="ChinhSuaTin"
+                                                           asp-route-id="@baiTuyenDung.PK_IdBaiTuyenDung"
+                                                           class="dropdown-item">
+                                                            <i class="bi bi-pencil-square me-2"></i>
+                                                            Chỉnh sửa
+                                                        </a>
+                                                    </li>
+
+                                                    <li>
+                                                        <hr class="dropdown-divider" />
+                                                    </li>
+
+                                                    <li>
+                                                        <button type="button"
+                                                                class="dropdown-item text-danger btn-delete-job"
+                                                                data-job-id="@baiTuyenDung.PK_IdBaiTuyenDung"
+                                                                data-job-title="@baiTuyenDung.sTieuDeCongViec">
+                                                            <i class="bi bi-trash me-2"></i>
+                                                            Xóa tin
+                                                        </button>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<div class="modal fade"
+     id="deleteJobModal"
+     tabindex="-1"
+     aria-labelledby="deleteJobModalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-0 pb-0">
+                <h2 class="modal-title h5 fw-bold"
+                    id="deleteJobModalLabel">
+                    Xác nhận xóa tin
+                </h2>
+
+                <button type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Đóng">
+                </button>
+            </div>
+
+            <div class="modal-body py-4">
+                <div class="delete-warning-icon mx-auto mb-3">
+                    <i class="bi bi-exclamation-triangle"></i>
+                </div>
+
+                <p class="text-center mb-2">
+                    Bạn có chắc muốn xóa tin:
+                </p>
+
+                <p class="text-center fw-bold mb-0"
+                   id="deleteJobTitle">
+                </p>
+            </div>
+
+            <div class="modal-footer border-0 pt-0">
+                <button type="button"
+                        class="btn btn-light"
+                        data-bs-dismiss="modal">
+                    Hủy
+                </button>
+
+                <button type="button"
+                        class="btn btn-danger"
+                        id="confirmDeleteJobButton">
+                    <span class="delete-button-text">
+                        <i class="bi bi-trash me-2"></i>
+                        Xóa tin
+                    </span>
+
+                    <span class="delete-button-loading d-none">
+                        <span class="spinner-border spinner-border-sm me-2"
+                              aria-hidden="true">
+                        </span>
+                        Đang xóa...
+                    </span>
+                </button>
+            </div>
+        </div>
     </div>
 </div>
+
+@section Scripts {
+    <script src="~/js/quan-ly-tin.js" asp-append-version="true"></script>
+}

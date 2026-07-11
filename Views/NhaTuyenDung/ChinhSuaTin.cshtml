@@ -1,0 +1,77 @@
+@model StudentJob.Models.BaiTuyenDungInputModel
+
+@{
+    ViewData["Title"] = "Chỉnh sửa tin tuyển dụng";
+    int baiTuyenDungId = ViewBag.BaiTuyenDungId;
+    string trangThaiHienTai = ViewBag.TrangThaiHienTai ?? "Chờ duyệt";
+}
+
+<section class="recruiter-page py-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-xl-10">
+                <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-center gap-3 mb-4">
+                    <div>
+                        <span class="text-primary fw-semibold text-uppercase small">
+                            Nhà tuyển dụng
+                        </span>
+                        <h1 class="h2 fw-bold mb-2">Chỉnh sửa tin tuyển dụng</h1>
+                        <p class="text-secondary mb-0">
+                            Trạng thái hiện tại:
+                            <span class="badge rounded-pill text-bg-secondary">
+                                @trangThaiHienTai
+                            </span>
+                        </p>
+                    </div>
+
+                    <a asp-controller="NhaTuyenDung"
+                       asp-action="QuanLyTin"
+                       class="btn btn-outline-secondary">
+                        <i class="bi bi-arrow-left me-2"></i>
+                        Quay lại
+                    </a>
+                </div>
+
+                <div class="card border-0 shadow-sm recruiter-form-card">
+                    <div class="card-body p-4 p-lg-5">
+                        <form asp-controller="NhaTuyenDung"
+                              asp-action="ChinhSuaTin"
+                              asp-route-id="@baiTuyenDungId"
+                              method="post">
+                            @Html.AntiForgeryToken()
+
+                            <partial name="_BaiTuyenDungForm" model="Model" />
+
+                            <div class="d-flex flex-column flex-sm-row justify-content-end gap-3 mt-4 pt-4 border-top">
+                                <a asp-controller="NhaTuyenDung"
+                                   asp-action="QuanLyTin"
+                                   class="btn btn-light px-4">
+                                    Hủy
+                                </a>
+
+                                <button type="submit" class="btn btn-primary px-4">
+                                    <i class="bi bi-check-circle me-2"></i>
+                                    Lưu thay đổi
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning border-0 mt-4 mb-0">
+                    <div class="d-flex gap-3">
+                        <i class="bi bi-exclamation-triangle-fill fs-5"></i>
+                        <div>
+                            Sau khi chỉnh sửa, tin tuyển dụng sẽ được chuyển về
+                            <strong>Chờ duyệt</strong>.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
