@@ -170,6 +170,7 @@ Controllers must directly accept these specific contracts (e.g., `IJobPostReposi
    - MANDATORY FETCH API FOR AJAX: You are strictly FORBIDDEN from using jQuery $.ajax, $.get, or $.post. All asynchronous background operations (filtering jobs, posting applications, status logs) must use modern, vanilla JavaScript with the native `fetch()` API.
    - For all POST, PUT, or DELETE fetch requests, you must programmatically extract the RequestVerificationToken from the DOM and append it into the fetch headers object (e.g., headers: { 'RequestVerificationToken': tokenValue }).
    - Handle fetch responses using async/await syntax or clean Promise chains (.then()) in JavaScript, parsing the backend object envelope (`response.json()`) structured as: { success: true/false, message: "...", data: ... }. Update layout components dynamically via the DOM without hard page reloads.
+   - DO NOT USE BOOTSTRAP ICON <i> TAGS: You are strictly forbidden from using font icon tags like `<i class="bi bi-..."></i>` from Bootstrap Icons to avoid external network dependencies. Instead, use inline SVGs or reusable SVG partial views (e.g., `<partial name="_LogoSvg" />`) for icons and logos to support offline-first rendering.
 
 ---
 
