@@ -4,7 +4,23 @@
     var sectors = ViewBag.NganhNghe as List<StudentJob.Models.NganhNghe> ?? new List<StudentJob.Models.NganhNghe>();
     var locations = ViewBag.KhuVuc as List<StudentJob.Models.KhuVuc> ?? new List<StudentJob.Models.KhuVuc>();
 }
+@if (TempData["ErrorMessage"] is string errorMessage)
+{
+    <div class="container mt-4">
+        <div class="alert alert-warning alert-dismissible fade show"
+             role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            @errorMessage
 
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Đóng">
+            </button>
+        </div>
+    </div>
+}
+@Html.AntiForgeryToken()
 <section class="hero-section text-center position-relative overflow-hidden mb-5">
     <div class="container position-relative" style="z-index: 2;">
         <div class="row justify-content-center">
@@ -144,13 +160,18 @@
                 if (nganhNgheId) params.append('nganhNgheId', nganhNgheId);
                 if (khuVucId) params.append('khuVucId', khuVucId);
 
-                const response = await fetch('/viec-lam/api/filter', {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    },
-                    body: params
-                });
+                const tokenInput = document.querySelector(
+                'input[name="__RequestVerificationToken"]'
+            );
+
+            const response = await fetch('/viec-lam/api/filter', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': tokenInput.value
+                },
+                body: params
+            });
 
                 if (!response.ok) {
                     throw new Error('Lỗi khi lọc dữ liệu: ' + response.statusText);

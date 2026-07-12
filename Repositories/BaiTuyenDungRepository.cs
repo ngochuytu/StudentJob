@@ -55,6 +55,17 @@ public class BaiTuyenDungRepository : IBaiTuyenDungRepository
             .FirstOrDefault(b => b.PK_IdBaiTuyenDung == id);
     }
 
+    public BaiTuyenDung? GetApprovedById(int id)
+    {
+        return _context.DsBaiTuyenDung
+            .Include(b => b.NhaTuyenDung)
+            .Include(b => b.NganhNghe)
+            .Include(b => b.KhuVuc)
+            .FirstOrDefault(b =>
+                b.PK_IdBaiTuyenDung == id &&
+                b.sTrangThaiKiemDuyet == "Đã duyệt");
+    }
+
     public List<BaiTuyenDung> GetByDieuKien(
         string? keyword,
         string? hinhThuc,
@@ -82,7 +93,8 @@ public class BaiTuyenDungRepository : IBaiTuyenDungRepository
 
         if (!string.IsNullOrWhiteSpace(hinhThuc))
         {
-            query = query.Where(b => b.sHinhThucLamViec == hinhThuc);
+            query = query.Where(
+                b => b.sHinhThucLamViec == hinhThuc);
         }
 
         if (nganhNgheId.HasValue)
