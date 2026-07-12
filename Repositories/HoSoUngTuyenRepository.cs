@@ -32,10 +32,22 @@ public class HoSoUngTuyenRepository : IHoSoUngTuyenRepository
             .ToList();
     }
 
+    public List<HoSoUngTuyen> GetByNhaTuyenDungId(int nhaTuyenDungId)
+    {
+        return _context.DsHoSoUngTuyen
+            .Include(h => h.SinhVien)
+                .ThenInclude(s => s.TaiKhoan)
+            .Include(h => h.BaiTuyenDung)
+            .Where(h => h.BaiTuyenDung.FK_IdNhaTuyenDung == nhaTuyenDungId)
+            .OrderByDescending(h => h.dThoiGianNopHoSo)
+            .ToList();
+    }
+
     public HoSoUngTuyen? GetById(int id)
     {
         return _context.DsHoSoUngTuyen
             .Include(h => h.SinhVien)
+                .ThenInclude(s => s.TaiKhoan)
             .Include(h => h.BaiTuyenDung)
                 .ThenInclude(b => b.NhaTuyenDung)
             .FirstOrDefault(h => h.PK_IdHoSoUngTuyen == id);

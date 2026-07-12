@@ -6,6 +6,7 @@ public interface IHoSoUngTuyenRepository
 {
     List<HoSoUngTuyen> GetBySinhVienId(int sinhVienId);
     List<HoSoUngTuyen> GetByBaiTuyenDungId(int baiTuyenDungId);
+    List<HoSoUngTuyen> GetByNhaTuyenDungId(int nhaTuyenDungId);
     HoSoUngTuyen? GetById(int id);
 
     bool HasApplied(int sinhVienId, int baiTuyenDungId);
