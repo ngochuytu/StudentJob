@@ -42,6 +42,7 @@ public class TaiKhoanController : Controller
     }
 
     [HttpPost("dang-nhap")]
+    [ValidateAntiForgeryToken]
     public IActionResult DangNhap(DangNhapViewModel model, string? returnUrl = null)
     {
         if (!ModelState.IsValid)
@@ -51,7 +52,7 @@ public class TaiKhoanController : Controller
 
         var taiKhoan = _taiKhoanRepository.GetByEmail(model.sEmail);
 
-        if (taiKhoan == null || taiKhoan.sMatKhau != model.sMatKhau)
+        if (taiKhoan == null || !BCrypt.Net.BCrypt.Verify(model.sMatKhau, taiKhoan.sMatKhau))
         {
             ModelState.AddModelError(string.Empty, "Email hoặc mật khẩu không đúng.");
             return View(model);
@@ -70,7 +71,12 @@ public class TaiKhoanController : Controller
             return Redirect(returnUrl);
         }
 
-        return RedirectToAction("Index", "Home");
+        return taiKhoan.VaiTro.sTenVaiTro switch
+        {
+            "Admin" => RedirectToAction("QuanLyTin", "Admin"),
+            "Nhà tuyển dụng" => RedirectToAction("QuanLyTin", "NhaTuyenDung"),
+            _ => RedirectToAction("Index", "Home"),
+        };
     }
 
     [HttpGet("dang-ky")]
@@ -85,6 +91,7 @@ public class TaiKhoanController : Controller
     }
 
     [HttpPost("dang-ky")]
+    [ValidateAntiForgeryToken]
     public IActionResult DangKy(DangKyViewModel model)
     {
         if (model.LoaiTaiKhoan == "SinhVien")
@@ -154,7 +161,7 @@ public class TaiKhoanController : Controller
         var taiKhoan = new TaiKhoan
         {
             sEmail = model.sEmail,
-            sMatKhau = model.sMatKhau,
+            sMatKhau = BCrypt.Net.BCrypt.HashPassword(model.sMatKhau),
             sSoDienThoai = model.sSoDienThoai,
             FK_IdVaiTro = vaiTro.PK_IdVaiTro,
             bTrangThaiHoatDong = true,
@@ -233,6 +240,7 @@ public class TaiKhoanController : Controller
     }
 
     [HttpPost("dang-xuat")]
+    [ValidateAntiForgeryToken]
     public IActionResult DangXuat()
     {
         HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).Wait();
