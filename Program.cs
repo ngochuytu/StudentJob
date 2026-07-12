@@ -25,7 +25,7 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
     {
         options.LoginPath = "/tai-khoan/dang-nhap";
         options.LogoutPath = "/tai-khoan/dang-xuat";
-        options.AccessDeniedPath = "/tai-khoan/dang-nhap";
+        options.AccessDeniedPath = "/loi/403";
         options.Cookie.Name = "StudentJob.Auth";
         options.Cookie.HttpOnly = true;
         options.ExpireTimeSpan = TimeSpan.FromDays(7);
