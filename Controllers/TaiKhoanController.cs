@@ -10,24 +10,30 @@ using StudentJob.Repositories;
 [Route("tai-khoan")]
 public class TaiKhoanController : Controller
 {
+    private const int SoLanSaiToiDa = 5;
+    private static readonly TimeSpan ThoiGianKhoa = TimeSpan.FromMinutes(15);
+
     private readonly ITaiKhoanRepository _taiKhoanRepository;
     private readonly ISinhVienRepository _sinhVienRepository;
     private readonly INhaTuyenDungRepository _nhaTuyenDungRepository;
     private readonly IVaiTroRepository _vaiTroRepository;
     private readonly INganhNgheRepository _nganhNgheRepository;
+    private readonly ILogger<TaiKhoanController> _logger;
 
     public TaiKhoanController(
         ITaiKhoanRepository taiKhoanRepository,
         ISinhVienRepository sinhVienRepository,
         INhaTuyenDungRepository nhaTuyenDungRepository,
         IVaiTroRepository vaiTroRepository,
-        INganhNgheRepository nganhNgheRepository)
+        INganhNgheRepository nganhNgheRepository,
+        ILogger<TaiKhoanController> logger)
     {
         _taiKhoanRepository = taiKhoanRepository;
         _sinhVienRepository = sinhVienRepository;
         _nhaTuyenDungRepository = nhaTuyenDungRepository;
         _vaiTroRepository = vaiTroRepository;
         _nganhNgheRepository = nganhNgheRepository;
+        _logger = logger;
     }
 
     [HttpGet("dang-nhap")]
@@ -50,19 +56,56 @@ public class TaiKhoanController : Controller
             return View(model);
         }
 
+        string diaChiIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
         var taiKhoan = _taiKhoanRepository.GetByEmail(model.sEmail);
+
+        if (taiKhoan != null && taiKhoan.dThoiGianKhoaToi.HasValue && taiKhoan.dThoiGianKhoaToi.Value > DateTime.Now)
+        {
+            int soPhutConLai = (int)Math.Ceiling((taiKhoan.dThoiGianKhoaToi.Value - DateTime.Now).TotalMinutes);
+            _logger.LogWarning(
+                "Đăng nhập bị chặn do tài khoản đang khóa tạm: Email={Email}, IP={Ip}, ConLai={Phut} phút",
+                model.sEmail, diaChiIp, soPhutConLai);
+            ModelState.AddModelError(string.Empty, $"Tài khoản tạm khóa do đăng nhập sai quá số lần cho phép. Vui lòng thử lại sau khoảng {soPhutConLai} phút.");
+            return View(model);
+        }
 
         if (taiKhoan == null || !BCrypt.Net.BCrypt.Verify(model.sMatKhau, taiKhoan.sMatKhau))
         {
+            if (taiKhoan != null)
+            {
+                taiKhoan.SoLanDangNhapSai += 1;
+                if (taiKhoan.SoLanDangNhapSai >= SoLanSaiToiDa)
+                {
+                    taiKhoan.dThoiGianKhoaToi = DateTime.Now.Add(ThoiGianKhoa);
+                }
+                _taiKhoanRepository.Update(taiKhoan);
+            }
+
+            _logger.LogWarning(
+                "Đăng nhập thất bại: Email={Email}, IP={Ip}, ThoiGian={ThoiGian}, SoLanSai={SoLanSai}",
+                model.sEmail, diaChiIp, DateTime.Now, taiKhoan?.SoLanDangNhapSai ?? 0);
+
             ModelState.AddModelError(string.Empty, "Email hoặc mật khẩu không đúng.");
             return View(model);
         }
 
         if (!taiKhoan.bTrangThaiHoatDong)
         {
+            _logger.LogWarning("Đăng nhập bị từ chối do tài khoản bị khóa vĩnh viễn: Email={Email}, IP={Ip}", model.sEmail, diaChiIp);
             ModelState.AddModelError(string.Empty, "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.");
             return View(model);
         }
+
+        if (taiKhoan.SoLanDangNhapSai > 0 || taiKhoan.dThoiGianKhoaToi.HasValue)
+        {
+            taiKhoan.SoLanDangNhapSai = 0;
+            taiKhoan.dThoiGianKhoaToi = null;
+            _taiKhoanRepository.Update(taiKhoan);
+        }
+
+        _logger.LogInformation(
+            "Đăng nhập thành công: Email={Email}, IP={Ip}, ThoiGian={ThoiGian}",
+            model.sEmail, diaChiIp, DateTime.Now);
 
         SignInUser(taiKhoan);
 
@@ -243,6 +286,8 @@ public class TaiKhoanController : Controller
     [ValidateAntiForgeryToken]
     public IActionResult DangXuat()
     {
+        string? email = User.FindFirstValue(ClaimTypes.Email);
+        _logger.LogInformation("Đăng xuất: Email={Email}, IP={Ip}", email, HttpContext.Connection.RemoteIpAddress?.ToString());
         HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).Wait();
         return RedirectToAction("Index", "Home");
     }

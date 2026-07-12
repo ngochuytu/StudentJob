@@ -37,6 +37,12 @@ public class TaiKhoan
     [Column(TypeName = "datetime")]
     public DateTime dNgayTaoTaiKhoan { get; set; }
 
+    [Required]
+    public int SoLanDangNhapSai { get; set; } = 0;
+
+    [Column(TypeName = "datetime")]
+    public DateTime? dThoiGianKhoaToi { get; set; }
+
     // Navigation properties
     public VaiTro VaiTro { get; set; } = null!;
     public SinhVien? SinhVien { get; set; }

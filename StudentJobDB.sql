@@ -19,6 +19,8 @@ CREATE TABLE tbl_TaiKhoan (
     FK_IdVaiTro INT NOT NULL,
     bTrangThaiHoatDong BIT NOT NULL DEFAULT 1,
     dNgayTaoTaiKhoan DATETIME NOT NULL DEFAULT GETDATE(),
+    SoLanDangNhapSai INT NOT NULL DEFAULT 0,
+    dThoiGianKhoaToi DATETIME NULL,
     CONSTRAINT PK_tbl_TaiKhoan PRIMARY KEY (PK_IdTaiKhoan),
     CONSTRAINT UQ_Email UNIQUE (sEmail),
     CONSTRAINT FK_tbl_TaiKhoan_VaiTro FOREIGN KEY (FK_IdVaiTro) REFERENCES tbl_VaiTro(PK_IdVaiTro)
