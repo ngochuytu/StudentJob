@@ -97,6 +97,15 @@ public class TaiKhoanController : Controller
             {
                 ModelState.AddModelError("sChuyenNganhHoc", "Vui lòng chọn chuyên ngành học.");
             }
+            if (model.CvFile != null && model.CvFile.Length > 0)
+            {
+                var allowedCvExtensions = new[] { ".pdf", ".doc", ".docx" };
+                var ext = Path.GetExtension(model.CvFile.FileName).ToLower();
+                if (!allowedCvExtensions.Contains(ext))
+                {
+                    ModelState.AddModelError("CvFile", "Định dạng file CV không hợp lệ. Chỉ chấp nhận các định dạng: .pdf, .doc, .docx");
+                }
+            }
         }
         else if (model.LoaiTaiKhoan == "NhaTuyenDung")
         {
@@ -107,6 +116,15 @@ public class TaiKhoanController : Controller
             if (string.IsNullOrWhiteSpace(model.sDiaChiVanPhong))
             {
                 ModelState.AddModelError("sDiaChiVanPhong", "Địa chỉ văn phòng không được để trống.");
+            }
+            if (model.ImageFile != null && model.ImageFile.Length > 0)
+            {
+                var allowedImgExtensions = new[] { ".png", ".jpg", ".jpeg", ".gif" };
+                var ext = Path.GetExtension(model.ImageFile.FileName).ToLower();
+                if (!allowedImgExtensions.Contains(ext))
+                {
+                    ModelState.AddModelError("ImageFile", "Định dạng ảnh logo không hợp lệ. Chỉ chấp nhận: .png, .jpg, .jpeg, .gif");
+                }
             }
         }
 
@@ -153,6 +171,27 @@ public class TaiKhoanController : Controller
                 sChuyenNganhHoc = model.sChuyenNganhHoc!
             };
             _sinhVienRepository.Add(sinhVien);
+
+            if (model.CvFile != null && model.CvFile.Length > 0)
+            {
+                var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "cvs", "default");
+                if (!Directory.Exists(uploadDir))
+                {
+                    Directory.CreateDirectory(uploadDir);
+                }
+
+                var ext = Path.GetExtension(model.CvFile.FileName);
+                var fileName = $"cv_{sinhVien.PK_IdSinhVien}{ext}";
+                var filePath = Path.Combine(uploadDir, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    model.CvFile.CopyTo(stream);
+                }
+
+                sinhVien.sDuongDanCVMacDinh = $"/uploads/cvs/default/{fileName}";
+                _sinhVienRepository.Update(sinhVien);
+            }
         }
         else
         {
@@ -160,9 +199,31 @@ public class TaiKhoanController : Controller
             {
                 FK_IdTaiKhoan = taiKhoan.PK_IdTaiKhoan,
                 sTenDoanhNghiep = model.sTenDoanhNghiep!,
-                sDiaChiVanPhong = model.sDiaChiVanPhong!
+                sDiaChiVanPhong = model.sDiaChiVanPhong!,
+                sMoTaTongQuan = model.sMoTaTongQuan
             };
             _nhaTuyenDungRepository.Add(nhaTuyenDung);
+
+            if (model.ImageFile != null && model.ImageFile.Length > 0)
+            {
+                var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "logos");
+                if (!Directory.Exists(uploadDir))
+                {
+                    Directory.CreateDirectory(uploadDir);
+                }
+
+                var ext = Path.GetExtension(model.ImageFile.FileName);
+                var fileName = $"logo_{nhaTuyenDung.PK_IdNhaTuyenDung}{ext}";
+                var filePath = Path.Combine(uploadDir, fileName);
+
+                using (var stream = new FileStream(filePath, FileMode.Create))
+                {
+                    model.ImageFile.CopyTo(stream);
+                }
+
+                nhaTuyenDung.sDuongDanAnhLogo = $"/uploads/logos/{fileName}";
+                _nhaTuyenDungRepository.Update(nhaTuyenDung);
+            }
         }
 
         taiKhoan.VaiTro = vaiTro;

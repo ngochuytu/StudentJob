@@ -1,0 +1,138 @@
+@model StudentJob.Models.BaiTuyenDung
+@{
+    ViewData["Title"] = $"{Model.sTieuDeCongViec} - {Model.NhaTuyenDung.sTenDoanhNghiep}";
+    var isExpired = Model.dHanNopHoSo < DateOnly.FromDateTime(DateTime.Today);
+}
+
+<section class="job-details-hero py-5 mb-5">
+    <div class="container">
+        <nav aria-label="breadcrumb" class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item"><a href="/" class="text-decoration-none hover-primary-text text-secondary small">Trang chủ</a></li>
+                <li class="breadcrumb-item active text-dark small" aria-current="page">Chi tiết việc làm</li>
+            </ol>
+        </nav>
+
+        <div class="row align-items-center g-4">
+            <div class="col-12 col-md-auto">
+                @if (!string.IsNullOrEmpty(Model.NhaTuyenDung.sDuongDanAnhLogo))
+                {
+                    <img src="@Model.NhaTuyenDung.sDuongDanAnhLogo" alt="@Model.NhaTuyenDung.sTenDoanhNghiep Logo" class="rounded border p-2 bg-white" style="width: 80px; height: 80px; object-fit: cover;" />
+                }
+                else
+                {
+                    <div class="rounded border bg-light d-flex align-items-center justify-content-center text-primary fw-bold" style="width: 80px; height: 80px; font-size: 1.8rem;">
+                        @Model.NhaTuyenDung.sTenDoanhNghiep.Substring(0, Math.Min(2, Model.NhaTuyenDung.sTenDoanhNghiep.Length)).ToUpper()
+                    </div>
+                }
+            </div>
+            
+            <div class="col-12 col-md">
+                <div class="d-flex flex-wrap gap-2 mb-2.5">
+                    <span class="badge bg-primary-subtle text-primary fw-bold rounded-pill px-3 py-1.5 small">
+                        @Model.sHinhThucLamViec
+                    </span>
+                    <span class="badge bg-light text-secondary border px-3 py-1.5 rounded-pill small">
+                        @Model.NganhNghe.sTenLinhVuc
+                    </span>
+                </div>
+                
+                <h1 class="h2 fw-extrabold text-dark mb-2">@Model.sTieuDeCongViec</h1>
+                
+                <div class="d-flex flex-wrap align-items-center gap-3 text-secondary small">
+                    <span class="fw-semibold text-dark">@Model.NhaTuyenDung.sTenDoanhNghiep</span>
+                    <span class="text-muted">|</span>
+                    <span>@Model.KhuVuc.sTenKhuVuc</span>
+                    <span class="text-muted">|</span>
+                    <span>Đăng ngày: @Model.dNgayTaoBai.ToString("dd/MM/yyyy")</span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="job-details-content pb-5 mb-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-12 col-lg-8">
+                <div class="bg-white p-4 p-md-5 rounded-3 border">
+                    <h3 class="h4 fw-bold text-dark mb-4 pb-2 border-bottom">Mô tả công việc</h3>
+                    
+                    <div class="job-description text-secondary lh-lg mb-5" style="white-space: pre-line;">
+                        @Model.sMoTaCongViec
+                    </div>
+
+                    @if (!string.IsNullOrEmpty(Model.sCaLam))
+                    {
+                        <h3 class="h4 fw-bold text-dark mb-4 pb-2 border-bottom">Ca làm việc</h3>
+                        <div class="text-secondary mb-0">
+                            @Model.sCaLam
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-4">
+                <div class="card p-4 shadow-sm bg-white border mb-4 sticky-lg-top" style="top: 100px; z-index: 1;">
+                    <h5 class="fw-bold text-dark mb-4 pb-2 border-bottom">Tổng quan công việc</h5>
+                    
+                    <div class="d-flex flex-column gap-4 mb-4">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center text-primary" style="width: 42px; height: 42px; min-width: 42px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="text-muted small d-block">Mức lương</span>
+                                <span class="fw-bold text-success">@Model.sMucLuong</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center text-primary" style="width: 42px; height: 42px; min-width: 42px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="text-muted small d-block">Địa điểm</span>
+                                <span class="fw-bold text-dark">@Model.KhuVuc.sTenKhuVuc</span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center text-primary" style="width: 42px; height: 42px; min-width: 42px;">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                    <path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                                </svg>
+                            </div>
+                            <div>
+                                <span class="text-muted small d-block">Hạn nộp hồ sơ</span>
+                                <span class="fw-bold @(isExpired ? "text-danger" : "text-dark")">@Model.dHanNopHoSo.ToString("dd/MM/yyyy")</span>
+                                @if (isExpired)
+                                {
+                                    <div class="small text-danger fw-semibold mt-0.5">Hết hạn ứng tuyển</div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (isExpired)
+                    {
+                        <button class="btn btn-secondary btn-lg w-100 rounded-pill fw-bold py-3 shadow-sm" disabled>
+                            Hết hạn ứng tuyển
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-primary btn-lg w-100 rounded-pill fw-bold py-3 shadow-sm hover-shadow transition">
+                            Ứng tuyển ngay
+                        </button>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>

@@ -251,3 +251,51 @@ body {
         padding: 1.25rem !important;
     }
 }
+
+/* Home & Chi tiết  */
+
+.transition {
+    transition: all 0.2s ease-in-out;
+}
+
+.hover-shadow:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+}
+
+.hover-primary-text:hover {
+    color: #3b5eff !important;
+}
+
+.text-xs {
+    font-size: 0.75rem;
+}
+
+.hero-section {
+    background: radial-gradient(circle at 10% 20%, rgba(238, 246, 255, 1) 0%, rgba(219, 233, 255, 0.6) 90%);
+    padding: 6rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.search-container {
+    background: white;
+    box-shadow: 0 15px 35px rgba(59, 94, 255, 0.06);
+    border: 1px solid rgba(59, 94, 255, 0.1);
+    border-radius: 1rem;
+    padding: 0.75rem;
+}
+
+.sidebar-filter .card {
+    border: 1px solid #e9ecef;
+    border-radius: 0.75rem;
+}
+
+.sidebar-filter .form-check-input:checked {
+    background-color: #3b5eff;
+    border-color: #3b5eff;
+}
+
+.job-details-hero {
+    background: linear-gradient(135deg, #f8f9fa 0%, #eef3ff 100%);
+    border-bottom: 1px solid #e9ecef;
+}

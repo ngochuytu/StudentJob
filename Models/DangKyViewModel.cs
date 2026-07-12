@@ -46,4 +46,13 @@ public class DangKyViewModel
     [StringLength(200)]
     [Display(Name = "Địa chỉ văn phòng")]
     public string? sDiaChiVanPhong { get; set; }
+
+    [Display(Name = "Mô tả tổng quan")]
+    public string? sMoTaTongQuan { get; set; }
+
+    [Display(Name = "Ảnh Logo Doanh nghiệp")]
+    public Microsoft.AspNetCore.Http.IFormFile? ImageFile { get; set; }
+
+    [Display(Name = "File CV cá nhân")]
+    public Microsoft.AspNetCore.Http.IFormFile? CvFile { get; set; }
 }
