@@ -1,136 +1,241 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const deleteButtons = document.querySelectorAll(".btn-delete-job");
-    const deleteModalElement = document.getElementById("deleteJobModal");
-    const confirmDeleteButton = document.getElementById("confirmDeleteJobButton");
-    const deleteJobTitle = document.getElementById("deleteJobTitle");
-    const alertContainer = document.getElementById("deleteAlertContainer");
-    const tokenInput = document.querySelector(
-        'input[name="__RequestVerificationToken"]'
-    );
+    const deleteButtons =
+        document.querySelectorAll(".btn-delete-job");
+
+    const deleteModalElement =
+        document.getElementById("deleteJobModal");
+
+    const confirmDeleteButton =
+        document.getElementById("confirmDeleteJobButton");
+
+    const deleteJobTitle =
+        document.getElementById("deleteJobTitle");
+
+    const alertContainer =
+        document.getElementById("deleteAlertContainer");
 
     if (
         !deleteModalElement ||
         !confirmDeleteButton ||
-        !deleteJobTitle ||
-        !tokenInput
+        !deleteJobTitle
     ) {
         return;
     }
 
-    const deleteModal = new bootstrap.Modal(deleteModalElement);
+    const deleteModal =
+        new bootstrap.Modal(deleteModalElement);
 
     let selectedJobId = null;
 
-    deleteButtons.forEach((button) => {
+    deleteButtons.forEach(button => {
         button.addEventListener("click", () => {
-            selectedJobId = button.dataset.jobId;
-            deleteJobTitle.textContent = button.dataset.jobTitle ?? "";
+            selectedJobId = button.dataset.jobId ?? null;
+
+            deleteJobTitle.textContent =
+                button.dataset.jobTitle ?? "";
+
             deleteModal.show();
         });
     });
 
-    confirmDeleteButton.addEventListener("click", async () => {
-        if (!selectedJobId) {
-            return;
+    confirmDeleteButton.addEventListener(
+        "click",
+        async () => {
+            if (!selectedJobId) {
+                return;
+            }
+
+            const tokenInput = document.querySelector(
+                'input[name="__RequestVerificationToken"]'
+            );
+
+            if (!tokenInput?.value) {
+                showAlert(
+                    "danger",
+                    "Không tìm thấy mã xác thực biểu mẫu. Vui lòng tải lại trang."
+                );
+
+                deleteModal.hide();
+                return;
+            }
+
+            setDeleteButtonLoading(true);
+
+            try {
+                const response = await fetch(
+                    `/nha-tuyen-dung/api/xoa-tin/${selectedJobId}`,
+                    {
+                        method: "POST",
+                        headers: {
+                            Accept: "application/json",
+                            RequestVerificationToken:
+                                tokenInput.value
+                        }
+                    }
+                );
+
+                const result =
+                    await readJsonResponse(response);
+
+                if (!response.ok) {
+                    throw new Error(
+                        result?.message ??
+                        `Không thể xóa tin tuyển dụng. Mã lỗi: ${response.status}.`
+                    );
+                }
+
+                if (result?.success !== true) {
+                    throw new Error(
+                        result?.message ??
+                        "Phản hồi từ máy chủ không hợp lệ."
+                    );
+                }
+
+                const deletedRow =
+                    document.getElementById(
+                        `job-row-${selectedJobId}`
+                    );
+
+                let status = "";
+
+                if (deletedRow) {
+                    const statusBadge =
+                        deletedRow.querySelector(
+                            ".badge.rounded-pill"
+                        );
+
+                    status =
+                        statusBadge?.textContent?.trim() ?? "";
+
+                    deletedRow.remove();
+                }
+
+                updateTotalJobCount(status);
+                showAlert("success", result.message);
+
+                deleteModal.hide();
+                selectedJobId = null;
+            } catch (error) {
+                showAlert(
+                    "danger",
+                    error instanceof Error
+                        ? error.message
+                        : "Đã xảy ra lỗi khi xóa tin tuyển dụng."
+                );
+
+                deleteModal.hide();
+            } finally {
+                setDeleteButtonLoading(false);
+            }
+        }
+    );
+
+    async function readJsonResponse(response) {
+        const contentType =
+            response.headers.get("content-type") ?? "";
+
+        if (!contentType.includes("application/json")) {
+            return null;
         }
 
-        setDeleteButtonLoading(true);
+        const responseText = await response.text();
+
+        if (!responseText.trim()) {
+            return null;
+        }
 
         try {
-            const response = await fetch(
-                `/nha-tuyen-dung/api/xoa-tin/${selectedJobId}`,
-                {
-                    method: "POST",
-                    headers: {
-                        RequestVerificationToken: tokenInput.value,
-                        Accept: "application/json"
-                    }
-                }
-            );
-
-            const result = await response.json();
-
-            if (!response.ok || result.success !== true) {
-                throw new Error(
-                    result.message ?? "Không thể xóa tin tuyển dụng."
-                );
-            }
-
-            const deletedRow = document.getElementById(
-                `job-row-${selectedJobId}`
-            );
-
-            let status = "";
-            if (deletedRow) {
-                const statusBadge = deletedRow.querySelector(".badge.rounded-pill");
-                status = statusBadge ? statusBadge.textContent.trim() : "";
-                deletedRow.remove();
-            }
-
-            updateTotalJobCount(status);
-            showAlert("success", result.message);
-            deleteModal.hide();
-            selectedJobId = null;
-        } catch (error) {
-            showAlert(
-                "danger",
-                error.message ?? "Đã xảy ra lỗi khi xóa tin tuyển dụng."
-            );
-
-            deleteModal.hide();
-        } finally {
-            setDeleteButtonLoading(false);
+            return JSON.parse(responseText);
+        } catch {
+            return null;
         }
-    });
+    }
 
     function setDeleteButtonLoading(isLoading) {
-        const normalContent = confirmDeleteButton.querySelector(
-            ".delete-button-text"
-        );
+        const normalContent =
+            confirmDeleteButton.querySelector(
+                ".delete-button-text"
+            );
 
-        const loadingContent = confirmDeleteButton.querySelector(
-            ".delete-button-loading"
-        );
+        const loadingContent =
+            confirmDeleteButton.querySelector(
+                ".delete-button-loading"
+            );
 
         confirmDeleteButton.disabled = isLoading;
-        normalContent?.classList.toggle("d-none", isLoading);
-        loadingContent?.classList.toggle("d-none", !isLoading);
+
+        normalContent?.classList.toggle(
+            "d-none",
+            isLoading
+        );
+
+        loadingContent?.classList.toggle(
+            "d-none",
+            !isLoading
+        );
     }
 
     function updateTotalJobCount(status) {
         const totalJobCountElement =
             document.getElementById("totalJobCount");
+
         const approvedJobCountElement =
-            document.getElementById("approvedJobCount");
+            document.getElementById(
+                "approvedJobCount"
+            );
+
         const pendingJobCountElement =
-            document.getElementById("pendingJobCount");
+            document.getElementById(
+                "pendingJobCount"
+            );
+
         const rejectedJobCountElement =
-            document.getElementById("rejectedJobCount");
+            document.getElementById(
+                "rejectedJobCount"
+            );
 
         const remainingRows =
-            document.querySelectorAll("#jobTableBody tr").length;
+            document.querySelectorAll(
+                "#jobTableBody tr"
+            ).length;
 
         if (totalJobCountElement) {
             totalJobCountElement.textContent =
                 remainingRows.toString();
         }
 
-        if (status) {
-            if (status === "Đã duyệt" && approvedJobCountElement) {
-                const current = parseInt(approvedJobCountElement.textContent) || 0;
-                approvedJobCountElement.textContent = Math.max(0, current - 1).toString();
-            } else if (status === "Chờ duyệt" && pendingJobCountElement) {
-                const current = parseInt(pendingJobCountElement.textContent) || 0;
-                pendingJobCountElement.textContent = Math.max(0, current - 1).toString();
-            } else if (status === "Từ chối" && rejectedJobCountElement) {
-                const current = parseInt(rejectedJobCountElement.textContent) || 0;
-                rejectedJobCountElement.textContent = Math.max(0, current - 1).toString();
-            }
+        if (status === "Đã duyệt") {
+            decreaseCount(
+                approvedJobCountElement
+            );
+        } else if (status === "Chờ duyệt") {
+            decreaseCount(
+                pendingJobCountElement
+            );
+        } else if (status === "Từ chối") {
+            decreaseCount(
+                rejectedJobCountElement
+            );
         }
 
         if (remainingRows === 0) {
             window.location.reload();
         }
+    }
+
+    function decreaseCount(element) {
+        if (!element) {
+            return;
+        }
+
+        const current =
+            Number.parseInt(
+                element.textContent ?? "0",
+                10
+            ) || 0;
+
+        element.textContent =
+            Math.max(0, current - 1).toString();
     }
 
     function showAlert(type, message) {
@@ -157,8 +262,12 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     function escapeHtml(value) {
-        const element = document.createElement("div");
-        element.textContent = value;
+        const element =
+            document.createElement("div");
+
+        element.textContent =
+            value ?? "";
+
         return element.innerHTML;
     }
 });

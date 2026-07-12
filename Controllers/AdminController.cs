@@ -24,10 +24,44 @@ public class AdminController : Controller
         _hoSoUngTuyenRepository = hoSoUngTuyenRepository;
     }
 
-    [HttpGet("quan-ly-ho-so")]
-    public IActionResult QuanLyHoSo()
+    [HttpGet("quan-ly-tin")]
+    public IActionResult QuanLyTin()
     {
-        return View();
+        var jobs = _baiTuyenDungRepository.GetAll();
+
+        ViewBag.TotalUsers = _taiKhoanRepository.GetAll().Count;
+        ViewBag.TotalJobs = jobs.Count;
+        ViewBag.TotalApplications = _hoSoUngTuyenRepository.GetAll().Count;
+
+        return View(jobs);
+    }
+
+    [HttpPost("duyet-tin")]
+    public IActionResult DuyetTin(int id, string status)
+    {
+        var job = _baiTuyenDungRepository.GetById(id);
+        if (job == null)
+        {
+            return Json(new { success = false, message = "Không tìm thấy tin tuyển dụng" });
+        }
+
+        if (status != "Đã duyệt" && status != "Từ chối" && status != "Chờ duyệt")
+        {
+            return Json(new { success = false, message = "Trạng thái không hợp lệ" });
+        }
+
+        job.sTrangThaiKiemDuyet = status;
+        _baiTuyenDungRepository.Update(job);
+
+        string message = status == "Đã duyệt" 
+            ? "Phê duyệt tin tuyển dụng thành công" 
+            : "Từ chối tin tuyển dụng thành công";
+
+        return Json(new {
+            success = true,
+            message = message,
+            data = new { status = status }
+        });
     }
 
     [HttpGet("quan-ly-tai-khoan")]

@@ -483,3 +483,7 @@ $RECYCLE.BIN/
 
 # Coding Agent
 # AI.md
+
+# CV & Logo thêm mới lưu ở local ko push, 4 cv & 5 logo có sẵn
+wwwroot/uploads/cvs/*
+wwwroot/uploads/logos/*

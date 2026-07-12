@@ -109,9 +109,12 @@ INSERT INTO tbl_VaiTro (sTenVaiTro) VALUES (N'Admin'), (N'Sinh viên'), (N'Nhà 
 GO
 
 INSERT INTO tbl_NganhNghe (sTenLinhVuc) VALUES 
-(N'Công nghệ thông tin'), (N'Marketing / Truyền thông'), (N'Dịch vụ F&B / Nhà hàng'), (N'Giao nhận / Logistics'), (N'Gia sư / Giáo dục');
+(N'Công nghệ thông tin'), (N'Marketing / Truyền thông'), (N'Dịch vụ F&B / Nhà hàng'), (N'Giao nhận / Logistics'), (N'Gia sư / Giáo dục'),
+(N'Thiết kế đồ họa / UI-UX'), (N'Bán hàng / Tư vấn'), (N'Hành chính / Văn phòng');
+
 INSERT INTO tbl_KhuVuc (sTenKhuVuc) VALUES 
-(N'Hoàn Kiếm, Hà Nội'), (N'Cầu Giấy, Hà Nội'), (N'Đống Đa, Hà Nội'), (N'Hai Bà Trưng, Hà Nội'), (N'Quận 1, TP. Hồ Chí Minh'), (N'Quận 3, TP. Hồ Chí Minh');
+(N'Hoàn Kiếm, Hà Nội'), (N'Cầu Giấy, Hà Nội'), (N'Đống Đa, Hà Nội'), (N'Hai Bà Trưng, Hà Nội'), (N'Quận 1, TP. Hồ Chí Minh'), (N'Quận 3, TP. Hồ Chí Minh'),
+(N'Thanh Xuân, Hà Nội'), (N'Ba Đình, Hà Nội'), (N'Quận Bình Thạnh, TP. Hồ Chí Minh'), (N'Quận 7, TP. Hồ Chí Minh');
 GO
 
 INSERT INTO tbl_TaiKhoan (sEmail, sMatKhau, sSoDienThoai, FK_IdVaiTro, bTrangThaiHoatDong, dNgayTaoTaiKhoan) VALUES
@@ -136,18 +139,34 @@ GO
 
 INSERT INTO tbl_TaiKhoan (sEmail, sMatKhau, sSoDienThoai, FK_IdVaiTro) VALUES
 ('hr.techcorp@gmail.com', '12345678', '0247300123', 3),
-('recruitment.highlands@cafe.com', '12345678', '0287300456', 3);
+('recruitment.highlands@cafe.com', '12345678', '0287300456', 3),
+('recruitment.fpt@fpt.com', '12345678', '0247300757', 3),
+('jobs.tiki@tiki.vn', '12345678', '0287300123', 3),
+('tuyendung@vng.com.vn', '12345678', '0287300999', 3);
 GO
 
+-- sDuongDanAnhLogo lưu ở /uploads/logos/logo_${IdNhaTuyenDung}.png
+
 INSERT INTO tbl_NhaTuyenDung (FK_IdTaiKhoan, sTenDoanhNghiep, sDuongDanAnhLogo, sDiaChiVanPhong, sMoTaTongQuan) VALUES
-(6, N'Công ty Cổ phần Công nghệ TechCorp', '/uploads/logos/techcorp.png', N'Số 12 Duy Tân, Cầu Giấy, Hà Nội', N'Đơn vị phát triển các giải pháp phần mềm và ứng dụng di động hàng đầu.'),
-(7, N'Chuỗi Cửa hàng Cà phê Highlands Coffee', '/uploads/logos/highlands.png', N'135 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh', N'Thương hiệu chuỗi cửa hàng cà phê và đồ ăn nhanh đại chúng lớn tại Việt Nam.');
+(6, N'Công ty Cổ phần Công nghệ TechCorp', '/uploads/logos/logo_1.png', N'Số 12 Duy Tân, Cầu Giấy, Hà Nội', N'Đơn vị phát triển các giải pháp phần mềm và ứng dụng di động hàng đầu.'),
+(7, N'Chuỗi Cửa hàng Cà phê Highlands Coffee', '/uploads/logos/logo_2.png', N'135 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh', N'Thương hiệu chuỗi cửa hàng cà phê và đồ ăn nhanh đại chúng lớn tại Việt Nam.'),
+(8, N'Công ty TNHH Phần mềm FPT (FPT Software)', '/uploads/logos/logo_3.png', N'Khu công nghệ cao Hòa Lạc, Thạch Thất, Hà Nội', N'Tập đoàn dịch vụ công nghệ thông tin hàng đầu khu vực.'),
+(9, N'Công ty Cổ phần Tiki (Tiki Corp)', '/uploads/logos/logo_4.png', N'52 Út Tịch, Quận Tân Bình, TP. Hồ Chí Minh', N'Hệ sinh thái thương mại điện tử hàng đầu tại Việt Nam.'),
+(10, N'Công ty Cổ phần VNG (VNG Corp)', '/uploads/logos/logo_5.png', N'Z06 Đường số 13, Tân Thuận Đông, Quận 7, TP. Hồ Chí Minh', N'Doanh nghiệp công nghệ kỳ lân đầu tiên tại Việt Nam, phát triển game và ứng dụng.');
 GO
 
 INSERT INTO tbl_BaiTuyenDung (FK_IdNhaTuyenDung, sTieuDeCongViec, sHinhThucLamViec, sMoTaCongViec, sCaLam, sMucLuong, FK_IdNganhNghe, FK_IdKhuVuc, dHanNopHoSo, sTrangThaiKiemDuyet) VALUES
 (1, N'Thực tập sinh Lập trình viên ASP.NET Core', N'Thực tập', N'Tham gia phát triển dự án web nội bộ, xây dựng API và thiết kế CSDL hệ thống.', N'Sáng: 08:00 - 12:00 hoặc Chiều: 13:30 - 17:30 (Tối thiểu 4 buổi/tuần)', N'3.000.000đ - 5.000.000đ', 1, 1, '2026-08-31', N'Đã duyệt'),
 (1, N'Cộng tác viên Content Marketing Part-time', N'Bán thời gian', N'Viết bài chuẩn SEO cho fanpage và website công nghệ, lên kịch bản video ngắn.', N'Thời gian linh hoạt theo lịch học của sinh viên', N'2.000.000đ - 4.000.000đ', 2, 1, '2026-08-15', N'Đã duyệt'),
 (2, N'Nhân viên phục vụ quầy ca tối cửa hàng', N'Bán thời gian', N'Đón tiếp khách hàng, nhận order, pha chế đồ uống cơ bản và dọn dẹp vệ sinh quầy.', N'Ca tối: 18:00 - 22:30 hoặc Ca đêm: 22:00 - 06:00', N'22.000đ - 25.000đ/giờ', 3, 4, '2026-09-10', N'Đã duyệt'),
+(3, N'Thực tập sinh Lập trình C#/.NET', N'Thực tập', N'Tham gia tìm hiểu quy trình phát triển phần mềm, viết unit test và sửa lỗi cơ bản.', N'Sáng: 08:30 - 12:00, Chiều: 13:30 - 17:30', N'4.000.000đ', 1, 2, '2026-08-30', N'Đã duyệt'),
+(3, N'Thực tập sinh Thiết kế UI/UX di động', N'Thực tập', N'Hỗ trợ thiết kế wireframe, prototype cho sản phẩm di động trên Figma.', N'Linh hoạt theo ca học', N'3.500.000đ', 6, 2, '2026-08-15', N'Đã duyệt'),
+(4, N'Cộng tác viên Xử lý đơn hàng Kho bãi', N'Bán thời gian', N'Hỗ trợ tiếp nhận đơn hàng, kiểm đếm sản phẩm và đóng gói hàng hóa gửi đi.', N'Ca sáng: 08:00 - 12:00 hoặc Ca chiều: 13:00 - 17:00', N'25.000đ/giờ', 4, 9, '2026-09-01', N'Đã duyệt'),
+(4, N'Thực tập sinh Truyền thông mạng xã hội', N'Thực tập', N'Lên ý tưởng hình ảnh, video ngắn trên TikTok để thu hút người mua hàng.', N'Ca linh hoạt', N'3.000.000đ', 2, 9, '2026-08-25', N'Đã duyệt'),
+(5, N'Thực tập sinh Kiểm thử phần mềm (QA/QC Intern)', N'Thực tập', N'Tìm hiểu kịch bản kiểm thử, chạy test case và báo cáo lỗi lên Jira.', N'Sáng: 08:30 - 12:00, Chiều: 13:30 - 17:30', N'3.000.000đ - 5.000.000đ', 1, 10, '2026-09-15', N'Đã duyệt'),
+(5, N'Nhân viên hỗ trợ kỹ thuật khách hàng Game', N'Bán thời gian', N'Tiếp nhận phản hồi của người chơi game, trả lời câu hỏi và hỗ trợ xử lý lỗi nạp thẻ.', N'Ca tối: 18:00 - 22:00', N'3.500.000đ', 1, 10, '2026-08-20', N'Đã duyệt'),
+(3, N'Thực tập sinh Lập trình Game Unity', N'Thực tập', N'Tham gia xây dựng gameplay cho game casual di động bằng engine Unity.', N'Tối thiểu 3 ngày/tuần', N'Thỏa thuận', 1, 2, '2026-08-28', N'Chờ duyệt'),
+(4, N'Cộng tác viên Chăm sóc khách hàng Tiki Part-time', N'Bán thời gian', N'Tư vấn sản phẩm cho khách hàng qua cổng chat trực tuyến của Tiki.', N'Linh hoạt từ 18:00 đến 22:00', N'22.000đ/giờ', 7, 9, '2026-08-10', N'Từ chối'),
 (2, N'Nhân viên ứng tuyển thử nghiệm tính năng', N'Bán thời gian', N'Bài viết này được tạo ra ở trạng thái chờ để Admin đăng nhập vào hệ thống test tính năng phê duyệt.', N'Ca tự do', N'Thỏa thuận', 1, 2, '2026-07-30', N'Chờ duyệt');
 GO
 

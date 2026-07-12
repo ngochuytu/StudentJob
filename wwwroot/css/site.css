@@ -81,16 +81,16 @@ body {
         margin-top: 1rem;
         padding-top: 0.5rem;
     }
-    
+
     .navbar-nav {
         gap: 0.25rem;
     }
-    
+
     .navbar-nav .nav-link {
         padding: 0.75rem 1rem !important;
         display: block;
     }
-    
+
     .navbar-collapse .d-flex {
         flex-direction: column;
         align-items: stretch !important;
@@ -100,18 +100,18 @@ body {
         border-top: 1px solid #e9ecef;
         gap: 0.75rem !important;
     }
-    
+
     .navbar-collapse .d-flex .btn {
         width: 100%;
         justify-content: center;
         padding: 0.75rem 1.5rem !important;
     }
-    
+
     .navbar-collapse .dropdown,
     .navbar-collapse .dropdown-toggle {
         width: 100%;
     }
-    
+
     .navbar-collapse .dropdown-menu {
         position: static !important;
         float: none;
@@ -479,6 +479,10 @@ body {
     }
 }
 
+/* =========================================================
+   Saved jobs
+   ========================================================= */
+
 .saved-jobs-page {
     min-height: 70vh;
 }
@@ -492,8 +496,9 @@ body {
 
 .saved-job-card {
     border-radius: 1rem;
-    transition: transform 0.25s ease-in-out,
-                box-shadow 0.25s ease-in-out;
+    transition:
+        transform 0.25s ease-in-out,
+        box-shadow 0.25s ease-in-out;
 }
 
 .saved-job-card:hover {
@@ -538,4 +543,62 @@ body {
     background: rgba(59, 94, 255, 0.1);
     color: var(--bs-primary);
     font-size: 2rem;
+}
+
+/* =========================================================
+   Home & Chi tiết
+   ========================================================= */
+
+.transition {
+    transition: all 0.2s ease-in-out;
+}
+
+.hover-shadow:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08) !important;
+}
+
+.hover-primary-text:hover {
+    color: #3b5eff !important;
+}
+
+.text-xs {
+    font-size: 0.75rem;
+}
+
+.hero-section {
+    background: radial-gradient(
+        circle at 10% 20%,
+        rgba(238, 246, 255, 1) 0%,
+        rgba(219, 233, 255, 0.6) 90%
+    );
+    padding: 6rem 0;
+    border-bottom: 1px solid #e9ecef;
+}
+
+.search-container {
+    background: white;
+    box-shadow: 0 15px 35px rgba(59, 94, 255, 0.06);
+    border: 1px solid rgba(59, 94, 255, 0.1);
+    border-radius: 1rem;
+    padding: 0.75rem;
+}
+
+.sidebar-filter .card {
+    border: 1px solid #e9ecef;
+    border-radius: 0.75rem;
+}
+
+.sidebar-filter .form-check-input:checked {
+    background-color: #3b5eff;
+    border-color: #3b5eff;
+}
+
+.job-details-hero {
+    background: linear-gradient(
+        135deg,
+        #f8f9fa 0%,
+        #eef3ff 100%
+    );
+    border-bottom: 1px solid #e9ecef;
 }

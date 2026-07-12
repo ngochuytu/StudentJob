@@ -14,7 +14,7 @@ public interface IBaiTuyenDungRepository
 
     BaiTuyenDung? GetApprovedById(int id);
 
-    List<BaiTuyenDung> GetJobsByCriteria(
+    List<BaiTuyenDung> GetByDieuKien(
         string? keyword,
         string? hinhThuc,
         int? nganhNgheId,

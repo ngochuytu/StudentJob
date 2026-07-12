@@ -54,7 +54,7 @@ public class BaiTuyenDungRepository : IBaiTuyenDungRepository
             .Include(b => b.KhuVuc)
             .FirstOrDefault(b => b.PK_IdBaiTuyenDung == id);
     }
-    
+
     public BaiTuyenDung? GetApprovedById(int id)
     {
         return _context.DsBaiTuyenDung
@@ -65,7 +65,8 @@ public class BaiTuyenDungRepository : IBaiTuyenDungRepository
                 b.PK_IdBaiTuyenDung == id &&
                 b.sTrangThaiKiemDuyet == "Đã duyệt");
     }
-    public List<BaiTuyenDung> GetJobsByCriteria(
+
+    public List<BaiTuyenDung> GetByDieuKien(
         string? keyword,
         string? hinhThuc,
         int? nganhNgheId,
@@ -82,17 +83,18 @@ public class BaiTuyenDungRepository : IBaiTuyenDungRepository
 
         if (!string.IsNullOrWhiteSpace(keyword))
         {
-            string normalizedKeyword = keyword.Trim();
+            string trimmedKeyword = keyword.Trim();
 
             query = query.Where(b =>
-                b.sTieuDeCongViec.Contains(normalizedKeyword) ||
-                b.sMoTaCongViec.Contains(normalizedKeyword) ||
-                b.NhaTuyenDung.sTenDoanhNghiep.Contains(normalizedKeyword));
+                b.sTieuDeCongViec.Contains(trimmedKeyword) ||
+                b.sMoTaCongViec.Contains(trimmedKeyword) ||
+                b.NhaTuyenDung.sTenDoanhNghiep.Contains(trimmedKeyword));
         }
 
         if (!string.IsNullOrWhiteSpace(hinhThuc))
         {
-            query = query.Where(b => b.sHinhThucLamViec == hinhThuc);
+            query = query.Where(
+                b => b.sHinhThucLamViec == hinhThuc);
         }
 
         if (nganhNgheId.HasValue)

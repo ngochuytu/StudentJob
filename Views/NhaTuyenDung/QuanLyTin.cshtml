@@ -1,5 +1,5 @@
 @model List<StudentJob.Models.BaiTuyenDung>
-
+@Html.AntiForgeryToken()
 @{
     ViewData["Title"] = "Quản lý tin tuyển dụng";
 
@@ -125,8 +125,6 @@
             </div>
 
             <div class="card-body p-0">
-                @Html.AntiForgeryToken()
-
                 @if (Model.Count == 0)
                 {
                     <div class="text-center py-5 px-3" id="emptyJobState">
@@ -165,9 +163,9 @@
                                 {
                                     string badgeClass = baiTuyenDung.sTrangThaiKiemDuyet switch
                                     {
-                                        "Đã duyệt" => "text-bg-success",
-                                        "Từ chối" => "text-bg-danger",
-                                        _ => "text-bg-warning"
+                                        "Đã duyệt" => "text-success border border-success",
+                                        "Từ chối" => "text-danger border border-danger",
+                                        _ => "text-warning border border-warning"
                                     };
 
                                     bool daHetHan =
@@ -219,7 +217,7 @@
                                         </td>
 
                                         <td>
-                                            <span class="badge rounded-pill @badgeClass">
+                                            <span class="badge @badgeClass px-3 py-1.5 rounded-pill fw-semibold">
                                                 @baiTuyenDung.sTrangThaiKiemDuyet
                                             </span>
                                         </td>

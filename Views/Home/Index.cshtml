@@ -1,8 +1,201 @@
-﻿@{
-    ViewData["Title"] = "Home Page";
+@model List<StudentJob.Models.BaiTuyenDung>
+@{
+    ViewData["Title"] = "StudentJob - Tìm kiếm việc làm bán thời gian & thực tập";
+    var sectors = ViewBag.NganhNghe as List<StudentJob.Models.NganhNghe> ?? new List<StudentJob.Models.NganhNghe>();
+    var locations = ViewBag.KhuVuc as List<StudentJob.Models.KhuVuc> ?? new List<StudentJob.Models.KhuVuc>();
 }
+@if (TempData["ErrorMessage"] is string errorMessage)
+{
+    <div class="container mt-4">
+        <div class="alert alert-warning alert-dismissible fade show"
+             role="alert">
+            <i class="bi bi-exclamation-triangle me-2"></i>
+            @errorMessage
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+            <button type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Đóng">
+            </button>
+        </div>
+    </div>
+}
+@Html.AntiForgeryToken()
+<section class="hero-section text-center position-relative overflow-hidden mb-5">
+    <div class="container position-relative" style="z-index: 2;">
+        <div class="row justify-content-center">
+            <div class="col-lg-8">
+                <h1 class="display-5 fw-extrabold text-primary mb-3">
+                    StudentJob
+                </h1>
+                <p class="fs-5 text-secondary mb-5">
+                    Nền tảng tìm kiếm công việc bán thời gian và thực tập hàng đầu dành cho sinh viên
+                </p>
+
+                <div class="search-container mb-4">
+                    <form id="searchForm" onsubmit="event.preventDefault(); triggerFilter();" class="row g-2 align-items-center">
+                        <div class="col-12 col-md-10">
+                            <div class="input-group">
+                                <span class="input-group-text bg-transparent border-0 text-muted">
+                                    <partial name="_SearchSvg" />
+                                </span>
+                                <input type="text" id="keywordInput" class="form-control border-0 bg-transparent py-2.5" placeholder="Tên công việc, từ khóa hoặc công ty..." />
+                            </div>
+                        </div>
+                        
+                        <div class="col-12 col-md-2">
+                            <button type="submit" class="btn btn-primary w-100 py-2.5 rounded-3 d-flex align-items-center justify-content-center fw-bold gap-2">
+                                <partial name="_SearchBtnSvg" />
+                                <span>Tìm kiếm</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="listings-section py-2 mb-5">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-12 col-lg-3 sidebar-filter">
+                <div class="card p-4 shadow-sm bg-white border mb-4">
+                    <h5 class="fw-bold text-dark mb-4 pb-2 border-bottom">Bộ lọc tìm kiếm</h5>
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-dark small text-uppercase mb-3">Hình thức làm việc</label>
+                        <div class="d-flex flex-column gap-2.5">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="hinhThucRadio" id="hinhThucAll" value="" checked onchange="triggerFilter()">
+                                <label class="form-check-label text-secondary small fw-medium" for="hinhThucAll">
+                                    Tất cả hình thức
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="hinhThucRadio" id="hinhThucPartTime" value="Bán thời gian" onchange="triggerFilter()">
+                                <label class="form-check-label text-secondary small fw-medium" for="hinhThucPartTime">
+                                    Part-time (Bán thời gian)
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="hinhThucRadio" id="hinhThucInternship" value="Thực tập" onchange="triggerFilter()">
+                                <label class="form-check-label text-secondary small fw-medium" for="hinhThucInternship">
+                                    Internship (Thực tập sinh)
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-dark small text-uppercase mb-2">Ngành nghề</label>
+                        <select id="nganhNgheSelect" class="form-select small py-2.5 text-secondary" onchange="triggerFilter()">
+                            <option value="">Tất cả ngành nghề</option>
+                            @foreach (var sector in sectors)
+                            {
+                                <option value="@sector.PK_IdNganhNghe">@sector.sTenLinhVuc</option>
+                            }
+                        </select>
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="form-label fw-bold text-dark small text-uppercase mb-2">Khu vực</label>
+                        <select id="khuVucSelect" class="form-select small py-2.5 text-secondary" onchange="triggerFilter()">
+                            <option value="">Tất cả khu vực</option>
+                            @foreach (var location in locations)
+                            {
+                                <option value="@location.PK_IdKhuVuc">@location.sTenKhuVuc</option>
+                            }
+                        </select>
+                    </div>
+
+                    <button class="btn btn-outline-secondary w-100 rounded-pill py-2.5 small fw-bold" onclick="resetFilters()">
+                        Xóa bộ lọc
+                    </button>
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-9">
+                <div class="d-flex align-items-center justify-content-between mb-4">
+                    <div>
+                        <h4 class="h5 fw-bold text-dark mb-1" id="listingTitle">Việc làm mới nhất</h4>
+                        <p class="text-secondary small mb-0">Tìm thấy <span id="jobCount" class="fw-semibold text-primary">@Model.Count</span> tin tuyển dụng phù hợp</p>
+                    </div>
+                </div>
+
+                <div id="jobsContainer" class="position-relative transition">
+                    <partial name="_DanhSachViecLamPartial" model="Model" />
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        let filterTimeout = null;
+
+        function triggerFilter() {
+            if (filterTimeout) {
+                clearTimeout(filterTimeout);
+            }
+            filterTimeout = setTimeout(fetchFilteredJobs, 200);
+        }
+
+        async function fetchFilteredJobs() {
+            const keyword = document.getElementById('keywordInput').value.trim();
+            const nganhNgheId = document.getElementById('nganhNgheSelect').value;
+            const khuVucId = document.getElementById('khuVucSelect').value;
+            
+            const checkedHinhThuc = document.querySelector('input[name="hinhThucRadio"]:checked');
+            const hinhThuc = checkedHinhThuc ? checkedHinhThuc.value : '';
+
+            const jobsContainer = document.getElementById('jobsContainer');
+            jobsContainer.style.opacity = '0.5';
+
+            try {
+                const params = new URLSearchParams();
+                params.append('keyword', keyword);
+                params.append('hinhThuc', hinhThuc);
+                if (nganhNgheId) params.append('nganhNgheId', nganhNgheId);
+                if (khuVucId) params.append('khuVucId', khuVucId);
+
+                const tokenInput = document.querySelector(
+                'input[name="__RequestVerificationToken"]'
+            );
+
+            const response = await fetch('/viec-lam/api/filter', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'RequestVerificationToken': tokenInput.value
+                },
+                body: params
+            });
+
+                if (!response.ok) {
+                    throw new Error('Lỗi khi lọc dữ liệu: ' + response.statusText);
+                }
+
+                const html = await response.text();
+                jobsContainer.innerHTML = html;
+                
+                const cardsCount = jobsContainer.querySelectorAll('#jobsGrid > div').length;
+                document.getElementById('jobCount').textContent = cardsCount;
+
+            } catch (error) {
+                console.error('Error filtering jobs:', error);
+            } finally {
+                jobsContainer.style.opacity = '1';
+            }
+        }
+
+        function resetFilters() {
+            document.getElementById('keywordInput').value = '';
+            document.getElementById('nganhNgheSelect').value = '';
+            document.getElementById('khuVucSelect').value = '';
+            document.getElementById('hinhThucAll').checked = true;
+            fetchFilteredJobs();
+        }
+    </script>
+}

@@ -11,7 +11,7 @@
             </h1>
         </div>
 
-        <form asp-controller="TaiKhoan" asp-action="DangKy" method="post" id="formDangKy">
+        <form asp-controller="TaiKhoan" asp-action="DangKy" method="post" id="formDangKy" enctype="multipart/form-data">
 
             <div asp-validation-summary="All" class="validation-summary-errors"></div>
 
@@ -46,6 +46,11 @@
                     </select>
                     <span asp-validation-for="sChuyenNganhHoc" class="field-validation-error"></span>
                 </div>
+                <div class="mb-3">
+                    <label asp-for="CvFile" class="form-label fw-semibold text-dark">Tải lên CV cá nhân mặc định (.pdf, .doc, .docx)</label>
+                    <input type="file" asp-for="CvFile" class="form-control py-2" accept=".pdf,.doc,.docx" />
+                    <span asp-validation-for="CvFile" class="field-validation-error text-danger"></span>
+                </div>
             </div>
 
             <div id="fieldsNhaTuyenDung" style="display: none;" class="mb-3">
@@ -58,6 +63,16 @@
                     <label asp-for="sDiaChiVanPhong" class="form-label fw-semibold text-dark">Địa chỉ văn phòng <span class="text-danger">*</span></label>
                     <input asp-for="sDiaChiVanPhong" class="form-control py-2 px-3" placeholder="123 Đường ABC, Quận 1, TP.HCM" />
                     <span asp-validation-for="sDiaChiVanPhong" class="field-validation-error"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="sMoTaTongQuan" class="form-label fw-semibold text-dark">Mô tả tổng quan doanh nghiệp</label>
+                    <textarea asp-for="sMoTaTongQuan" class="form-control py-2 px-3" rows="3" placeholder="Giới thiệu ngắn gọn về công ty của bạn..."></textarea>
+                    <span asp-validation-for="sMoTaTongQuan" class="field-validation-error"></span>
+                </div>
+                <div class="mb-3">
+                    <label asp-for="ImageFile" class="form-label fw-semibold text-dark">Ảnh Logo (.png, .jpg, .jpeg)</label>
+                    <input type="file" asp-for="ImageFile" class="form-control py-2" accept=".png,.jpg,.jpeg" />
+                    <span asp-validation-for="ImageFile" class="field-validation-error text-danger"></span>
                 </div>
             </div>
 

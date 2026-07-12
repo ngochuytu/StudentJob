@@ -1,0 +1,402 @@
+@model StudentJob.Models.ChiTietBaiTuyenDungViewModel
+
+@{
+    var job = Model.BaiTuyenDung;
+
+    ViewData["Title"] =
+        $"{job.sTieuDeCongViec} - {job.NhaTuyenDung.sTenDoanhNghiep}";
+}
+
+<section class="job-details-hero py-5 mb-5">
+    <div class="container">
+        <nav aria-label="breadcrumb"
+             class="mb-4">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item">
+                    <a asp-controller="Home"
+                       asp-action="Index"
+                       class="text-decoration-none hover-primary-text text-secondary small">
+                        Trang chủ
+                    </a>
+                </li>
+
+                <li class="breadcrumb-item active text-dark small"
+                    aria-current="page">
+                    Chi tiết việc làm
+                </li>
+            </ol>
+        </nav>
+
+        <div class="row align-items-center g-4">
+            <div class="col-12 col-md-auto">
+                @if (!string.IsNullOrWhiteSpace(
+                    job.NhaTuyenDung.sDuongDanAnhLogo))
+                {
+                    <img src="@job.NhaTuyenDung.sDuongDanAnhLogo"
+                         alt="@job.NhaTuyenDung.sTenDoanhNghiep Logo"
+                         class="rounded border p-2 bg-white"
+                         style="width: 80px; height: 80px; object-fit: contain;"
+                         onerror="this.src='/images/company-placeholder.png'" />
+                }
+                else
+                {
+                    <div class="rounded border bg-light d-flex align-items-center justify-content-center text-primary fw-bold"
+                         style="width: 80px; height: 80px; font-size: 1.8rem;">
+                        @job.NhaTuyenDung.sTenDoanhNghiep
+                            .Substring(
+                                0,
+                                Math.Min(
+                                    2,
+                                    job.NhaTuyenDung
+                                        .sTenDoanhNghiep.Length))
+                            .ToUpper()
+                    </div>
+                }
+            </div>
+
+            <div class="col-12 col-md">
+                <div class="d-flex flex-wrap gap-2 mb-2">
+                    <span class="badge bg-primary-subtle text-primary fw-bold rounded-pill px-3 py-2 small">
+                        @job.sHinhThucLamViec
+                    </span>
+
+                    <span class="badge bg-light text-secondary border px-3 py-2 rounded-pill small">
+                        @job.NganhNghe.sTenLinhVuc
+                    </span>
+                </div>
+
+                <h1 class="h2 fw-bold text-dark mb-2">
+                    @job.sTieuDeCongViec
+                </h1>
+
+                <div class="d-flex flex-wrap align-items-center gap-3 text-secondary small">
+                    <span class="fw-semibold text-dark">
+                        @job.NhaTuyenDung.sTenDoanhNghiep
+                    </span>
+
+                    <span class="text-muted">|</span>
+
+                    <span>
+                        @job.KhuVuc.sTenKhuVuc
+                    </span>
+
+                    <span class="text-muted">|</span>
+
+                    <span>
+                        Đăng ngày:
+                        @job.dNgayTaoBai.ToString("dd/MM/yyyy")
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="job-details-content pb-5 mb-5">
+    <div class="container">
+        <div class="row g-5">
+            <div class="col-12 col-lg-8">
+                <div class="bg-white p-4 p-md-5 rounded-3 border">
+                    <h2 class="h4 fw-bold text-dark mb-4 pb-2 border-bottom">
+                        Mô tả công việc
+                    </h2>
+
+                    <div class="job-description text-secondary lh-lg mb-5"
+                         style="white-space: pre-line;">
+                        @job.sMoTaCongViec
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(job.sCaLam))
+                    {
+                        <h2 class="h4 fw-bold text-dark mb-4 pb-2 border-bottom">
+                            Ca làm việc
+                        </h2>
+
+                        <div class="text-secondary mb-0">
+                            @job.sCaLam
+                        </div>
+                    }
+                </div>
+            </div>
+
+            <div class="col-12 col-lg-4">
+                <aside class="card p-4 shadow-sm bg-white border mb-4 sticky-lg-top"
+                       style="top: 100px; z-index: 1;">
+                    <h2 class="h5 fw-bold text-dark mb-4 pb-2 border-bottom">
+                        Tổng quan công việc
+                    </h2>
+
+                    <div class="d-flex flex-column gap-4 mb-4">
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center text-primary"
+                                 style="width: 42px; height: 42px; min-width: 42px;">
+                                <i class="bi bi-cash-stack"></i>
+                            </div>
+
+                            <div>
+                                <span class="text-muted small d-block">
+                                    Mức lương
+                                </span>
+
+                                <span class="fw-bold text-success">
+                                    @job.sMucLuong
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center text-primary"
+                                 style="width: 42px; height: 42px; min-width: 42px;">
+                                <i class="bi bi-geo-alt"></i>
+                            </div>
+
+                            <div>
+                                <span class="text-muted small d-block">
+                                    Địa điểm
+                                </span>
+
+                                <span class="fw-bold text-dark">
+                                    @job.KhuVuc.sTenKhuVuc
+                                </span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex align-items-start gap-3">
+                            <div class="rounded-circle bg-light d-flex align-items-center justify-content-center text-primary"
+                                 style="width: 42px; height: 42px; min-width: 42px;">
+                                <i class="bi bi-calendar-event"></i>
+                            </div>
+
+                            <div>
+                                <span class="text-muted small d-block">
+                                    Hạn nộp hồ sơ
+                                </span>
+
+                                <span class="fw-bold @(Model.DaHetHan ? "text-danger" : "text-dark")">
+                                    @job.dHanNopHoSo.ToString("dd/MM/yyyy")
+                                </span>
+
+                                @if (Model.DaHetHan)
+                                {
+                                    <div class="small text-danger fw-semibold mt-1">
+                                        Hết hạn ứng tuyển
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    @if (Model.DaDangNhap && Model.LaSinhVien)
+                    {
+                        @Html.AntiForgeryToken()
+
+                        <button type="button"
+                                id="saveJobButton"
+                                class="btn @(Model.DaLuuTin ? "btn-primary" : "btn-outline-primary") w-100 rounded-pill fw-bold py-3 mb-3"
+                                data-job-id="@job.PK_IdBaiTuyenDung"
+                                data-is-saved="@Model.DaLuuTin.ToString().ToLowerInvariant()">
+                            <span class="save-job-text">
+                                @if (Model.DaLuuTin)
+                                {
+                                    <i class="bi bi-bookmark-check-fill me-2"></i>
+                                    <span>Đã lưu tin</span>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-bookmark me-2"></i>
+                                    <span>Lưu tin</span>
+                                }
+                            </span>
+
+                            <span class="save-job-loading d-none">
+                                <span class="spinner-border spinner-border-sm me-2"
+                                      aria-hidden="true">
+                                </span>
+                                Đang xử lý...
+                            </span>
+                        </button>
+
+                        <div id="saveJobAlert"></div>
+                    }
+
+                    @if (Model.DaHetHan)
+                    {
+                        <button type="button"
+                                class="btn btn-secondary btn-lg w-100 rounded-pill fw-bold py-3"
+                                disabled>
+                            Hết hạn ứng tuyển
+                        </button>
+                    }
+                    else if (!Model.DaDangNhap)
+                    {
+                        <a asp-controller="TaiKhoan"
+                           asp-action="DangNhap"
+                           asp-route-returnUrl="@Context.Request.Path"
+                           class="btn btn-primary btn-lg w-100 rounded-pill fw-bold py-3">
+                            Đăng nhập để ứng tuyển
+                        </a>
+                    }
+                    else if (!Model.LaSinhVien)
+                    {
+                        <div class="alert alert-warning border-0 mb-0">
+                            <i class="bi bi-exclamation-circle me-2"></i>
+                            Chỉ tài khoản Sinh viên mới có thể ứng tuyển.
+                        </div>
+                    }
+                    else if (Model.DaUngTuyen)
+                    {
+                        <div class="alert alert-success border-0 mb-3">
+                            <i class="bi bi-check-circle-fill me-2"></i>
+                            Bạn đã ứng tuyển công việc này.
+                        </div>
+
+                        <a asp-controller="SinhVien"
+                           asp-action="TheoDoiHoSo"
+                           class="btn btn-outline-primary w-100 rounded-pill fw-bold py-3">
+                            Theo dõi hồ sơ
+                        </a>
+                    }
+                    else
+                    {
+                        <button type="button"
+                                class="btn btn-primary btn-lg w-100 rounded-pill fw-bold py-3 shadow-sm hover-shadow transition"
+                                data-bs-toggle="modal"
+                                data-bs-target="#applicationModal">
+                            Ứng tuyển ngay
+                        </button>
+                    }
+                </aside>
+            </div>
+        </div>
+    </div>
+</section>
+
+@if (Model.DaDangNhap &&
+     Model.LaSinhVien &&
+     !Model.DaUngTuyen &&
+     !Model.DaHetHan)
+{
+    <div class="modal fade"
+         id="applicationModal"
+         tabindex="-1"
+         aria-labelledby="applicationModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content border-0 shadow">
+                <div class="modal-header border-0 px-4 px-lg-5 pt-4">
+                    <div>
+                        <span class="text-primary fw-semibold small text-uppercase">
+                            Nộp hồ sơ
+                        </span>
+
+                        <h2 class="modal-title h4 fw-bold mt-1"
+                            id="applicationModalLabel">
+                            @job.sTieuDeCongViec
+                        </h2>
+                    </div>
+
+                    <button type="button"
+                            class="btn-close"
+                            data-bs-dismiss="modal"
+                            aria-label="Đóng">
+                    </button>
+                </div>
+
+                <div class="modal-body px-4 px-lg-5 py-4">
+                    <div id="applicationAlert"></div>
+
+                    <form id="applicationForm"
+                          enctype="multipart/form-data">
+                        @Html.AntiForgeryToken()
+
+                        <input asp-for="UngTuyen.FK_IdBaiTuyenDung"
+                               type="hidden" />
+
+                        @if (Model.CoCVMacDinh)
+                        {
+                            <div class="application-cv-option mb-4">
+                                <div class="form-check">
+                                    <input asp-for="UngTuyen.SuDungCVMacDinh"
+                                           class="form-check-input"
+                                           type="checkbox"
+                                           id="useDefaultCv" />
+
+                                    <label class="form-check-label fw-semibold"
+                                           for="useDefaultCv">
+                                        Sử dụng CV mặc định trong hồ sơ
+                                    </label>
+                                </div>
+
+                                <p class="text-secondary small mb-0 mt-2">
+                                    Bỏ chọn nếu bạn muốn tải lên CV khác.
+                                </p>
+                            </div>
+                        }
+
+                        <div class="mb-4"
+                             id="uploadCvGroup">
+                            <label asp-for="UngTuyen.TepCV"
+                                   class="form-label fw-semibold">
+                                Tải CV lên
+                            </label>
+
+                            <input asp-for="UngTuyen.TepCV"
+                                   class="form-control"
+                                   type="file"
+                                   accept=".pdf,.docx" />
+
+                            <div class="form-text">
+                                Chấp nhận PDF hoặc DOCX, tối đa 5 MB.
+                            </div>
+                        </div>
+
+                        <div>
+                            <label asp-for="UngTuyen.sThuXinViec"
+                                   class="form-label fw-semibold">
+                                Thư xin việc
+                            </label>
+
+                            <textarea asp-for="UngTuyen.sThuXinViec"
+                                      class="form-control"
+                                      rows="6"
+                                      maxlength="3000"
+                                      placeholder="Giới thiệu ngắn gọn về bản thân và lý do bạn phù hợp..."></textarea>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="modal-footer border-0 px-4 px-lg-5 pb-4">
+                    <button type="button"
+                            class="btn btn-light"
+                            data-bs-dismiss="modal">
+                        Hủy
+                    </button>
+
+                    <button type="button"
+                            class="btn btn-primary px-4"
+                            id="submitApplicationButton">
+                        <span class="application-submit-text">
+                            <i class="bi bi-send me-2"></i>
+                            Nộp hồ sơ
+                        </span>
+
+                        <span class="application-submit-loading d-none">
+                            <span class="spinner-border spinner-border-sm me-2"
+                                  aria-hidden="true">
+                            </span>
+                            Đang gửi...
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+@section Scripts {
+    <script src="~/js/ung-tuyen.js"
+            asp-append-version="true"></script>
+
+    <script src="~/js/luu-tin.js"
+            asp-append-version="true"></script>
+}

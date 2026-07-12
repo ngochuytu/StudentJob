@@ -1,0 +1,70 @@
+@model List<StudentJob.Models.BaiTuyenDung>
+
+@if (Model.Count == 0)
+{
+    <div class="text-center py-5 bg-white rounded-3 border">
+        <h4 class="h5 fw-bold text-dark mb-2">Không tìm thấy việc làm phù hợp</h4>
+        <p class="text-secondary mb-0">Thử thay đổi bộ lọc hoặc từ khóa tìm kiếm khác nhé.</p>
+    </div>
+}
+else
+{
+    <div class="row g-4" id="jobsGrid">
+        @foreach (var job in Model)
+        {
+            var detailUrl = $"/viec-lam/{job.PK_IdBaiTuyenDung}";
+            
+            <div class="col-12 col-md-6 col-lg-6">
+                <div class="card h-100 border rounded-3 p-4 shadow-sm hover-shadow transition">
+                    <div class="d-flex align-items-start justify-content-between mb-3">
+                        <div class="d-flex align-items-center gap-3">
+                            @if (!string.IsNullOrEmpty(job.NhaTuyenDung.sDuongDanAnhLogo))
+                            {
+                                <img src="@job.NhaTuyenDung.sDuongDanAnhLogo" alt="@job.NhaTuyenDung.sTenDoanhNghiep Logo" class="rounded border p-1 bg-white" style="width: 54px; height: 54px; object-fit: cover;" />
+                            }
+                            else
+                            {
+                                <div class="rounded border bg-light d-flex align-items-center justify-content-center text-primary fw-bold" style="width: 54px; height: 54px; font-size: 1.2rem;">
+                                    @job.NhaTuyenDung.sTenDoanhNghiep.Substring(0, Math.Min(2, job.NhaTuyenDung.sTenDoanhNghiep.Length)).ToUpper()
+                                </div>
+                            }
+                            <div>
+                                <h6 class="mb-1 text-secondary small fw-semibold">@job.NhaTuyenDung.sTenDoanhNghiep</h6>
+                                <div class="d-flex align-items-center gap-1.5 text-muted small">
+                                    <span class="d-inline-flex align-items-center gap-1">
+                                        @job.KhuVuc.sTenKhuVuc
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <span class="badge bg-primary-subtle text-primary fw-bold rounded-pill px-3 py-1.5 small">
+                            @job.sHinhThucLamViec
+                        </span>
+                    </div>
+
+                    <h5 class="h6 fw-extrabold text-dark mb-3">
+                        <a href="@detailUrl" class="text-decoration-none text-dark hover-primary-text transition">
+                            @job.sTieuDeCongViec
+                        </a>
+                    </h5>
+
+                    <div class="d-flex flex-wrap gap-2 mb-3">
+                        <span class="badge bg-light text-secondary border px-2.5 py-1.5 rounded text-xs">
+                            @job.NganhNghe.sTenLinhVuc
+                        </span>
+                        <span class="badge bg-light text-success border border-success-subtle px-2.5 py-1.5 rounded text-xs fw-semibold">
+                            @job.sMucLuong
+                        </span>
+                    </div>
+
+                    <div class="border-top pt-3 mt-auto d-flex align-items-center justify-content-between text-muted small">
+                        <span>Đăng ngày: @job.dNgayTaoBai.ToString("dd/MM/yyyy")</span>
+                        <a href="@detailUrl" class="btn btn-sm btn-outline-primary rounded-pill px-3 fw-bold">
+                            Xem chi tiết
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}

@@ -22,7 +22,9 @@ public class LuuTinRepository : ILuuTinRepository
                 .ThenInclude(b => b.NganhNghe)
             .Include(l => l.BaiTuyenDung)
                 .ThenInclude(b => b.KhuVuc)
-            .Where(l => l.FK_IdSinhVien == sinhVienId)
+            .Where(l =>
+                l.FK_IdSinhVien == sinhVienId &&
+                l.BaiTuyenDung.sTrangThaiKiemDuyet == "Đã duyệt")
             .OrderByDescending(l => l.dNgayLuu)
             .ToList();
     }
