@@ -119,11 +119,12 @@ INSERT INTO tbl_KhuVuc (sTenKhuVuc) VALUES
 (N'Thanh Xuân, Hà Nội'), (N'Ba Đình, Hà Nội'), (N'Quận Bình Thạnh, TP. Hồ Chí Minh'), (N'Quận 7, TP. Hồ Chí Minh');
 GO
 
+------------ PASS DEFAULT = 12345678 ---------------------
 INSERT INTO tbl_TaiKhoan (sEmail, sMatKhau, sSoDienThoai, FK_IdVaiTro, bTrangThaiHoatDong, dNgayTaoTaiKhoan) VALUES
-('vuquanganh@gmail.com', '12345678', '0912345678', 2, 1, GETDATE()), 
-('phamthanhhuy@gmail.com', '12345678', '0923456789', 2, 1, GETDATE()),
-('tungochuy@gmail.com', '12345678', '0934567890', 2, 1, GETDATE()), 
-('trantrongnghia@gmail.com', '12345678', '0945678901', 2, 1, GETDATE()); 
+('vuquanganh@gmail.com', '$2a$11$jPflYEOsT77oGqDWTMzaUuUzLQo/gJDk.FPJ.TTJMtVOzprctiLZm', '0912345678', 2, 1, GETDATE()), 
+('phamthanhhuy@gmail.com', '$2a$11$jPflYEOsT77oGqDWTMzaUuUzLQo/gJDk.FPJ.TTJMtVOzprctiLZm', '0923456789', 2, 1, GETDATE()),
+('tungochuy@gmail.com', '$2a$11$jPflYEOsT77oGqDWTMzaUuUzLQo/gJDk.FPJ.TTJMtVOzprctiLZm', '0934567890', 2, 1, GETDATE()), 
+('trantrongnghia@gmail.com', '$2a$11$jPflYEOsT77oGqDWTMzaUuUzLQo/gJDk.FPJ.TTJMtVOzprctiLZm', '0945678901', 2, 1, GETDATE()); 
 GO
 
 -- sDuongDanCVMacDinh lưu ở /uploads/cvs/default/cv_${PK_IdSinhVien}.pdf
@@ -136,15 +137,15 @@ INSERT INTO tbl_SinhVien (FK_IdTaiKhoan, sHoTen, sChuyenNganhHoc, sDuongDanCVMac
 GO
 
 INSERT INTO tbl_TaiKhoan (sEmail, sMatKhau, sSoDienThoai, FK_IdVaiTro) VALUES
-('admin@gmail.com', '12345678', '0243380234', 1);
+('admin@gmail.com', '$2a$11$jPflYEOsT77oGqDWTMzaUuUzLQo/gJDk.FPJ.TTJMtVOzprctiLZm', '0243380234', 1);
 GO
 
 INSERT INTO tbl_TaiKhoan (sEmail, sMatKhau, sSoDienThoai, FK_IdVaiTro) VALUES
-('hr.techcorp@gmail.com', '12345678', '0247300123', 3),
-('recruitment.highlands@cafe.com', '12345678', '0287300456', 3),
-('recruitment.fpt@fpt.com', '12345678', '0247300757', 3),
-('jobs.tiki@tiki.vn', '12345678', '0287300123', 3),
-('tuyendung@vng.com.vn', '12345678', '0287300999', 3);
+('hr.techcorp@gmail.com', '$2a$11$jPflYEOsT77oGqDWTMzaUuUzLQo/gJDk.FPJ.TTJMtVOzprctiLZm', '0247300123', 3),
+('recruitment.highlands@cafe.com', '$2a$11$jPflYEOsT77oGqDWTMzaUuUzLQo/gJDk.FPJ.TTJMtVOzprctiLZm', '0287300456', 3),
+('recruitment.fpt@fpt.com', '$2a$11$jPflYEOsT77oGqDWTMzaUuUzLQo/gJDk.FPJ.TTJMtVOzprctiLZm', '0247300757', 3),
+('jobs.tiki@tiki.vn', '$2a$11$jPflYEOsT77oGqDWTMzaUuUzLQo/gJDk.FPJ.TTJMtVOzprctiLZm', '0287300123', 3),
+('tuyendung@vng.com.vn', '$2a$11$jPflYEOsT77oGqDWTMzaUuUzLQo/gJDk.FPJ.TTJMtVOzprctiLZm', '0287300999', 3);
 GO
 
 -- sDuongDanAnhLogo lưu ở /uploads/logos/logo_${IdNhaTuyenDung}.png
