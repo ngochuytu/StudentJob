@@ -29,9 +29,10 @@ public class AdminController : Controller
     {
         var jobs = _baiTuyenDungRepository.GetAll();
 
-        ViewBag.TotalUsers = _taiKhoanRepository.GetAll().Count;
         ViewBag.TotalJobs = jobs.Count;
-        ViewBag.TotalApplications = _hoSoUngTuyenRepository.GetAll().Count;
+        ViewBag.ApprovedJobs = jobs.Count(j => j.sTrangThaiKiemDuyet == "Đã duyệt");
+        ViewBag.PendingJobs = jobs.Count(j => j.sTrangThaiKiemDuyet == "Chờ duyệt");
+        ViewBag.RejectedJobs = jobs.Count(j => j.sTrangThaiKiemDuyet == "Từ chối");
 
         return View(jobs);
     }
@@ -68,43 +69,38 @@ public class AdminController : Controller
     public IActionResult QuanLyTaiKhoan(string? query, string? role, string? status)
     {
         var accounts = _taiKhoanRepository.GetAll();
+
+        ViewBag.TotalUsers = accounts.Count;
+        ViewBag.StudentUsers = accounts.Count(t => t.VaiTro.sTenVaiTro == "Sinh viên");
+        ViewBag.RecruiterUsers = accounts.Count(t => t.VaiTro.sTenVaiTro == "Nhà tuyển dụng");
+        ViewBag.AdminUsers = accounts.Count(t => t.VaiTro.sTenVaiTro == "Admin");
+
+        return View(accounts);
+    }
+
+    [HttpGet("thong-ke")]
+    public IActionResult ThongKe()
+    {
+        var accounts = _taiKhoanRepository.GetAll();
         var jobs = _baiTuyenDungRepository.GetAll();
         var applications = _hoSoUngTuyenRepository.GetAll();
 
-        // if (!string.IsNullOrWhiteSpace(query))
-        // {
-        //     var q = query.ToLower().Trim();
-        //     accounts = accounts.Where(t => 
-        //         t.sEmail.ToLower().Contains(q) || 
-        //         t.sSoDienThoai.Contains(q) ||
-        //         (t.VaiTro.sTenVaiTro == "Sinh viên" && t.SinhVien != null && t.SinhVien.sHoTen.ToLower().Contains(q)) ||
-        //         (t.VaiTro.sTenVaiTro == "Nhà tuyển dụng" && t.NhaTuyenDung != null && t.NhaTuyenDung.sTenDoanhNghiep.ToLower().Contains(q))
-        //     ).ToList();
-        // }
+        ViewBag.TotalUsers = accounts.Count;
+        ViewBag.StudentUsers = accounts.Count(t => t.VaiTro.sTenVaiTro == "Sinh viên");
+        ViewBag.RecruiterUsers = accounts.Count(t => t.VaiTro.sTenVaiTro == "Nhà tuyển dụng");
+        ViewBag.AdminUsers = accounts.Count(t => t.VaiTro.sTenVaiTro == "Admin");
 
-        // if (!string.IsNullOrWhiteSpace(role))
-        // {
-        //     accounts = accounts.Where(t => t.VaiTro.sTenVaiTro == role).ToList();
-        // }
-
-        // if (!string.IsNullOrWhiteSpace(status))
-        // {
-        //     bool isActive = status == "Hoạt động";
-        //     accounts = accounts.Where(t => t.bTrangThaiHoatDong == isActive).ToList();
-        // }
-
-        // if (Request.Headers["X-Requested-With"] == "XMLHttpRequest")
-        // {
-        //     return PartialView("_DanhSachTaiKhoanPartial", accounts);
-        // }
-
-        
-
-        ViewBag.TotalUsers = _taiKhoanRepository.GetAll().Count;
         ViewBag.TotalJobs = jobs.Count;
-        ViewBag.TotalApplications = applications.Count;
+        ViewBag.ApprovedJobs = jobs.Count(j => j.sTrangThaiKiemDuyet == "Đã duyệt");
+        ViewBag.PendingJobs = jobs.Count(j => j.sTrangThaiKiemDuyet == "Chờ duyệt");
+        ViewBag.RejectedJobs = jobs.Count(j => j.sTrangThaiKiemDuyet == "Từ chối");
 
-        return View(accounts);
+        ViewBag.TotalApplications = applications.Count;
+        ViewBag.PendingApplications = applications.Count(a => a.sTrangThaiXetDuyet == "Chờ duyệt");
+        ViewBag.ShortlistedApplications = applications.Count(a => a.sTrangThaiXetDuyet == "Hẹn phỏng vấn");
+        ViewBag.RejectedApplications = applications.Count(a => a.sTrangThaiXetDuyet == "Từ chối");
+
+        return View();
     }
 
     [HttpPost("khoa-tai-khoan")]

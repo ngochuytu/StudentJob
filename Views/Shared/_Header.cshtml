@@ -41,6 +41,14 @@
                                 Quản lý tài khoản
                             </a>
                         </li>
+
+                        <li class="nav-item">
+                            <a class="nav-link fw-medium text-dark px-3 py-2 rounded"
+                               asp-controller="Admin"
+                               asp-action="ThongKe">
+                                Thống kê
+                            </a>
+                        </li>
                     }
                     else if (role == "Sinh viên")
                     {
@@ -155,6 +163,14 @@
                                        asp-controller="Admin"
                                        asp-action="QuanLyTaiKhoan">
                                         Quản lý tài khoản
+                                    </a>
+                                </li>
+
+                                <li>
+                                    <a class="dropdown-item"
+                                       asp-controller="Admin"
+                                       asp-action="ThongKe">
+                                        Thống kê
                                     </a>
                                 </li>
 

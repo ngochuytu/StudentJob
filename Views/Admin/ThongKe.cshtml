@@ -1,0 +1,137 @@
+@{
+    ViewData["Title"] = "Thống kê hệ thống";
+}
+
+<div class="py-5 bg-light" style="min-height: calc(100vh - 70px - 200px);">
+    <div class="container">
+        <div class="card shadow border-0 rounded-3 p-4 p-md-5">
+            <div class="mb-5">
+                <h1 class="h3 fw-extrabold text-dark mb-0">Thống kê hệ thống</h1>
+            </div>
+
+            <div class="mb-5">
+                <h2 class="h5 fw-extrabold text-dark mb-3 pb-2 border-bottom">Tài khoản người dùng</h2>
+                <div class="row g-4">
+                    <div class="col-12 col-md-3">
+                        <div class="card border border rounded-3 h-100">
+                            <div class="card-body p-4">
+                                <span class="text-primary small fw-bold text-uppercase d-block mb-1">Tổng tài khoản</span>
+                                <h3 class="fw-extrabold text-dark mb-0">@ViewBag.TotalUsers</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="card border border rounded-3 h-100">
+                            <div class="card-body p-4">
+                                <span class="text-secondary small fw-bold text-uppercase d-block mb-1">Sinh viên</span>
+                                <h3 class="fw-extrabold text-dark mb-0">@ViewBag.StudentUsers</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="card border border rounded-3 h-100">
+                            <div class="card-body p-4">
+                                <span class="text-secondary small fw-bold text-uppercase d-block mb-1">Nhà tuyển dụng</span>
+                                <h3 class="fw-extrabold text-dark mb-0">@ViewBag.RecruiterUsers</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="card border border rounded-3 h-100">
+                            <div class="card-body p-4">
+                                <span class="text-secondary small fw-bold text-uppercase d-block mb-1">Quản trị viên</span>
+                                <h3 class="fw-extrabold text-dark mb-0">@ViewBag.AdminUsers</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-5">
+                <h2 class="h5 fw-extrabold text-dark mb-3 pb-2 border-bottom">Bài đăng tuyển dụng</h2>
+                <div class="row g-4">
+                    <div class="col-12 col-md-3">
+                        <div class="card border border rounded-3 h-100">
+                            <div class="card-body p-4">
+                                <span class="text-primary small fw-bold text-uppercase d-block mb-1">Tổng bài đăng</span>
+                                <h3 class="fw-extrabold text-dark mb-0">@ViewBag.TotalJobs</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="card border border rounded-3 h-100">
+                            <div class="card-body p-4">
+                                <span class="text-success small fw-bold text-uppercase d-block mb-1">Đã duyệt</span>
+                                <h3 class="fw-extrabold text-success mb-0">@ViewBag.ApprovedJobs</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="card border border rounded-3 h-100">
+                            <div class="card-body p-4">
+                                <span class="text-warning small fw-bold text-uppercase d-block mb-1">Chờ duyệt</span>
+                                <h3 class="fw-extrabold text-warning mb-0">@ViewBag.PendingJobs</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="card border border rounded-3 h-100">
+                            <div class="card-body p-4">
+                                <span class="text-danger small fw-bold text-uppercase d-block mb-1">Từ chối</span>
+                                <h3 class="fw-extrabold text-danger mb-0">@ViewBag.RejectedJobs</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="mb-0">
+                <h2 class="h5 fw-extrabold text-dark mb-3 pb-2 border-bottom">Hồ sơ ứng tuyển</h2>
+                <div class="row g-4">
+                    <div class="col-12 col-md-3">
+                        <div class="card border border rounded-3 h-100">
+                            <div class="card-body p-4">
+                                <span class="text-primary small fw-bold text-uppercase d-block mb-1">Tổng hồ sơ nộp</span>
+                                <h3 class="fw-extrabold text-dark mb-0">@ViewBag.TotalApplications</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="card border border rounded-3 h-100">
+                            <div class="card-body p-4">
+                                <span class="text-warning small fw-bold text-uppercase d-block mb-1">Chờ xét duyệt</span>
+                                <h3 class="fw-extrabold text-warning mb-0">@ViewBag.PendingApplications</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="card border border rounded-3 h-100">
+                            <div class="card-body p-4">
+                                <span class="text-success small fw-bold text-uppercase d-block mb-1">Hẹn phỏng vấn</span>
+                                <h3 class="fw-extrabold text-success mb-0">@ViewBag.ShortlistedApplications</h3>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-12 col-md-3">
+                        <div class="card border border rounded-3 h-100">
+                            <div class="card-body p-4">
+                                <span class="text-danger small fw-bold text-uppercase d-block mb-1">Từ chối</span>
+                                <h3 class="fw-extrabold text-danger mb-0">@ViewBag.RejectedApplications</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>
