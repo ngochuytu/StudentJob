@@ -105,7 +105,7 @@ public class NhaTuyenDungController : Controller
         _baiTuyenDungRepository.Add(baiTuyenDung);
 
         TempData["SuccessMessage"] =
-            "Tạo tin tuyển dụng thành công. Tin đang chờ quản trị viên phê duyệt.";
+            "Tạo tin tuyển dụng thành công. Tin đang chờ quản trị viên phê duyệt";
 
         return RedirectToAction(nameof(QuanLyTin));
     }
@@ -271,7 +271,7 @@ public class NhaTuyenDungController : Controller
             {
                 success = false,
                 message =
-                    "Không thể xóa tin đã có sinh viên ứng tuyển. Bạn nên giữ tin để bảo toàn lịch sử hồ sơ."
+                    "Không thể xóa tin đã có sinh viên ứng tuyển"
             });
         }
 
@@ -284,6 +284,75 @@ public class NhaTuyenDungController : Controller
             data = new
             {
                 id = baiTuyenDung.PK_IdBaiTuyenDung
+            }
+        });
+    }
+
+    [HttpGet("quan-ly-ho-so")]
+    public IActionResult QuanLyHoSo()
+    {
+        var nhaTuyenDung = GetCurrentNhaTuyenDung();
+
+        if (nhaTuyenDung == null)
+        {
+            return RedirectToAction("DangNhap", "TaiKhoan");
+        }
+
+        var danhSachHoSo = _hoSoUngTuyenRepository
+            .GetByNhaTuyenDungId(nhaTuyenDung.PK_IdNhaTuyenDung);
+
+        ViewBag.TenDoanhNghiep = nhaTuyenDung.sTenDoanhNghiep;
+
+        return View(danhSachHoSo);
+    }
+
+    [HttpPost("api/update-trang-thai-ho-so")]
+    [ValidateAntiForgeryToken]
+    public IActionResult UpdateTrangThaiHoSo([FromForm] CapNhatTrangThaiHoSoInputModel model)
+    {
+        var nhaTuyenDung = GetCurrentNhaTuyenDung();
+        if (nhaTuyenDung == null)
+        {
+            return Json(new { success = false, message = "Bạn không có quyền thực hiện hành động này." });
+        }
+
+        if (!ModelState.IsValid)
+        {
+            var errors = string.Join(" ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+            return Json(new { success = false, message = errors });
+        }
+
+        var hoSo = _hoSoUngTuyenRepository.GetById(model.PK_IdHoSoUngTuyen);
+        if (hoSo == null)
+        {
+            return Json(new { success = false, message = "Không tìm thấy hồ sơ ứng tuyển." });
+        }
+
+        if (hoSo.BaiTuyenDung.FK_IdNhaTuyenDung != nhaTuyenDung.PK_IdNhaTuyenDung)
+        {
+            return StatusCode(StatusCodes.Status403Forbidden, new { success = false, message = "Bạn không có quyền cập nhật hồ sơ này." });
+        }
+
+        var allowedStatuses = new[] { "Chờ duyệt", "Hẹn phỏng vấn", "Từ chối" };
+        if (!allowedStatuses.Contains(model.sTrangThaiXetDuyet))
+        {
+            return Json(new { success = false, message = "Trạng thái hồ sơ không hợp lệ." });
+        }
+
+        hoSo.sTrangThaiXetDuyet = model.sTrangThaiXetDuyet;
+        hoSo.sGhiChuPhanHoi = string.IsNullOrWhiteSpace(model.sGhiChuPhanHoi) ? null : model.sGhiChuPhanHoi.Trim();
+
+        _hoSoUngTuyenRepository.Update(hoSo);
+
+        return Json(new
+        {
+            success = true,
+            message = "Cập nhật trạng thái hồ sơ thành công.",
+            data = new
+            {
+                id = hoSo.PK_IdHoSoUngTuyen,
+                status = hoSo.sTrangThaiXetDuyet,
+                feedback = hoSo.sGhiChuPhanHoi
             }
         });
     }

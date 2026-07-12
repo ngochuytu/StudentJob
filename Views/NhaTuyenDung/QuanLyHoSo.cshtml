@@ -1,0 +1,397 @@
+@model List<StudentJob.Models.HoSoUngTuyen>
+@Html.AntiForgeryToken()
+@{
+    ViewData["Title"] = "Quản lý hồ sơ ứng tuyển";
+
+    int tongHoSo = Model.Count;
+    int choDuyet = Model.Count(h => h.sTrangThaiXetDuyet == "Chờ duyệt");
+    int henPhongVan = Model.Count(h => h.sTrangThaiXetDuyet == "Hẹn phỏng vấn");
+    int tuChoi = Model.Count(h => h.sTrangThaiXetDuyet == "Từ chối");
+}
+
+<section class="recruiter-page py-5">
+    <div class="container">
+        <div class="d-flex flex-column justify-content-between gap-3 mb-4">
+            <div>
+                <span class="text-primary fw-semibold text-uppercase small">
+                    Trung tâm nhà tuyển dụng
+                </span>
+
+                <h1 class="h2 fw-bold mb-2">
+                    Quản lý hồ sơ ứng tuyển
+                </h1>
+
+                <p class="text-secondary mb-0">
+                    Theo dõi, xem xét CV và cập nhật trạng thái ứng tuyển của các ứng viên cho doanh nghiệp 
+                    <strong>@ViewBag.TenDoanhNghiep</strong>.
+                </p>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card border-0 shadow-sm recruiter-stat-card h-100">
+                    <div class="card-body p-4">
+                        <p class="text-secondary mb-2">Tổng số hồ sơ</p>
+                        <h2 class="display-6 fw-bold mb-0 text-dark" id="statTotal">@tongHoSo</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card border-0 shadow-sm recruiter-stat-card h-100">
+                    <div class="card-body p-4">
+                        <p class="text-secondary mb-2">Chờ duyệt</p>
+                        <h2 class="display-6 fw-bold mb-0" id="statPending">@choDuyet</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card border-0 shadow-sm recruiter-stat-card h-100">
+                    <div class="card-body p-4">
+                        <p class="text-secondary mb-2">Hẹn phỏng vấn</p>
+                        <h2 class="display-6 fw-bold mb-0" id="statShortlisted">@henPhongVan</h2>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card border-0 shadow-sm recruiter-stat-card h-100">
+                    <div class="card-body p-4">
+                        <p class="text-secondary mb-2">Từ chối</p>
+                        <h2 class="display-6 fw-bold mb-0" id="statRejected">@tuChoi</h2>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card border-0 shadow-sm recruiter-list-card">
+            <div class="card-header bg-white border-0 p-4">
+                <h2 class="h5 fw-bold mb-0">
+                    Danh sách hồ sơ ứng tuyển
+                </h2>
+            </div>
+
+            <div class="card-body p-0">
+                @if (Model.Count == 0)
+                {
+                    <div class="text-center py-5 px-3">
+                        <h3 class="h5 fw-bold">
+                            Chưa có hồ sơ ứng tuyển nào
+                        </h3>
+
+                        <p class="text-secondary mb-0">
+                            Các hồ sơ ứng tuyển của sinh viên gửi tới sẽ xuất hiện tại đây.
+                        </p>
+                    </div>
+                }
+                else
+                {
+                    <div class="table-responsive">
+                        <table class="table align-middle recruiter-job-table mb-0">
+                            <thead>
+                                <tr>
+                                    <th class="ps-4">Sinh viên ứng tuyển</th>
+                                    <th>Vị trí ứng tuyển</th>
+                                    <th>Ngày nộp</th>
+                                    <th>Trạng thái</th>
+                                    <th class="text-end pe-4">Thao tác</th>
+                                </tr>
+                            </thead>
+
+                            <tbody id="applicationTableBody">
+                                @foreach (var hoSo in Model)
+                                {
+                                    string badgeClass = hoSo.sTrangThaiXetDuyet switch
+                                    {
+                                        "Hẹn phỏng vấn" => "border border-success text-success",
+                                        "Từ chối" => "border border-danger text-danger",
+                                        _ => "border border-warning text-warning"
+                                    };
+
+                                    <tr id="row-@hoSo.PK_IdHoSoUngTuyen" class="application-row">
+                                        <td class="ps-4">
+                                            <div class="d-flex flex-column">
+                                                <strong class="text-dark">@hoSo.SinhVien.sHoTen</strong>
+                                                <span class="text-secondary small">@hoSo.SinhVien.sChuyenNganhHoc</span>
+                                            </div>
+                                        </td>
+
+                                        <td>
+                                            <span class="text-dark fw-medium">
+                                                @hoSo.BaiTuyenDung.sTieuDeCongViec
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <span class="text-secondary small">
+                                                @hoSo.dThoiGianNopHoSo.ToString("dd/MM/yyyy")
+                                            </span>
+                                        </td>
+
+                                        <td>
+                                            <span class="status-badge badge rounded-pill @badgeClass">
+                                                @hoSo.sTrangThaiXetDuyet
+                                            </span>
+                                        </td>
+
+                                        <td class="text-end pe-4">
+                                            <button type="button"
+                                                    class="btn btn-sm btn-outline-primary px-3 rounded-pill view-detail-btn fw-semibold"
+                                                    data-id="@hoSo.PK_IdHoSoUngTuyen"
+                                                    data-name="@hoSo.SinhVien.sHoTen"
+                                                    data-email="@hoSo.SinhVien.TaiKhoan.sEmail"
+                                                    data-phone="@hoSo.SinhVien.TaiKhoan.sSoDienThoai"
+                                                    data-job="@hoSo.BaiTuyenDung.sTieuDeCongViec"
+                                                    data-date="@hoSo.dThoiGianNopHoSo.ToString("dd/MM/yyyy HH:mm")"
+                                                    data-cover="@hoSo.sThuXinViec"
+                                                    data-cv="@hoSo.sDuongDanCV"
+                                                    data-status="@hoSo.sTrangThaiXetDuyet"
+                                                    data-feedback="@hoSo.sGhiChuPhanHoi">
+                                                Xem chi tiết
+                                            </button>
+                                        </td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Detail Modal (Includes BM05) -->
+<div class="modal fade" id="detailModal" tabindex="-1" aria-labelledby="detailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content border-0 shadow">
+            <div class="modal-header border-0 px-4 px-lg-5 pt-4">
+                <div>
+                    <span class="text-primary fw-semibold small text-uppercase">Chi tiết ứng tuyển</span>
+                    <h2 class="modal-title h4 fw-bold mt-1" id="detailModalLabel">Thông tin hồ sơ</h2>
+                </div>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Đóng"></button>
+            </div>
+
+            <div class="modal-body px-4 px-lg-5 py-4">
+                <div id="modalAlertContainer"></div>
+
+                <div class="row g-4 mb-4">
+                    <div class="col-12 col-md-6">
+                        <span class="text-secondary small d-block mb-1">Họ tên ứng viên</span>
+                        <strong class="fs-5 text-dark" id="modalCandidateName">-</strong>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <span class="text-secondary small d-block mb-1">Vị trí ứng tuyển</span>
+                        <strong class="fs-5 text-dark" id="modalJobTitle">-</strong>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <span class="text-secondary small d-block mb-1">Email liên hệ</span>
+                        <span class="text-dark" id="modalCandidateEmail">-</span>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <span class="text-secondary small d-block mb-1">Số điện thoại</span>
+                        <span class="text-dark" id="modalCandidatePhone">-</span>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <span class="text-secondary small d-block mb-1">Thời gian nộp</span>
+                        <span class="text-secondary small" id="modalAppliedDate">-</span>
+                    </div>
+
+                    <div class="col-12 col-md-6">
+                        <span class="text-secondary small d-block mb-2">Tệp CV đính kèm</span>
+                        <a id="modalCvLink" href="#" target="_blank" class="btn btn-sm btn-outline-primary px-3 rounded-pill fw-semibold gap-2">
+                            Mở xem CV / Tải xuống
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mb-4">
+                    <span class="text-secondary small d-block mb-2">Thư xin việc</span>
+                    <div class="p-3 bg-light rounded-3 text-secondary" style="white-space: pre-line;" id="modalCoverLetter">
+                        -
+                    </div>
+                </div>
+
+                <hr class="my-4" />
+
+                <!-- Form BM05: Cập nhật trạng thái hồ sơ -->
+                <form id="updateStatusForm">
+                    <input type="hidden" id="modalIdInput" name="PK_IdHoSoUngTuyen" />
+
+                    <h3 class="h5 fw-bold text-dark mb-3">Đánh giá và cập nhật trạng thái hồ sơ</h3>
+
+                    <div class="row g-3">
+                        <div class="col-12 col-md-6">
+                            <label for="modalStatusSelect" class="form-label fw-semibold">Trạng thái hồ sơ <span class="text-danger">*</span></label>
+                            <select id="modalStatusSelect" name="sTrangThaiXetDuyet" class="form-select" required>
+                                <option value="Chờ duyệt">Chờ duyệt</option>
+                                <option value="Hẹn phỏng vấn">Hẹn phỏng vấn</option>
+                                <option value="Từ chối">Từ chối</option>
+                            </select>
+                        </div>
+
+                        <div class="col-12">
+                            <label for="modalFeedbackTextarea" class="form-label fw-semibold">Ghi chú phản hồi</label>
+                            <textarea id="modalFeedbackTextarea" name="sGhiChuPhanHoi" class="form-control" rows="3" maxlength="200" placeholder="Nhập lý do từ chối hoặc thời gian, địa điểm, hình thức phỏng vấn... (Tối đa 200 ký tự)"></textarea>
+                            <div class="form-text text-end">Tối đa 200 ký tự.</div>
+                        </div>
+                    </div>
+
+                    <div class="d-flex justify-content-end gap-2 mt-4">
+                        <button type="button" class="btn btn-light px-4" data-bs-dismiss="modal">Đóng</button>
+                        <button type="submit" class="btn btn-primary px-4">Xác nhận</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const detailButtons = document.querySelectorAll(".view-detail-btn");
+            const modalElement = document.getElementById("detailModal");
+            const modal = new bootstrap.Modal(modalElement);
+
+            detailButtons.forEach(btn => {
+                btn.addEventListener("click", () => {
+                    const id = btn.getAttribute("data-id");
+                    const name = btn.getAttribute("data-name");
+                    const email = btn.getAttribute("data-email");
+                    const phone = btn.getAttribute("data-phone");
+                    const jobTitle = btn.getAttribute("data-job");
+                    const date = btn.getAttribute("data-date");
+                    const coverLetter = btn.getAttribute("data-cover") || "Không có thư xin việc.";
+                    const cvUrl = btn.getAttribute("data-cv");
+                    const status = btn.getAttribute("data-status");
+                    const feedback = btn.getAttribute("data-feedback") || "";
+
+                    // Populate modal fields
+                    document.getElementById("modalCandidateName").textContent = name;
+                    document.getElementById("modalCandidateEmail").textContent = email;
+                    document.getElementById("modalCandidatePhone").textContent = phone;
+                    document.getElementById("modalJobTitle").textContent = jobTitle;
+                    document.getElementById("modalAppliedDate").textContent = date;
+                    document.getElementById("modalCoverLetter").textContent = coverLetter;
+                    
+                    const cvLink = document.getElementById("modalCvLink");
+                    if (cvUrl) {
+                        cvLink.href = cvUrl;
+                        cvLink.style.display = "inline-flex";
+                    } else {
+                        cvLink.style.display = "none";
+                    }
+
+                    document.getElementById("modalIdInput").value = id;
+                    document.getElementById("modalStatusSelect").value = status;
+                    document.getElementById("modalFeedbackTextarea").value = feedback;
+
+                    // Clear previous alerts
+                    document.getElementById("modalAlertContainer").innerHTML = "";
+
+                    modal.show();
+                });
+            });
+
+            // Form submission via Fetch API
+            const form = document.getElementById("updateStatusForm");
+            form.addEventListener("submit", async (e) => {
+                e.preventDefault();
+                
+                const id = document.getElementById("modalIdInput").value;
+                const status = document.getElementById("modalStatusSelect").value;
+                const feedback = document.getElementById("modalFeedbackTextarea").value;
+                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
+
+                const formData = new FormData();
+                formData.append("PK_IdHoSoUngTuyen", id);
+                formData.append("sTrangThaiXetDuyet", status);
+                formData.append("sGhiChuPhanHoi", feedback);
+
+                const alertContainer = document.getElementById("modalAlertContainer");
+                alertContainer.innerHTML = "";
+
+                try {
+                    const response = await fetch("/nha-tuyen-dung/api/update-trang-thai-ho-so", {
+                        method: "POST",
+                        headers: {
+                            "RequestVerificationToken": token
+                        },
+                        body: formData
+                    });
+
+                    const result = await response.json();
+                    if (result.success) {
+                        alertContainer.innerHTML = `<div class="alert alert-success border-0 py-2 small" role="alert">${result.message}</div>`;
+                        
+                        // Update table row info dynamically
+                        const row = document.getElementById(`row-${id}`);
+                        if (row) {
+                            // Update badge text and color class
+                            const badge = row.querySelector(".status-badge");
+                            badge.textContent = status;
+                            badge.className = "status-badge badge rounded-pill " + getBadgeClass(status);
+                            
+                            // Update data attributes on button
+                            const btn = row.querySelector(".view-detail-btn");
+                            btn.setAttribute("data-status", status);
+                            btn.setAttribute("data-feedback", feedback);
+                        }
+
+                        // Update statistics
+                        updateStats();
+
+                        // Close modal after delay
+                        setTimeout(() => {
+                            modal.hide();
+                        }, 1000);
+                    } else {
+                        alertContainer.innerHTML = `<div class="alert alert-danger border-0 py-2 small" role="alert">${result.message}</div>`;
+                    }
+                } catch (err) {
+                    console.error(err);
+                    alertContainer.innerHTML = `<div class="alert alert-danger border-0 py-2 small" role="alert">Có lỗi xảy ra trong quá trình xử lý.</div>`;
+                }
+            });
+
+            function getBadgeClass(status) {
+                switch (status) {
+                    case "Hẹn phỏng vấn": return "border border-success text-success";
+                    case "Từ chối": return "border border-danger text-danger";
+                    default: return "border border-warning text-warning";
+                }
+            }
+
+            function updateStats() {
+                const rows = document.querySelectorAll(".application-row");
+                let total = rows.length;
+                let pending = 0;
+                let shortlisted = 0;
+                let rejected = 0;
+
+                rows.forEach(row => {
+                    const badge = row.querySelector(".status-badge");
+                    if (badge) {
+                        const status = badge.textContent.trim();
+                        if (status === "Chờ duyệt") pending++;
+                        else if (status === "Hẹn phỏng vấn") shortlisted++;
+                        else if (status === "Từ chối") rejected++;
+                    }
+                });
+
+                document.getElementById("statTotal").textContent = total;
+                document.getElementById("statPending").textContent = pending;
+                document.getElementById("statShortlisted").textContent = shortlisted;
+                document.getElementById("statRejected").textContent = rejected;
+            }
+        });
+    </script>
+}
