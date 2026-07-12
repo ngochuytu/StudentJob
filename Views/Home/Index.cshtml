@@ -1,4 +1,4 @@
-@model List<StudentJob.Models.BaiTuyenDung>
+@model StudentJob.Models.PagedResult<StudentJob.Models.BaiTuyenDung>
 @{
     ViewData["Title"] = "StudentJob - Tìm kiếm việc làm bán thời gian & thực tập";
     var sectors = ViewBag.NganhNghe as List<StudentJob.Models.NganhNghe> ?? new List<StudentJob.Models.NganhNghe>();
@@ -102,7 +102,7 @@
                 <div class="d-flex align-items-center justify-content-between mb-4">
                     <div>
                         <h4 class="h5 fw-bold text-dark mb-1" id="listingTitle">Việc làm mới nhất</h4>
-                        <p class="text-secondary small mb-0">Tìm thấy <span id="jobCount" class="fw-semibold text-primary">@Model.Count</span> tin tuyển dụng phù hợp</p>
+                        <p class="text-secondary small mb-0">Tìm thấy <span id="jobCount" class="fw-semibold text-primary">@Model.TotalCount</span> tin tuyển dụng phù hợp</p>
                     </div>
                 </div>
 
@@ -118,8 +118,10 @@
 @section Scripts {
     <script>
         let filterTimeout = null;
+        let currentPage = 1;
 
         function triggerFilter() {
+            currentPage = 1;
             if (filterTimeout) {
                 clearTimeout(filterTimeout);
             }
@@ -130,7 +132,7 @@
             const keyword = document.getElementById('keywordInput').value.trim();
             const nganhNgheId = document.getElementById('nganhNgheSelect').value;
             const khuVucId = document.getElementById('khuVucSelect').value;
-            
+
             const checkedHinhThuc = document.querySelector('input[name="hinhThucRadio"]:checked');
             const hinhThuc = checkedHinhThuc ? checkedHinhThuc.value : '';
 
@@ -143,6 +145,7 @@
                 params.append('hinhThuc', hinhThuc);
                 if (nganhNgheId) params.append('nganhNgheId', nganhNgheId);
                 if (khuVucId) params.append('khuVucId', khuVucId);
+                params.append('pageIndex', currentPage);
 
                 const response = await fetch('/viec-lam/api/filter', {
                     method: 'POST',
@@ -158,9 +161,9 @@
 
                 const html = await response.text();
                 jobsContainer.innerHTML = html;
-                
-                const cardsCount = jobsContainer.querySelectorAll('#jobsGrid > div').length;
-                document.getElementById('jobCount').textContent = cardsCount;
+
+                const meta = document.getElementById('jobsMeta');
+                document.getElementById('jobCount').textContent = meta ? meta.dataset.totalCount : '0';
 
             } catch (error) {
                 console.error('Error filtering jobs:', error);
@@ -169,11 +172,22 @@
             }
         }
 
+        document.getElementById('jobsContainer').addEventListener('click', function (event) {
+            const pageBtn = event.target.closest('.page-link[data-page]');
+            if (!pageBtn) {
+                return;
+            }
+            currentPage = parseInt(pageBtn.dataset.page, 10);
+            fetchFilteredJobs();
+            document.getElementById('jobsContainer').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
         function resetFilters() {
             document.getElementById('keywordInput').value = '';
             document.getElementById('nganhNgheSelect').value = '';
             document.getElementById('khuVucSelect').value = '';
             document.getElementById('hinhThucAll').checked = true;
+            currentPage = 1;
             fetchFilteredJobs();
         }
     </script>

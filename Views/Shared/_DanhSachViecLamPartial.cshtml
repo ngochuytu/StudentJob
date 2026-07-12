@@ -1,6 +1,8 @@
-@model List<StudentJob.Models.BaiTuyenDung>
+@model StudentJob.Models.PagedResult<StudentJob.Models.BaiTuyenDung>
 
-@if (Model.Count == 0)
+<span id="jobsMeta" class="d-none" data-total-count="@Model.TotalCount" data-page-index="@Model.PageIndex"></span>
+
+@if (Model.Items.Count == 0)
 {
     <div class="text-center py-5 bg-white rounded-3 border">
         <h4 class="h5 fw-bold text-dark mb-2">Không tìm thấy việc làm phù hợp</h4>
@@ -10,7 +12,7 @@
 else
 {
     <div class="row g-4" id="jobsGrid">
-        @foreach (var job in Model)
+        @foreach (var job in Model.Items)
         {
             var detailUrl = $"/viec-lam/{job.PK_IdBaiTuyenDung}";
             
@@ -67,4 +69,18 @@ else
             </div>
         }
     </div>
+
+    @if (Model.TotalPages > 1)
+    {
+        <nav aria-label="Phân trang việc làm" class="mt-4">
+            <ul class="pagination justify-content-center" id="jobsPagination">
+                @for (int trang = 1; trang <= Model.TotalPages; trang++)
+                {
+                    <li class="page-item @(trang == Model.PageIndex ? "active" : "")">
+                        <button type="button" class="page-link" data-page="@trang">@trang</button>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
 }

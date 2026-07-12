@@ -8,11 +8,13 @@ public interface IBaiTuyenDungRepository
     List<BaiTuyenDung> GetApprovedJobs();
     List<BaiTuyenDung> GetByNhaTuyenDungId(int nhaTuyenDungId);
     BaiTuyenDung? GetById(int id);
-    List<BaiTuyenDung> GetByDieuKien(
+    PagedResult<BaiTuyenDung> GetByDieuKien(
         string? keyword,
         string? hinhThuc,
         int? nganhNgheId,
-        int? khuVucId
+        int? khuVucId,
+        int pageIndex,
+        int pageSize
     );
     void Add(BaiTuyenDung baiTuyenDung);
     void Update(BaiTuyenDung baiTuyenDung);

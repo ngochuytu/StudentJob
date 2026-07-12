@@ -22,13 +22,15 @@ public class HomeController : Controller
         _khuVucRepository = khuVucRepository;
     }
 
+    private const int SoTinMoiTrang = 8;
+
     [HttpGet("")]
     public IActionResult Index()
     {
-        var jobs = _baiTuyenDungRepository.GetApprovedJobs();
+        var ketQua = _baiTuyenDungRepository.GetByDieuKien(null, null, null, null, 1, SoTinMoiTrang);
         ViewBag.NganhNghe = _nganhNgheRepository.GetAll();
         ViewBag.KhuVuc = _khuVucRepository.GetAll();
-        return View(jobs);
+        return View(ketQua);
     }
 
     [HttpGet("privacy")]

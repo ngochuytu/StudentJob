@@ -55,11 +55,13 @@ public class BaiTuyenDungRepository : IBaiTuyenDungRepository
             .FirstOrDefault(b => b.PK_IdBaiTuyenDung == id);
     }
 
-    public List<BaiTuyenDung> GetByDieuKien(
+    public PagedResult<BaiTuyenDung> GetByDieuKien(
         string? keyword,
         string? hinhThuc,
         int? nganhNgheId,
-        int? khuVucId)
+        int? khuVucId,
+        int pageIndex,
+        int pageSize)
     {
         var query = _context.DsBaiTuyenDung
             .Include(b => b.NhaTuyenDung)
@@ -97,9 +99,23 @@ public class BaiTuyenDungRepository : IBaiTuyenDungRepository
                 b => b.FK_IdKhuVuc == khuVucId.Value);
         }
 
-        return query
-            .OrderByDescending(b => b.dNgayTaoBai)
+        query = query.OrderByDescending(b => b.dNgayTaoBai);
+
+        int totalCount = query.Count();
+        int soTrangHopLe = Math.Max(pageIndex, 1);
+
+        var items = query
+            .Skip((soTrangHopLe - 1) * pageSize)
+            .Take(pageSize)
             .ToList();
+
+        return new PagedResult<BaiTuyenDung>
+        {
+            Items = items,
+            PageIndex = soTrangHopLe,
+            PageSize = pageSize,
+            TotalCount = totalCount
+        };
     }
 
     public void Add(BaiTuyenDung baiTuyenDung)

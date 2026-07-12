@@ -34,11 +34,18 @@ public class ViecLamController : Controller
         return View(job);
     }
 
+    private const int SoTinMoiTrang = 8;
+
     [HttpPost("api/filter")]
-    public IActionResult Filter([FromForm] string? keyword, [FromForm] string? hinhThuc, [FromForm] int? nganhNgheId, [FromForm] int? khuVucId)
+    public IActionResult Filter(
+        [FromForm] string? keyword,
+        [FromForm] string? hinhThuc,
+        [FromForm] int? nganhNgheId,
+        [FromForm] int? khuVucId,
+        [FromForm] int pageIndex = 1)
     {
-        var filteredJobs = _baiTuyenDungRepository.GetByDieuKien(keyword, hinhThuc, nganhNgheId, khuVucId);
-        
-        return PartialView("_DanhSachViecLamPartial", filteredJobs);
+        var ketQua = _baiTuyenDungRepository.GetByDieuKien(keyword, hinhThuc, nganhNgheId, khuVucId, pageIndex, SoTinMoiTrang);
+
+        return PartialView("_DanhSachViecLamPartial", ketQua);
     }
 }

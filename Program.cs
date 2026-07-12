@@ -35,6 +35,12 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 // ===== MVC =====
 builder.Services.AddControllersWithViews();
 
+// ===== Response Compression (giảm băng thông tải trang, tối ưu cho kết nối 4G) =====
+builder.Services.AddResponseCompression(options =>
+{
+    options.EnableForHttps = true;
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -44,6 +50,7 @@ if (!app.Environment.IsDevelopment())
     app.UseHsts();
 }
 
+app.UseResponseCompression();
 app.UseHttpsRedirection();
 app.UseRouting();
 
