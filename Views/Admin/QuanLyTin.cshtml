@@ -10,7 +10,7 @@
                 <h1 class="h3 fw-extrabold text-dark mb-1">Quản lý tin tuyển dụng</h1>
             </div>
 
-            <partial name="_ThongKeAdminPartial" />
+            <partial name="_ThongKeTinPartial" />
 
             <div class="border rounded-3 overflow-hidden">
                 <div class="table-responsive">
@@ -84,6 +84,7 @@
 
                 if (result.success) {
                     const row = buttonElement.closest('tr');
+                    const oldStatus = row.getAttribute('data-status');
                     row.setAttribute('data-status', status);
 
                     const badge = row.querySelector('.status-badge');
@@ -109,6 +110,7 @@
                         `;
                     }
 
+                    updateJobStats(oldStatus, status);
                     showToast(result.message, 'success');
                 } else {
                     showToast(result.message || 'Cập nhật trạng thái thất bại.', 'danger');
@@ -120,6 +122,32 @@
                 container.innerHTML = originalButtons;
             } finally {
                 buttonElement.disabled = false;
+            }
+        }
+
+        function updateJobStats(oldStatus, newStatus) {
+            if (oldStatus === newStatus) return;
+
+            const approvedEl = document.getElementById('statApprovedJobs');
+            const pendingEl = document.getElementById('statPendingJobs');
+            const rejectedEl = document.getElementById('statRejectedJobs');
+
+            if (!approvedEl || !pendingEl || !rejectedEl) return;
+
+            if (oldStatus === 'Đã duyệt') {
+                approvedEl.textContent = Math.max(0, parseInt(approvedEl.textContent) - 1);
+            } else if (oldStatus === 'Chờ duyệt') {
+                pendingEl.textContent = Math.max(0, parseInt(pendingEl.textContent) - 1);
+            } else if (oldStatus === 'Từ chối') {
+                rejectedEl.textContent = Math.max(0, parseInt(rejectedEl.textContent) - 1);
+            }
+
+            if (newStatus === 'Đã duyệt') {
+                approvedEl.textContent = parseInt(approvedEl.textContent) + 1;
+            } else if (newStatus === 'Chờ duyệt') {
+                pendingEl.textContent = parseInt(pendingEl.textContent) + 1;
+            } else if (newStatus === 'Từ chối') {
+                rejectedEl.textContent = parseInt(rejectedEl.textContent) + 1;
             }
         }
 
