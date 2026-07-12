@@ -45,4 +45,11 @@ public class HomeController : Controller
             new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier }
         );
     }
+
+    [HttpGet("loi/403")]
+    public IActionResult TruyCapBiTuChoi()
+    {
+        Response.StatusCode = StatusCodes.Status403Forbidden;
+        return View();
+    }
 }
