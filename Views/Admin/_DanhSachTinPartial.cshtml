@@ -1,0 +1,90 @@
+@model List<StudentJob.Models.BaiTuyenDung>
+
+@foreach (var job in Model)
+{
+    var badgeClass = job.sTrangThaiKiemDuyet switch
+    {
+        "Đã duyệt" => "text-success border border-success",
+        "Từ chối" => "text-danger border border-danger",
+        _ => "text-warning border border-warning"
+    };
+
+    var isExpired = job.dHanNopHoSo < DateOnly.FromDateTime(DateTime.Today);
+
+    <tr id="job-row-@job.PK_IdBaiTuyenDung" data-id="@job.PK_IdBaiTuyenDung" data-title="@job.sTieuDeCongViec" data-status="@job.sTrangThaiKiemDuyet">
+        <td class="py-3 px-3">
+            <div class="d-flex align-items-center gap-2">
+                @if (!string.IsNullOrEmpty(job.NhaTuyenDung.sDuongDanAnhLogo))
+                {
+                    <img src="@job.NhaTuyenDung.sDuongDanAnhLogo" alt="Logo" class="rounded border" style="width: 40px; height: 40px; object-fit: cover;" />
+                }
+                else
+                {
+                    <div class="rounded border bg-light d-flex align-items-center justify-content-center text-secondary fw-bold" style="width: 40px; height: 40px; min-width: 40px;">
+                        @job.NhaTuyenDung.sTenDoanhNghiep.Substring(0, Math.Min(2, job.NhaTuyenDung.sTenDoanhNghiep.Length)).ToUpper()
+                    </div>
+                }
+                <div>
+                    <h6 class="mb-0 fw-bold text-dark small">@job.NhaTuyenDung.sTenDoanhNghiep</h6>
+                    <span class="text-muted small">@job.NhaTuyenDung.sDiaChiVanPhong</span>
+                </div>
+            </div>
+        </td>
+        <td class="py-3 px-3">
+            <div>
+                <h6 class="mb-1 fw-bold text-dark small">@job.sTieuDeCongViec</h6>
+                <div class="d-flex flex-wrap gap-2 align-items-center">
+                    <span class="badge bg-primary-subtle text-primary small px-2 py-1 rounded">@job.sHinhThucLamViec</span>
+                    <span class="text-secondary small">@job.sMucLuong</span>
+                </div>
+            </div>
+        </td>
+        <td class="py-3 px-3 text-secondary small">
+            <div>@job.NganhNghe.sTenLinhVuc</div>
+            <div class="text-muted">@job.KhuVuc.sTenKhuVuc</div>
+        </td>
+        <td class="py-3 px-3 text-secondary small">
+            <span class="@(isExpired ? "text-danger fw-semibold" : "")">
+                @job.dHanNopHoSo.ToString("dd/MM/yyyy")
+            </span>
+            @if (isExpired)
+            {
+                <div class="small text-danger fw-medium mt-0.5">Đã hết hạn</div>
+            }
+        </td>
+        <td class="py-3 px-3">
+            <span class="status-badge badge @badgeClass px-3 py-1.5 rounded-pill fw-semibold">
+                @job.sTrangThaiKiemDuyet
+            </span>
+        </td>
+        <td class="py-3 px-3 text-center">
+            <div class="d-flex justify-content-center gap-2 action-buttons">
+                @if (job.sTrangThaiKiemDuyet == "Chờ duyệt")
+                {
+                    <button class="btn btn-sm btn-success rounded-pill px-3 py-1.5 fw-bold"
+                            onclick="approveJob(@job.PK_IdBaiTuyenDung, this)">
+                        Phê duyệt
+                    </button>
+                    <button class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1.5 fw-bold"
+                            onclick="rejectJob(@job.PK_IdBaiTuyenDung, this)">
+                        Từ chối
+                    </button>
+                }
+                else if (job.sTrangThaiKiemDuyet == "Đã duyệt")
+                {
+                    <button class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1.5 fw-bold"
+                            onclick="rejectJob(@job.PK_IdBaiTuyenDung, this)">
+                        Từ chối
+                    </button>
+                }
+                else if (job.sTrangThaiKiemDuyet == "Từ chối")
+                {
+                    <button class="btn btn-sm btn-success rounded-pill px-3 py-1.5 fw-bold"
+                            onclick="approveJob(@job.PK_IdBaiTuyenDung, this)">
+                        Phê duyệt
+                    </button>
+                }
+            </div>
+        </td>
+    </tr>
+}

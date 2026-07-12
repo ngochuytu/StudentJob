@@ -4,15 +4,10 @@ document.addEventListener("DOMContentLoaded", () => {
     const confirmDeleteButton = document.getElementById("confirmDeleteJobButton");
     const deleteJobTitle = document.getElementById("deleteJobTitle");
     const alertContainer = document.getElementById("deleteAlertContainer");
-    const tokenInput = document.querySelector(
-        'input[name="__RequestVerificationToken"]'
-    );
-
     if (
         !deleteModalElement ||
         !confirmDeleteButton ||
-        !deleteJobTitle ||
-        !tokenInput
+        !deleteJobTitle
     ) {
         return;
     }
@@ -42,7 +37,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     method: "POST",
                     headers: {
-                        RequestVerificationToken: tokenInput.value,
                         Accept: "application/json"
                     }
                 }

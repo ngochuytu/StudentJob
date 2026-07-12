@@ -12,40 +12,7 @@
                 <h1 class="h3 fw-extrabold text-dark mb-1">Quản lý tài khoản</h1>
             </div>
 
-            <div class="row g-4 mb-5">
-                <div class="col-12 col-md-4">
-                    <div class="card border border rounded-3 h-100">
-                        <div class="card-body p-4 d-flex align-items-center justify-content-between">
-                            <div>
-                                <span class="text-primary small fw-bold text-uppercase d-block mb-1">Tổng người dùng</span>
-                                <h3 class="fw-extrabold text-dark mb-0">@ViewBag.TotalUsers</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12 col-md-4">
-                    <div class="card border border rounded-3 h-100">
-                        <div class="card-body p-4 d-flex align-items-center justify-content-between">
-                            <div>
-                                <span class="text-primary small fw-bold text-uppercase d-block mb-1">Bài tuyển dụng</span>
-                                <h3 class="fw-extrabold text-dark mb-0">@ViewBag.TotalJobs</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="col-12 col-md-4">
-                    <div class="card border border rounded-3 h-100">
-                        <div class="card-body p-4 d-flex align-items-center justify-content-between">
-                            <div>
-                                <span class="text-primary small fw-bold text-uppercase d-block mb-1">Hồ sơ ứng tuyển</span>
-                                <h3 class="fw-extrabold text-dark mb-0">@ViewBag.TotalApplications</h3>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            <partial name="_ThongKeAdminPartial" />
 
             <!-- <div class="card border-0 bg-light rounded-3 mb-4">
                 <div class="card-body p-3">

@@ -139,9 +139,11 @@ INSERT INTO tbl_TaiKhoan (sEmail, sMatKhau, sSoDienThoai, FK_IdVaiTro) VALUES
 ('recruitment.highlands@cafe.com', '12345678', '0287300456', 3);
 GO
 
+-- sDuongDanAnhLogo lưu ở /uploads/logos/logo_${IdNhaTuyenDung}.png
+
 INSERT INTO tbl_NhaTuyenDung (FK_IdTaiKhoan, sTenDoanhNghiep, sDuongDanAnhLogo, sDiaChiVanPhong, sMoTaTongQuan) VALUES
-(6, N'Công ty Cổ phần Công nghệ TechCorp', '/uploads/logos/techcorp.png', N'Số 12 Duy Tân, Cầu Giấy, Hà Nội', N'Đơn vị phát triển các giải pháp phần mềm và ứng dụng di động hàng đầu.'),
-(7, N'Chuỗi Cửa hàng Cà phê Highlands Coffee', '/uploads/logos/highlands.png', N'135 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh', N'Thương hiệu chuỗi cửa hàng cà phê và đồ ăn nhanh đại chúng lớn tại Việt Nam.');
+(6, N'Công ty Cổ phần Công nghệ TechCorp', '/uploads/logos/logo_1.png', N'Số 12 Duy Tân, Cầu Giấy, Hà Nội', N'Đơn vị phát triển các giải pháp phần mềm và ứng dụng di động hàng đầu.'),
+(7, N'Chuỗi Cửa hàng Cà phê Highlands Coffee', '/uploads/logos/logo_2.png', N'135 Nguyễn Huệ, Quận 1, TP. Hồ Chí Minh', N'Thương hiệu chuỗi cửa hàng cà phê và đồ ăn nhanh đại chúng lớn tại Việt Nam.');
 GO
 
 INSERT INTO tbl_BaiTuyenDung (FK_IdNhaTuyenDung, sTieuDeCongViec, sHinhThucLamViec, sMoTaCongViec, sCaLam, sMucLuong, FK_IdNganhNghe, FK_IdKhuVuc, dHanNopHoSo, sTrangThaiKiemDuyet) VALUES

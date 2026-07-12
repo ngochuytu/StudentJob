@@ -1,0 +1,150 @@
+@model List<StudentJob.Models.BaiTuyenDung>
+@{
+    ViewData["Title"] = "Quản lý tin tuyển dụng";
+}
+
+<div class="py-5 bg-light" style="min-height: calc(100vh - 70px - 200px);">
+    <div class="container">
+        <div class="card shadow border-0 rounded-3 p-4 p-md-5">
+            <div class="mb-4">
+                <h1 class="h3 fw-extrabold text-dark mb-1">Quản lý tin tuyển dụng</h1>
+            </div>
+
+            <partial name="_ThongKeAdminPartial" />
+
+            <div class="border rounded-3 overflow-hidden">
+                <div class="table-responsive">
+                    <table class="table table-hover align-middle mb-0" id="tableJobs">
+                        <thead class="table-light text-secondary">
+                            <tr>
+                                <th class="py-3 px-3">Nhà tuyển dụng</th>
+                                <th class="py-3 px-3">Tin tuyển dụng</th>
+                                <th class="py-3 px-3">Ngành/Khu vực</th>
+                                <th class="py-3 px-3">Hạn nộp</th>
+                                <th class="py-3 px-3">Trạng thái</th>
+                                <th class="py-3 px-3 text-center">Hành động</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tableBodyJobs">
+                            <partial name="_DanhSachTinPartial" model="Model" />
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="toast-container position-fixed bottom-0 end-0 p-3" style="z-index:999;">
+    <div id="toastNotification" class="toast align-items-center text-white border-0 rounded-3 shadow" role="alert" aria-live="assertive" aria-atomic="true">
+        <div class="d-flex">
+            <div class="toast-body d-flex align-items-center gap-2 py-3">
+                <span id="toastMessage" class="fw-semibold"></span>
+            </div>
+            <button type="button" class="btn-close btn-close-white m-auto me-2" data-bs-dismiss="toast" aria-label="Close"></button>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        async function updateJobStatus(jobId, status, buttonElement) {
+            if (buttonElement.disabled) return;
+            
+            const container = buttonElement.closest('.action-buttons');
+            const originalButtons = container.innerHTML;
+            
+            // Set loading state
+            buttonElement.disabled = true;
+            buttonElement.innerHTML = `<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>`;
+            
+            const otherButtons = container.querySelectorAll('button');
+            otherButtons.forEach(btn => {
+                if (btn !== buttonElement) btn.disabled = true;
+            });
+
+            try {
+                const params = new URLSearchParams();
+                params.append('id', jobId);
+                params.append('status', status);
+
+                const response = await fetch('/admin/duyet-tin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    },
+                    body: params
+                });
+
+                if (!response.ok) {
+                    throw new Error('Lỗi máy chủ: ' + response.statusText);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const row = buttonElement.closest('tr');
+                    row.setAttribute('data-status', status);
+
+                    const badge = row.querySelector('.status-badge');
+                    if (status === 'Đã duyệt') {
+                        badge.className = 'status-badge badge bg-success-subtle text-success border border-success px-3 py-1.5 rounded-pill fw-semibold';
+                        badge.textContent = 'Đã duyệt';
+
+                        container.innerHTML = `
+                            <button class="btn btn-sm btn-outline-danger rounded-pill px-3 py-1.5 fw-bold"
+                                    onclick="rejectJob(${jobId}, this)">
+                                Từ chối
+                            </button>
+                        `;
+                    } else {
+                        badge.className = 'status-badge badge bg-danger-subtle text-danger border border-danger px-3 py-1.5 rounded-pill fw-semibold';
+                        badge.textContent = 'Từ chối';
+
+                        container.innerHTML = `
+                            <button class="btn btn-sm btn-success rounded-pill px-3 py-1.5 fw-bold"
+                                    onclick="approveJob(${jobId}, this)">
+                                Phê duyệt
+                            </button>
+                        `;
+                    }
+
+                    showToast(result.message, 'success');
+                } else {
+                    showToast(result.message || 'Cập nhật trạng thái thất bại.', 'danger');
+                    container.innerHTML = originalButtons;
+                }
+            } catch (error) {
+                console.error('Error updating job status:', error);
+                showToast('Không thể kết nối đến hệ thống. Vui lòng thử lại.', 'danger');
+                container.innerHTML = originalButtons;
+            } finally {
+                buttonElement.disabled = false;
+            }
+        }
+
+        async function rejectJob(jobId, buttonElement) {
+            await updateJobStatus(jobId, 'Từ chối', buttonElement);
+        }
+
+        async function approveJob(jobId, buttonElement) {
+            await updateJobStatus(jobId, 'Đã duyệt', buttonElement);
+        }
+
+        function showToast(message, type) {
+            const toastEl = document.getElementById('toastNotification');
+            const toastMessage = document.getElementById('toastMessage');
+
+            toastMessage.textContent = message;
+
+            if (type === 'success') {
+                toastEl.className = 'toast align-items-center text-white bg-success border-0 rounded-3 shadow';
+            } else {
+                toastEl.className = 'toast align-items-center text-white bg-danger border-0 rounded-3 shadow';
+            }
+
+            const toast = new bootstrap.Toast(toastEl, { delay: 4000 });
+            toast.show();
+        }
+    </script>
+}
