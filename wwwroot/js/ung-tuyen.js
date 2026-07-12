@@ -222,11 +222,6 @@ document.addEventListener("DOMContentLoaded", () => {
         alertContainer.innerHTML = `
             <div class="alert alert-${type} border-0"
                  role="alert">
-                <i class="bi ${
-                    type === "success"
-                        ? "bi-check-circle-fill"
-                        : "bi-exclamation-circle-fill"
-                } me-2"></i>
                 ${escapeHtml(message)}
             </div>
         `;

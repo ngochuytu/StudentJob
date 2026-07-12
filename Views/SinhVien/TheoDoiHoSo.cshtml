@@ -39,9 +39,7 @@
                                 </h2>
                             </div>
 
-                            <div class="student-stat-icon bg-primary-subtle text-primary">
-                                <i class="bi bi-file-earmark-person"></i>
-                            </div>
+                           
                         </div>
                     </div>
                 </div>
@@ -57,11 +55,7 @@
                                     @choDuyet
                                 </h2>
                             </div>
-
-                            <div class="student-stat-icon bg-warning-subtle text-warning">
-                                <i class="bi bi-clock-history"></i>
-                            </div>
-                        </div>
+                                                    </div>
                     </div>
                 </div>
             </div>
@@ -76,11 +70,7 @@
                                     @henPhongVan
                                 </h2>
                             </div>
-
-                            <div class="student-stat-icon bg-success-subtle text-success">
-                                <i class="bi bi-calendar-check"></i>
-                            </div>
-                        </div>
+                                                    </div>
                     </div>
                 </div>
             </div>
@@ -96,9 +86,7 @@
                                 </h2>
                             </div>
 
-                            <div class="student-stat-icon bg-danger-subtle text-danger">
-                                <i class="bi bi-x-circle"></i>
-                            </div>
+                            
                         </div>
                     </div>
                 </div>
@@ -109,9 +97,7 @@
         {
             <div class="card border-0 shadow-sm">
                 <div class="card-body text-center py-5 px-3">
-                    <div class="student-empty-icon mx-auto mb-4">
-                        <i class="bi bi-file-earmark-text"></i>
-                    </div>
+                    
 
                     <h2 class="h5 fw-bold">
                         Bạn chưa nộp hồ sơ nào
@@ -156,23 +142,17 @@
                                                          alt="@hoSo.BaiTuyenDung.NhaTuyenDung.sTenDoanhNghiep"
                                                          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
 
-                                                    <div class="application-logo-fallback"
-                                                         style="display:none;">
-                                                        <i class="bi bi-building"></i>
-                                                    </div>
+                                                    
                                                 }
                                                 else
                                                 {
-                                                    <div class="application-logo-fallback">
-                                                        <i class="bi bi-building"></i>
-                                                    </div>
+                                                    
                                                 }
                                             </div>
 
                                             <div class="flex-grow-1">
                                                 <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
                                                     <span class="badge rounded-pill @badgeClass">
-                                                        <i class="bi @iconClass me-1"></i>
                                                         @hoSo.sTrangThaiXetDuyet
                                                     </span>
 
@@ -192,17 +172,14 @@
 
                                                 <div class="d-flex flex-wrap gap-3 text-secondary small">
                                                     <span>
-                                                        <i class="bi bi-briefcase me-1"></i>
                                                         @hoSo.BaiTuyenDung.sHinhThucLamViec
                                                     </span>
 
                                                     <span>
-                                                        <i class="bi bi-cash-stack me-1"></i>
                                                         @hoSo.BaiTuyenDung.sMucLuong
                                                     </span>
 
                                                     <span>
-                                                        <i class="bi bi-calendar-event me-1"></i>
                                                         Hạn nộp:
                                                         @hoSo.BaiTuyenDung.dHanNopHoSo.ToString("dd/MM/yyyy")
                                                     </span>
@@ -213,11 +190,10 @@
 
                                     <div class="col-12 col-lg-auto">
                                         <div class="d-flex flex-column gap-2 application-action-group">
-                                            <a asp-controller="BaiTuyenDung"
+                                            <a asp-controller="ViecLam"
                                                asp-action="ChiTiet"
                                                asp-route-id="@hoSo.BaiTuyenDung.PK_IdBaiTuyenDung"
                                                class="btn btn-outline-primary">
-                                                <i class="bi bi-eye me-2"></i>
                                                 Xem công việc
                                             </a>
 
@@ -225,7 +201,6 @@
                                                target="_blank"
                                                rel="noopener noreferrer"
                                                class="btn btn-light border">
-                                                <i class="bi bi-file-earmark-person me-2"></i>
                                                 Xem CV đã nộp
                                             </a>
                                         </div>
@@ -236,9 +211,7 @@
                                 {
                                     <div class="application-feedback mt-4">
                                         <div class="d-flex gap-3">
-                                            <div class="application-feedback-icon">
-                                                <i class="bi bi-chat-left-text"></i>
-                                            </div>
+                                            
 
                                             <div>
                                                 <span class="small fw-semibold text-primary d-block mb-1">
@@ -256,9 +229,7 @@
                                 {
                                     <div class="application-feedback mt-4">
                                         <div class="d-flex gap-3">
-                                            <div class="application-feedback-icon">
-                                                <i class="bi bi-hourglass-split"></i>
-                                            </div>
+                                            
 
                                             <div>
                                                 <span class="small fw-semibold text-secondary d-block mb-1">

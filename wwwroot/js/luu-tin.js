@@ -85,7 +85,6 @@ document.addEventListener("DOMContentLoaded", () => {
             saveButton.classList.add("btn-primary");
 
             textContainer.innerHTML = `
-                <i class="bi bi-bookmark-check-fill me-2"></i>
                 <span>Đã lưu tin</span>
             `;
         } else {
@@ -95,7 +94,6 @@ document.addEventListener("DOMContentLoaded", () => {
             );
 
             textContainer.innerHTML = `
-                <i class="bi bi-bookmark me-2"></i>
                 <span>Lưu tin</span>
             `;
         }
@@ -129,11 +127,6 @@ document.addEventListener("DOMContentLoaded", () => {
         alertContainer.innerHTML = `
             <div class="alert alert-${type} border-0 py-2 small"
                  role="alert">
-                <i class="bi ${
-                    type === "success"
-                        ? "bi-check-circle-fill"
-                        : "bi-exclamation-circle-fill"
-                } me-2"></i>
                 ${escapeHtml(message)}
             </div>
         `;
