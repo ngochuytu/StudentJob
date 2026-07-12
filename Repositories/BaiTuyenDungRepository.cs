@@ -54,7 +54,17 @@ public class BaiTuyenDungRepository : IBaiTuyenDungRepository
             .Include(b => b.KhuVuc)
             .FirstOrDefault(b => b.PK_IdBaiTuyenDung == id);
     }
-
+    
+    public BaiTuyenDung? GetApprovedById(int id)
+    {
+        return _context.DsBaiTuyenDung
+            .Include(b => b.NhaTuyenDung)
+            .Include(b => b.NganhNghe)
+            .Include(b => b.KhuVuc)
+            .FirstOrDefault(b =>
+                b.PK_IdBaiTuyenDung == id &&
+                b.sTrangThaiKiemDuyet == "Đã duyệt");
+    }
     public List<BaiTuyenDung> GetJobsByCriteria(
         string? keyword,
         string? hinhThuc,

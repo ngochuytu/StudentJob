@@ -17,6 +17,7 @@ public class AppDbContext : DbContext
     public DbSet<KhuVuc> DsKhuVuc { get; set; }
     public DbSet<BaiTuyenDung> DsBaiTuyenDung { get; set; }
     public DbSet<HoSoUngTuyen> DsHoSoUngTuyen { get; set; }
+    public DbSet<LuuTin> DsLuuTin { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -113,5 +114,27 @@ public class AppDbContext : DbContext
                   .HasForeignKey(e => e.FK_IdBaiTuyenDung)
                   .OnDelete(DeleteBehavior.Restrict);
         });
+
+        modelBuilder.Entity<LuuTin>(entity =>
+            {
+            entity.HasKey(e => e.PK_IdLuuTin);
+
+            entity.HasIndex(e => new
+            {
+                  e.FK_IdSinhVien,
+                  e.FK_IdBaiTuyenDung
+            })
+            .IsUnique();
+
+            entity.HasOne(e => e.SinhVien)
+                  .WithMany()
+                  .HasForeignKey(e => e.FK_IdSinhVien)
+                  .OnDelete(DeleteBehavior.Restrict);
+
+            entity.HasOne(e => e.BaiTuyenDung)
+                  .WithMany()
+                  .HasForeignKey(e => e.FK_IdBaiTuyenDung)
+                  .OnDelete(DeleteBehavior.Restrict);
+            });
     }
 }

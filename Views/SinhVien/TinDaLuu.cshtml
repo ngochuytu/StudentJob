@@ -1,0 +1,180 @@
+@model List<StudentJob.Models.LuuTin>
+
+@{
+    ViewData["Title"] = "Tin đã lưu";
+}
+
+<section class="saved-jobs-page py-5">
+    <div class="container">
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-md-end gap-3 mb-4">
+            <div>
+                <span class="text-primary fw-semibold small text-uppercase">
+                    Việc làm của bạn
+                </span>
+
+                <h1 class="display-6 fw-bold mt-2 mb-2">
+                    Tin đã lưu
+                </h1>
+
+                <p class="text-secondary mb-0">
+                    Quản lý các công việc bạn quan tâm và quay lại ứng tuyển khi sẵn sàng.
+                </p>
+            </div>
+
+            <div class="saved-jobs-count">
+                <i class="bi bi-bookmark-fill text-primary me-2"></i>
+                <strong>@Model.Count</strong>
+                <span class="text-secondary">tin đã lưu</span>
+            </div>
+        </div>
+
+        @Html.AntiForgeryToken()
+
+        <div id="savedJobsAlert"></div>
+
+        @if (Model.Count == 0)
+        {
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center py-5 px-4">
+                    <div class="saved-jobs-empty-icon mb-4">
+                        <i class="bi bi-bookmark"></i>
+                    </div>
+
+                    <h2 class="h4 fw-bold mb-3">
+                        Bạn chưa lưu tin tuyển dụng nào
+                    </h2>
+
+                    <p class="text-secondary mb-4">
+                        Khám phá các công việc phù hợp và lưu lại để xem sau.
+                    </p>
+
+                    <a asp-controller="Home"
+                       asp-action="Index"
+                       class="btn btn-primary px-4 py-2">
+                        <i class="bi bi-search me-2"></i>
+                        Khám phá việc làm
+                    </a>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div id="savedJobsList"
+                 class="row g-4">
+                @foreach (var luuTin in Model)
+                {
+                    var baiTuyenDung = luuTin.BaiTuyenDung;
+                    var nhaTuyenDung = baiTuyenDung.NhaTuyenDung;
+
+                    string logoUrl =
+                        string.IsNullOrWhiteSpace(
+                            nhaTuyenDung.sDuongDanAnhLogo)
+                            ? "/images/company-placeholder.png"
+                            : nhaTuyenDung.sDuongDanAnhLogo;
+
+                    <div class="col-12 col-md-6 col-xl-4 saved-job-item"
+                         data-job-id="@baiTuyenDung.PK_IdBaiTuyenDung">
+                        <article class="card border-0 shadow-sm h-100 saved-job-card">
+                            <div class="card-body p-4">
+                                <div class="d-flex justify-content-between align-items-start gap-3 mb-4">
+                                    <div class="company-logo-wrapper flex-shrink-0">
+                                        <img src="@logoUrl"
+                                             alt="@nhaTuyenDung.sTenDoanhNghiep"
+                                             class="company-logo"
+                                             onerror="this.src='/images/company-placeholder.png'" />
+                                    </div>
+
+                                    <button type="button"
+                                            class="btn btn-light saved-job-remove-button"
+                                            data-job-id="@baiTuyenDung.PK_IdBaiTuyenDung"
+                                            title="Bỏ lưu tin">
+                                        <i class="bi bi-bookmark-x"></i>
+                                    </button>
+                                </div>
+
+                                <div class="d-flex flex-wrap gap-2 mb-3">
+                                    <span class="badge rounded-pill bg-primary-subtle text-primary">
+                                        @baiTuyenDung.sHinhThucLamViec
+                                    </span>
+
+                                    @if (baiTuyenDung.dHanNopHoSo <
+                                         DateOnly.FromDateTime(DateTime.Today))
+                                    {
+                                        <span class="badge rounded-pill bg-danger-subtle text-danger">
+                                            Đã hết hạn
+                                        </span>
+                                    }
+                                </div>
+
+                                <h2 class="h5 fw-bold mb-2 saved-job-title">
+                                    @baiTuyenDung.sTieuDeCongViec
+                                </h2>
+
+                                <p class="text-primary fw-semibold small mb-3">
+                                    @nhaTuyenDung.sTenDoanhNghiep
+                                </p>
+
+                                <div class="text-secondary small mb-4">
+                                    <div class="d-flex gap-2 mb-2">
+                                        <i class="bi bi-geo-alt"></i>
+
+                                        <span>
+                                            @baiTuyenDung.KhuVuc.sTenKhuVuc
+                                        </span>
+                                    </div>
+
+                                    <div class="d-flex gap-2 mb-2">
+                                        <i class="bi bi-briefcase"></i>
+
+                                        <span>
+                                            @baiTuyenDung.NganhNghe.sTenLinhVuc
+                                        </span>
+                                    </div>
+
+                                    <div class="d-flex gap-2">
+                                        <i class="bi bi-calendar-event"></i>
+
+                                        <span>
+                                            Hạn nộp:
+                                            @baiTuyenDung.dHanNopHoSo.ToString("dd/MM/yyyy")
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <div class="saved-job-salary mb-4">
+                                    <span class="text-secondary small d-block mb-1">
+                                        Mức lương
+                                    </span>
+
+                                    <strong>
+                                        @baiTuyenDung.sMucLuong
+                                    </strong>
+                                </div>
+
+                                <a asp-controller="BaiTuyenDung"
+                                   asp-action="ChiTiet"
+                                   asp-route-id="@baiTuyenDung.PK_IdBaiTuyenDung"
+                                   class="btn btn-outline-primary w-100">
+                                    Xem chi tiết
+                                    <i class="bi bi-arrow-right ms-2"></i>
+                                </a>
+                            </div>
+
+                            <div class="card-footer bg-transparent border-0 px-4 pb-4 pt-0">
+                                <span class="text-secondary small">
+                                    <i class="bi bi-bookmark-check me-1"></i>
+                                    Đã lưu ngày @luuTin.dNgayLuu.ToString("dd/MM/yyyy")
+                                </span>
+                            </div>
+                        </article>
+                    </div>
+                }
+            </div>
+        }
+    </div>
+</section>
+
+@section Scripts {
+    <script src="~/js/tin-da-luu.js"
+            asp-append-version="true"></script>
+}

@@ -158,3 +158,60 @@ INSERT INTO tbl_HoSoUngTuyen (FK_IdSinhVien, FK_IdBaiTuyenDung, sDuongDanCV, sTh
 (3, 1, '/uploads/cvs/applied/post_1/cv_3.pdf', N'Em đã học qua môn Lập trình Web nâng cao và muốn trải nghiệm thực tế công việc.', N'Chờ duyệt', NULL, GETDATE()),
 (2, 3, '/uploads/cvs/applied/post_3/cv_2.pdf', N'Em muốn ứng tuyển làm ca tối để kiếm thêm thu nhập trang trải chi phí học tập.', N'Chờ duyệt', NULL, GETDATE());
 GO
+
+-----------------------------------------------------
+-----------------------------------------------------
+-----------------Chỉnh sửa lần 1 --------------------
+-----------------------------------------------------
+-----------------------------------------------------
+-- Đồng nhất ca làm với Model và đặc tả: cho phép để trống
+ALTER TABLE tbl_BaiTuyenDung
+ALTER COLUMN sCaLam NVARCHAR(200) NULL;
+GO
+
+-- Bổ sung ràng buộc trạng thái bài tuyển dụng
+ALTER TABLE tbl_BaiTuyenDung
+ADD CONSTRAINT CHK_TrangThaiKiemDuyet
+CHECK (sTrangThaiKiemDuyet IN
+(
+    N'Chờ duyệt',
+    N'Đã duyệt',
+    N'Từ chối'
+));
+GO
+
+-- Bổ sung ràng buộc trạng thái hồ sơ
+ALTER TABLE tbl_HoSoUngTuyen
+ADD CONSTRAINT CHK_TrangThaiXetDuyet
+CHECK (sTrangThaiXetDuyet IN
+(
+    N'Chờ duyệt',
+    N'Hẹn phỏng vấn',
+    N'Từ chối'
+));
+GO
+
+-- Bảng lưu việc làm
+CREATE TABLE tbl_LuuTin
+(
+    PK_IdLuuTin INT IDENTITY(1,1) NOT NULL,
+    FK_IdSinhVien INT NOT NULL,
+    FK_IdBaiTuyenDung INT NOT NULL,
+    dNgayLuu DATETIME NOT NULL
+        CONSTRAINT DF_tbl_LuuTin_dNgayLuu DEFAULT GETDATE(),
+
+    CONSTRAINT PK_tbl_LuuTin
+        PRIMARY KEY (PK_IdLuuTin),
+
+    CONSTRAINT UQ_tbl_LuuTin_SinhVien_BaiTuyenDung
+        UNIQUE (FK_IdSinhVien, FK_IdBaiTuyenDung),
+
+    CONSTRAINT FK_tbl_LuuTin_SinhVien
+        FOREIGN KEY (FK_IdSinhVien)
+        REFERENCES tbl_SinhVien(PK_IdSinhVien),
+
+    CONSTRAINT FK_tbl_LuuTin_BaiTuyenDung
+        FOREIGN KEY (FK_IdBaiTuyenDung)
+        REFERENCES tbl_BaiTuyenDung(PK_IdBaiTuyenDung)
+);
+GO

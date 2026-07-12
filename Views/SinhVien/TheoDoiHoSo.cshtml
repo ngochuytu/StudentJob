@@ -1,9 +1,282 @@
+@model List<StudentJob.Models.HoSoUngTuyen>
+
 @{
     ViewData["Title"] = "Theo dõi hồ sơ";
+
+    int tongHoSo = Model.Count;
+    int choDuyet = Model.Count(h => h.sTrangThaiXetDuyet == "Chờ duyệt");
+    int henPhongVan = Model.Count(h => h.sTrangThaiXetDuyet == "Hẹn phỏng vấn");
+    int tuChoi = Model.Count(h => h.sTrangThaiXetDuyet == "Từ chối");
 }
 
-<div class="container py-5">
-    <div class="card shadow-sm border-0 rounded-3 p-4">
-        <h1 class="h3 fw-bold text-dark mb-3">Theo dõi hồ sơ</h1>
+<section class="student-application-page py-5">
+    <div class="container">
+        <div class="d-flex flex-column flex-lg-row justify-content-between align-items-lg-center gap-3 mb-4">
+            <div>
+                <span class="text-primary fw-semibold text-uppercase small">
+                    Hồ sơ sinh viên
+                </span>
+
+                <h1 class="h2 fw-bold mb-2">
+                    Theo dõi trạng thái hồ sơ
+                </h1>
+
+                <p class="text-secondary mb-0">
+                    Theo dõi tiến trình xét duyệt các công việc bạn đã ứng tuyển.
+                </p>
+            </div>
+        </div>
+
+        <div class="row g-4 mb-5">
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card border-0 shadow-sm student-stat-card h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="text-secondary mb-2">Tổng hồ sơ</p>
+                                <h2 class="display-6 fw-bold mb-0">
+                                    @tongHoSo
+                                </h2>
+                            </div>
+
+                            <div class="student-stat-icon bg-primary-subtle text-primary">
+                                <i class="bi bi-file-earmark-person"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card border-0 shadow-sm student-stat-card h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="text-secondary mb-2">Chờ duyệt</p>
+                                <h2 class="display-6 fw-bold mb-0">
+                                    @choDuyet
+                                </h2>
+                            </div>
+
+                            <div class="student-stat-icon bg-warning-subtle text-warning">
+                                <i class="bi bi-clock-history"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card border-0 shadow-sm student-stat-card h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="text-secondary mb-2">Hẹn phỏng vấn</p>
+                                <h2 class="display-6 fw-bold mb-0">
+                                    @henPhongVan
+                                </h2>
+                            </div>
+
+                            <div class="student-stat-icon bg-success-subtle text-success">
+                                <i class="bi bi-calendar-check"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-xl-3">
+                <div class="card border-0 shadow-sm student-stat-card h-100">
+                    <div class="card-body p-4">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <p class="text-secondary mb-2">Từ chối</p>
+                                <h2 class="display-6 fw-bold mb-0">
+                                    @tuChoi
+                                </h2>
+                            </div>
+
+                            <div class="student-stat-icon bg-danger-subtle text-danger">
+                                <i class="bi bi-x-circle"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if (Model.Count == 0)
+        {
+            <div class="card border-0 shadow-sm">
+                <div class="card-body text-center py-5 px-3">
+                    <div class="student-empty-icon mx-auto mb-4">
+                        <i class="bi bi-file-earmark-text"></i>
+                    </div>
+
+                    <h2 class="h5 fw-bold">
+                        Bạn chưa nộp hồ sơ nào
+                    </h2>
+
+                    <p class="text-secondary mb-0">
+                        Hãy tìm công việc phù hợp và nộp CV để bắt đầu theo dõi tiến trình ứng tuyển.
+                    </p>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row g-4">
+                @foreach (var hoSo in Model)
+                {
+                    string badgeClass = hoSo.sTrangThaiXetDuyet switch
+                    {
+                        "Hẹn phỏng vấn" => "text-bg-success",
+                        "Từ chối" => "text-bg-danger",
+                        _ => "text-bg-warning"
+                    };
+
+                    string iconClass = hoSo.sTrangThaiXetDuyet switch
+                    {
+                        "Hẹn phỏng vấn" => "bi-calendar-check",
+                        "Từ chối" => "bi-x-circle",
+                        _ => "bi-clock-history"
+                    };
+
+                    <div class="col-12">
+                        <article class="card border-0 shadow-sm application-history-card">
+                            <div class="card-body p-4">
+                                <div class="row g-4 align-items-start">
+                                    <div class="col-12 col-lg">
+                                        <div class="d-flex flex-column flex-md-row gap-4">
+                                            <div class="application-company-logo flex-shrink-0">
+                                                @if (!string.IsNullOrWhiteSpace(
+                                                    hoSo.BaiTuyenDung.NhaTuyenDung.sDuongDanAnhLogo))
+                                                {
+                                                    <img src="@hoSo.BaiTuyenDung.NhaTuyenDung.sDuongDanAnhLogo"
+                                                         alt="@hoSo.BaiTuyenDung.NhaTuyenDung.sTenDoanhNghiep"
+                                                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+
+                                                    <div class="application-logo-fallback"
+                                                         style="display:none;">
+                                                        <i class="bi bi-building"></i>
+                                                    </div>
+                                                }
+                                                else
+                                                {
+                                                    <div class="application-logo-fallback">
+                                                        <i class="bi bi-building"></i>
+                                                    </div>
+                                                }
+                                            </div>
+
+                                            <div class="flex-grow-1">
+                                                <div class="d-flex flex-wrap align-items-center gap-2 mb-2">
+                                                    <span class="badge rounded-pill @badgeClass">
+                                                        <i class="bi @iconClass me-1"></i>
+                                                        @hoSo.sTrangThaiXetDuyet
+                                                    </span>
+
+                                                    <span class="text-secondary small">
+                                                        Nộp lúc
+                                                        @hoSo.dThoiGianNopHoSo.ToString("dd/MM/yyyy HH:mm")
+                                                    </span>
+                                                </div>
+
+                                                <h2 class="h5 fw-bold mb-2">
+                                                    @hoSo.BaiTuyenDung.sTieuDeCongViec
+                                                </h2>
+
+                                                <p class="text-primary fw-semibold mb-3">
+                                                    @hoSo.BaiTuyenDung.NhaTuyenDung.sTenDoanhNghiep
+                                                </p>
+
+                                                <div class="d-flex flex-wrap gap-3 text-secondary small">
+                                                    <span>
+                                                        <i class="bi bi-briefcase me-1"></i>
+                                                        @hoSo.BaiTuyenDung.sHinhThucLamViec
+                                                    </span>
+
+                                                    <span>
+                                                        <i class="bi bi-cash-stack me-1"></i>
+                                                        @hoSo.BaiTuyenDung.sMucLuong
+                                                    </span>
+
+                                                    <span>
+                                                        <i class="bi bi-calendar-event me-1"></i>
+                                                        Hạn nộp:
+                                                        @hoSo.BaiTuyenDung.dHanNopHoSo.ToString("dd/MM/yyyy")
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="col-12 col-lg-auto">
+                                        <div class="d-flex flex-column gap-2 application-action-group">
+                                            <a asp-controller="BaiTuyenDung"
+                                               asp-action="ChiTiet"
+                                               asp-route-id="@hoSo.BaiTuyenDung.PK_IdBaiTuyenDung"
+                                               class="btn btn-outline-primary">
+                                                <i class="bi bi-eye me-2"></i>
+                                                Xem công việc
+                                            </a>
+
+                                            <a href="@hoSo.sDuongDanCV"
+                                               target="_blank"
+                                               rel="noopener noreferrer"
+                                               class="btn btn-light border">
+                                                <i class="bi bi-file-earmark-person me-2"></i>
+                                                Xem CV đã nộp
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                @if (!string.IsNullOrWhiteSpace(hoSo.sGhiChuPhanHoi))
+                                {
+                                    <div class="application-feedback mt-4">
+                                        <div class="d-flex gap-3">
+                                            <div class="application-feedback-icon">
+                                                <i class="bi bi-chat-left-text"></i>
+                                            </div>
+
+                                            <div>
+                                                <span class="small fw-semibold text-primary d-block mb-1">
+                                                    Phản hồi từ nhà tuyển dụng
+                                                </span>
+
+                                                <p class="mb-0 text-secondary">
+                                                    @hoSo.sGhiChuPhanHoi
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <div class="application-feedback mt-4">
+                                        <div class="d-flex gap-3">
+                                            <div class="application-feedback-icon">
+                                                <i class="bi bi-hourglass-split"></i>
+                                            </div>
+
+                                            <div>
+                                                <span class="small fw-semibold text-secondary d-block mb-1">
+                                                    Chưa có phản hồi
+                                                </span>
+
+                                                <p class="mb-0 text-secondary small">
+                                                    Nhà tuyển dụng chưa gửi ghi chú cho hồ sơ này.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                        </article>
+                    </div>
+                }
+            </div>
+        }
     </div>
-</div>
+</section>

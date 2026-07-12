@@ -18,6 +18,7 @@ builder.Services.AddScoped<INganhNgheRepository, NganhNgheRepository>();
 builder.Services.AddScoped<IKhuVucRepository, KhuVucRepository>();
 builder.Services.AddScoped<IBaiTuyenDungRepository, BaiTuyenDungRepository>();
 builder.Services.AddScoped<IHoSoUngTuyenRepository, HoSoUngTuyenRepository>();
+builder.Services.AddScoped<ILuuTinRepository, LuuTinRepository>();
 
 // ===== Cookie Authentication =====
 builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
