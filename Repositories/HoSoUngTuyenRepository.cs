@@ -15,8 +15,8 @@ public class HoSoUngTuyenRepository : IHoSoUngTuyenRepository
 
     public List<HoSoUngTuyen> GetBySinhVienId(int sinhVienId)
     {
-        return _context.DsHoSoUngTuyen
-            .Include(h => h.BaiTuyenDung)
+        return _context
+            .DsHoSoUngTuyen.Include(h => h.BaiTuyenDung)
                 .ThenInclude(b => b.NhaTuyenDung)
             .Where(h => h.FK_IdSinhVien == sinhVienId)
             .OrderByDescending(h => h.dThoiGianNopHoSo)
@@ -25,8 +25,8 @@ public class HoSoUngTuyenRepository : IHoSoUngTuyenRepository
 
     public List<HoSoUngTuyen> GetByBaiTuyenDungId(int baiTuyenDungId)
     {
-        return _context.DsHoSoUngTuyen
-            .Include(h => h.SinhVien)
+        return _context
+            .DsHoSoUngTuyen.Include(h => h.SinhVien)
             .Where(h => h.FK_IdBaiTuyenDung == baiTuyenDungId)
             .OrderByDescending(h => h.dThoiGianNopHoSo)
             .ToList();
@@ -34,8 +34,8 @@ public class HoSoUngTuyenRepository : IHoSoUngTuyenRepository
 
     public List<HoSoUngTuyen> GetByNhaTuyenDungId(int nhaTuyenDungId)
     {
-        return _context.DsHoSoUngTuyen
-            .Include(h => h.SinhVien)
+        return _context
+            .DsHoSoUngTuyen.Include(h => h.SinhVien)
                 .ThenInclude(s => s.TaiKhoan)
             .Include(h => h.BaiTuyenDung)
             .Where(h => h.BaiTuyenDung.FK_IdNhaTuyenDung == nhaTuyenDungId)
@@ -45,8 +45,8 @@ public class HoSoUngTuyenRepository : IHoSoUngTuyenRepository
 
     public HoSoUngTuyen? GetById(int id)
     {
-        return _context.DsHoSoUngTuyen
-            .Include(h => h.SinhVien)
+        return _context
+            .DsHoSoUngTuyen.Include(h => h.SinhVien)
                 .ThenInclude(s => s.TaiKhoan)
             .Include(h => h.BaiTuyenDung)
                 .ThenInclude(b => b.NhaTuyenDung)
@@ -56,14 +56,13 @@ public class HoSoUngTuyenRepository : IHoSoUngTuyenRepository
     public bool HasApplied(int sinhVienId, int baiTuyenDungId)
     {
         return _context.DsHoSoUngTuyen.Any(h =>
-            h.FK_IdSinhVien == sinhVienId &&
-            h.FK_IdBaiTuyenDung == baiTuyenDungId);
+            h.FK_IdSinhVien == sinhVienId && h.FK_IdBaiTuyenDung == baiTuyenDungId
+        );
     }
 
     public bool HasApplicationsForJob(int baiTuyenDungId)
     {
-        return _context.DsHoSoUngTuyen.Any(h =>
-            h.FK_IdBaiTuyenDung == baiTuyenDungId);
+        return _context.DsHoSoUngTuyen.Any(h => h.FK_IdBaiTuyenDung == baiTuyenDungId);
     }
 
     public void Add(HoSoUngTuyen hoSoUngTuyen)

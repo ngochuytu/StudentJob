@@ -15,15 +15,15 @@ public class SinhVienRepository : ISinhVienRepository
 
     public SinhVien? GetByTaiKhoanId(int taiKhoanId)
     {
-        return _context.DsSinhVien
-            .Include(s => s.TaiKhoan)
+        return _context
+            .DsSinhVien.Include(s => s.TaiKhoan)
             .FirstOrDefault(s => s.FK_IdTaiKhoan == taiKhoanId);
     }
 
     public SinhVien? GetById(int id)
     {
-        return _context.DsSinhVien
-            .Include(s => s.TaiKhoan)
+        return _context
+            .DsSinhVien.Include(s => s.TaiKhoan)
             .FirstOrDefault(s => s.PK_IdSinhVien == id);
     }
 

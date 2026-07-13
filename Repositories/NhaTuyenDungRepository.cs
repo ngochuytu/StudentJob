@@ -15,15 +15,15 @@ public class NhaTuyenDungRepository : INhaTuyenDungRepository
 
     public NhaTuyenDung? GetByTaiKhoanId(int taiKhoanId)
     {
-        return _context.DsNhaTuyenDung
-            .Include(n => n.TaiKhoan)
+        return _context
+            .DsNhaTuyenDung.Include(n => n.TaiKhoan)
             .FirstOrDefault(n => n.FK_IdTaiKhoan == taiKhoanId);
     }
 
     public NhaTuyenDung? GetById(int id)
     {
-        return _context.DsNhaTuyenDung
-            .Include(n => n.TaiKhoan)
+        return _context
+            .DsNhaTuyenDung.Include(n => n.TaiKhoan)
             .FirstOrDefault(n => n.PK_IdNhaTuyenDung == id);
     }
 

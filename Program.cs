@@ -7,7 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 // ===== DbContext Registration (Scoped) =====
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
+);
 
 // ===== Repository Registration (Scoped) =====
 builder.Services.AddScoped<IVaiTroRepository, VaiTroRepository>();
@@ -21,7 +22,8 @@ builder.Services.AddScoped<IHoSoUngTuyenRepository, HoSoUngTuyenRepository>();
 builder.Services.AddScoped<ILuuTinRepository, LuuTinRepository>();
 
 // ===== Cookie Authentication =====
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+builder
+    .Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
     .AddCookie(options =>
     {
         options.LoginPath = "/tai-khoan/dang-nhap";
@@ -52,7 +54,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapStaticAssets();
-
 
 app.MapControllers();
 

@@ -21,7 +21,8 @@ public class NhaTuyenDungController : Controller
         IBaiTuyenDungRepository baiTuyenDungRepository,
         IHoSoUngTuyenRepository hoSoUngTuyenRepository,
         INganhNgheRepository nganhNgheRepository,
-        IKhuVucRepository khuVucRepository)
+        IKhuVucRepository khuVucRepository
+    )
     {
         _nhaTuyenDungRepository = nhaTuyenDungRepository;
         _baiTuyenDungRepository = baiTuyenDungRepository;
@@ -40,8 +41,9 @@ public class NhaTuyenDungController : Controller
             return RedirectToAction("DangNhap", "TaiKhoan");
         }
 
-        var danhSachTin = _baiTuyenDungRepository
-            .GetByNhaTuyenDungId(nhaTuyenDung.PK_IdNhaTuyenDung);
+        var danhSachTin = _baiTuyenDungRepository.GetByNhaTuyenDungId(
+            nhaTuyenDung.PK_IdNhaTuyenDung
+        );
 
         ViewBag.TenDoanhNghiep = nhaTuyenDung.sTenDoanhNghiep;
 
@@ -60,10 +62,7 @@ public class NhaTuyenDungController : Controller
 
         LoadDanhMuc();
 
-        return View(new BaiTuyenDungInputModel
-        {
-            dHanNopHoSo = DateTime.Today.AddDays(7)
-        });
+        return View(new BaiTuyenDungInputModel { dHanNopHoSo = DateTime.Today.AddDays(7) });
     }
 
     [HttpPost("tao-tin")]
@@ -91,15 +90,13 @@ public class NhaTuyenDungController : Controller
             sTieuDeCongViec = model.sTieuDeCongViec.Trim(),
             sHinhThucLamViec = model.sHinhThucLamViec.Trim(),
             sMoTaCongViec = model.sMoTaCongViec.Trim(),
-            sCaLam = string.IsNullOrWhiteSpace(model.sCaLam)
-                ? null
-                : model.sCaLam.Trim(),
+            sCaLam = string.IsNullOrWhiteSpace(model.sCaLam) ? null : model.sCaLam.Trim(),
             sMucLuong = model.sMucLuong.Trim(),
             FK_IdNganhNghe = model.FK_IdNganhNghe!.Value,
             FK_IdKhuVuc = model.FK_IdKhuVuc!.Value,
             dHanNopHoSo = DateOnly.FromDateTime(model.dHanNopHoSo!.Value),
             sTrangThaiKiemDuyet = "Chờ duyệt",
-            dNgayTaoBai = DateTime.Now
+            dNgayTaoBai = DateTime.Now,
         };
 
         _baiTuyenDungRepository.Add(baiTuyenDung);
@@ -127,8 +124,7 @@ public class NhaTuyenDungController : Controller
             return NotFound();
         }
 
-        if (baiTuyenDung.FK_IdNhaTuyenDung !=
-            nhaTuyenDung.PK_IdNhaTuyenDung)
+        if (baiTuyenDung.FK_IdNhaTuyenDung != nhaTuyenDung.PK_IdNhaTuyenDung)
         {
             return Forbid();
         }
@@ -142,8 +138,7 @@ public class NhaTuyenDungController : Controller
             sMucLuong = baiTuyenDung.sMucLuong,
             FK_IdNganhNghe = baiTuyenDung.FK_IdNganhNghe,
             FK_IdKhuVuc = baiTuyenDung.FK_IdKhuVuc,
-            dHanNopHoSo = baiTuyenDung.dHanNopHoSo.ToDateTime(
-                TimeOnly.MinValue)
+            dHanNopHoSo = baiTuyenDung.dHanNopHoSo.ToDateTime(TimeOnly.MinValue),
         };
 
         ViewBag.BaiTuyenDungId = baiTuyenDung.PK_IdBaiTuyenDung;
@@ -156,9 +151,7 @@ public class NhaTuyenDungController : Controller
 
     [HttpPost("chinh-sua/{id:int}")]
     [ValidateAntiForgeryToken]
-    public IActionResult ChinhSuaTin(
-        int id,
-        BaiTuyenDungInputModel model)
+    public IActionResult ChinhSuaTin(int id, BaiTuyenDungInputModel model)
     {
         var nhaTuyenDung = GetCurrentNhaTuyenDung();
 
@@ -174,8 +167,7 @@ public class NhaTuyenDungController : Controller
             return NotFound();
         }
 
-        if (baiTuyenDung.FK_IdNhaTuyenDung !=
-            nhaTuyenDung.PK_IdNhaTuyenDung)
+        if (baiTuyenDung.FK_IdNhaTuyenDung != nhaTuyenDung.PK_IdNhaTuyenDung)
         {
             return Forbid();
         }
@@ -185,39 +177,28 @@ public class NhaTuyenDungController : Controller
         if (!ModelState.IsValid)
         {
             ViewBag.BaiTuyenDungId = id;
-            ViewBag.TrangThaiHienTai =
-                baiTuyenDung.sTrangThaiKiemDuyet;
+            ViewBag.TrangThaiHienTai = baiTuyenDung.sTrangThaiKiemDuyet;
 
             LoadDanhMuc();
 
             return View(model);
         }
 
-        baiTuyenDung.sTieuDeCongViec =
-            model.sTieuDeCongViec.Trim();
+        baiTuyenDung.sTieuDeCongViec = model.sTieuDeCongViec.Trim();
 
-        baiTuyenDung.sHinhThucLamViec =
-            model.sHinhThucLamViec.Trim();
+        baiTuyenDung.sHinhThucLamViec = model.sHinhThucLamViec.Trim();
 
-        baiTuyenDung.sMoTaCongViec =
-            model.sMoTaCongViec.Trim();
+        baiTuyenDung.sMoTaCongViec = model.sMoTaCongViec.Trim();
 
-        baiTuyenDung.sCaLam =
-            string.IsNullOrWhiteSpace(model.sCaLam)
-                ? null
-                : model.sCaLam.Trim();
+        baiTuyenDung.sCaLam = string.IsNullOrWhiteSpace(model.sCaLam) ? null : model.sCaLam.Trim();
 
-        baiTuyenDung.sMucLuong =
-            model.sMucLuong.Trim();
+        baiTuyenDung.sMucLuong = model.sMucLuong.Trim();
 
-        baiTuyenDung.FK_IdNganhNghe =
-            model.FK_IdNganhNghe!.Value;
+        baiTuyenDung.FK_IdNganhNghe = model.FK_IdNganhNghe!.Value;
 
-        baiTuyenDung.FK_IdKhuVuc =
-            model.FK_IdKhuVuc!.Value;
+        baiTuyenDung.FK_IdKhuVuc = model.FK_IdKhuVuc!.Value;
 
-        baiTuyenDung.dHanNopHoSo =
-            DateOnly.FromDateTime(model.dHanNopHoSo!.Value);
+        baiTuyenDung.dHanNopHoSo = DateOnly.FromDateTime(model.dHanNopHoSo!.Value);
 
         baiTuyenDung.sTrangThaiKiemDuyet = "Chờ duyệt";
 
@@ -237,55 +218,41 @@ public class NhaTuyenDungController : Controller
 
         if (nhaTuyenDung == null)
         {
-            return Unauthorized(new
-            {
-                success = false,
-                message = "Phiên đăng nhập không hợp lệ."
-            });
+            return Unauthorized(new { success = false, message = "Phiên đăng nhập không hợp lệ." });
         }
 
         var baiTuyenDung = _baiTuyenDungRepository.GetById(id);
 
         if (baiTuyenDung == null)
         {
-            return NotFound(new
-            {
-                success = false,
-                message = "Không tìm thấy tin tuyển dụng."
-            });
+            return NotFound(new { success = false, message = "Không tìm thấy tin tuyển dụng." });
         }
 
-        if (baiTuyenDung.FK_IdNhaTuyenDung !=
-            nhaTuyenDung.PK_IdNhaTuyenDung)
+        if (baiTuyenDung.FK_IdNhaTuyenDung != nhaTuyenDung.PK_IdNhaTuyenDung)
         {
-            return StatusCode(StatusCodes.Status403Forbidden, new
-            {
-                success = false,
-                message = "Bạn không có quyền xóa tin tuyển dụng này."
-            });
+            return StatusCode(
+                StatusCodes.Status403Forbidden,
+                new { success = false, message = "Bạn không có quyền xóa tin tuyển dụng này." }
+            );
         }
 
         if (_hoSoUngTuyenRepository.HasApplicationsForJob(id))
         {
-            return BadRequest(new
-            {
-                success = false,
-                message =
-                    "Không thể xóa tin đã có sinh viên ứng tuyển"
-            });
+            return BadRequest(
+                new { success = false, message = "Không thể xóa tin đã có sinh viên ứng tuyển" }
+            );
         }
 
         _baiTuyenDungRepository.Delete(baiTuyenDung);
 
-        return Json(new
-        {
-            success = true,
-            message = "Xóa tin tuyển dụng thành công.",
-            data = new
+        return Json(
+            new
             {
-                id = baiTuyenDung.PK_IdBaiTuyenDung
+                success = true,
+                message = "Xóa tin tuyển dụng thành công.",
+                data = new { id = baiTuyenDung.PK_IdBaiTuyenDung },
             }
-        });
+        );
     }
 
     [HttpGet("quan-ly-ho-so")]
@@ -298,8 +265,9 @@ public class NhaTuyenDungController : Controller
             return RedirectToAction("DangNhap", "TaiKhoan");
         }
 
-        var danhSachHoSo = _hoSoUngTuyenRepository
-            .GetByNhaTuyenDungId(nhaTuyenDung.PK_IdNhaTuyenDung);
+        var danhSachHoSo = _hoSoUngTuyenRepository.GetByNhaTuyenDungId(
+            nhaTuyenDung.PK_IdNhaTuyenDung
+        );
 
         ViewBag.TenDoanhNghiep = nhaTuyenDung.sTenDoanhNghiep;
 
@@ -313,12 +281,17 @@ public class NhaTuyenDungController : Controller
         var nhaTuyenDung = GetCurrentNhaTuyenDung();
         if (nhaTuyenDung == null)
         {
-            return Json(new { success = false, message = "Bạn không có quyền thực hiện hành động này." });
+            return Json(
+                new { success = false, message = "Bạn không có quyền thực hiện hành động này." }
+            );
         }
 
         if (!ModelState.IsValid)
         {
-            var errors = string.Join(" ", ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage));
+            var errors = string.Join(
+                " ",
+                ModelState.Values.SelectMany(v => v.Errors).Select(e => e.ErrorMessage)
+            );
             return Json(new { success = false, message = errors });
         }
 
@@ -330,7 +303,10 @@ public class NhaTuyenDungController : Controller
 
         if (hoSo.BaiTuyenDung.FK_IdNhaTuyenDung != nhaTuyenDung.PK_IdNhaTuyenDung)
         {
-            return StatusCode(StatusCodes.Status403Forbidden, new { success = false, message = "Bạn không có quyền cập nhật hồ sơ này." });
+            return StatusCode(
+                StatusCodes.Status403Forbidden,
+                new { success = false, message = "Bạn không có quyền cập nhật hồ sơ này." }
+            );
         }
 
         var allowedStatuses = new[] { "Chờ duyệt", "Hẹn phỏng vấn", "Từ chối" };
@@ -340,35 +316,37 @@ public class NhaTuyenDungController : Controller
         }
 
         hoSo.sTrangThaiXetDuyet = model.sTrangThaiXetDuyet;
-        hoSo.sGhiChuPhanHoi = string.IsNullOrWhiteSpace(model.sGhiChuPhanHoi) ? null : model.sGhiChuPhanHoi.Trim();
+        hoSo.sGhiChuPhanHoi = string.IsNullOrWhiteSpace(model.sGhiChuPhanHoi)
+            ? null
+            : model.sGhiChuPhanHoi.Trim();
 
         _hoSoUngTuyenRepository.Update(hoSo);
 
-        return Json(new
-        {
-            success = true,
-            message = "Cập nhật trạng thái hồ sơ thành công.",
-            data = new
+        return Json(
+            new
             {
-                id = hoSo.PK_IdHoSoUngTuyen,
-                status = hoSo.sTrangThaiXetDuyet,
-                feedback = hoSo.sGhiChuPhanHoi
+                success = true,
+                message = "Cập nhật trạng thái hồ sơ thành công.",
+                data = new
+                {
+                    id = hoSo.PK_IdHoSoUngTuyen,
+                    status = hoSo.sTrangThaiXetDuyet,
+                    feedback = hoSo.sGhiChuPhanHoi,
+                },
             }
-        });
+        );
     }
 
     private NhaTuyenDung? GetCurrentNhaTuyenDung()
     {
-        string? taiKhoanIdClaim =
-            User.FindFirstValue(ClaimTypes.NameIdentifier);
+        string? taiKhoanIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
         if (!int.TryParse(taiKhoanIdClaim, out int taiKhoanId))
         {
             return null;
         }
 
-        return _nhaTuyenDungRepository
-            .GetByTaiKhoanId(taiKhoanId);
+        return _nhaTuyenDungRepository.GetByTaiKhoanId(taiKhoanId);
     }
 
     private void LoadDanhMuc()
@@ -377,8 +355,7 @@ public class NhaTuyenDungController : Controller
         ViewBag.DsKhuVuc = _khuVucRepository.GetAll();
     }
 
-    private void ValidateHanNopHoSo(
-        BaiTuyenDungInputModel model)
+    private void ValidateHanNopHoSo(BaiTuyenDungInputModel model)
     {
         if (!model.dHanNopHoSo.HasValue)
         {
@@ -389,7 +366,8 @@ public class NhaTuyenDungController : Controller
         {
             ModelState.AddModelError(
                 nameof(model.dHanNopHoSo),
-                "Hạn nộp hồ sơ không được nhỏ hơn ngày hiện tại.");
+                "Hạn nộp hồ sơ không được nhỏ hơn ngày hiện tại."
+            );
         }
     }
 }

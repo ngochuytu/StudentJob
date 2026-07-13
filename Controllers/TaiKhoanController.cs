@@ -26,7 +26,8 @@ public class TaiKhoanController : Controller
         INhaTuyenDungRepository nhaTuyenDungRepository,
         IVaiTroRepository vaiTroRepository,
         INganhNgheRepository nganhNgheRepository,
-        ILogger<TaiKhoanController> logger)
+        ILogger<TaiKhoanController> logger
+    )
     {
         _taiKhoanRepository = taiKhoanRepository;
         _sinhVienRepository = sinhVienRepository;
@@ -59,13 +60,24 @@ public class TaiKhoanController : Controller
         string diaChiIp = HttpContext.Connection.RemoteIpAddress?.ToString() ?? "unknown";
         var taiKhoan = _taiKhoanRepository.GetByEmail(model.sEmail);
 
-        if (taiKhoan != null && taiKhoan.dThoiGianKhoaToi.HasValue && taiKhoan.dThoiGianKhoaToi.Value > DateTime.Now)
+        if (
+            taiKhoan != null
+            && taiKhoan.dThoiGianKhoaToi.HasValue
+            && taiKhoan.dThoiGianKhoaToi.Value > DateTime.Now
+        )
         {
-            int soPhutConLai = (int)Math.Ceiling((taiKhoan.dThoiGianKhoaToi.Value - DateTime.Now).TotalMinutes);
+            int soPhutConLai = (int)
+                Math.Ceiling((taiKhoan.dThoiGianKhoaToi.Value - DateTime.Now).TotalMinutes);
             _logger.LogWarning(
                 "Đăng nhập bị chặn do tài khoản đang khóa tạm: Email={Email}, IP={Ip}, ConLai={Phut} phút",
-                model.sEmail, diaChiIp, soPhutConLai);
-            ModelState.AddModelError(string.Empty, $"Tài khoản tạm khóa do đăng nhập sai quá số lần cho phép. Vui lòng thử lại sau khoảng {soPhutConLai} phút.");
+                model.sEmail,
+                diaChiIp,
+                soPhutConLai
+            );
+            ModelState.AddModelError(
+                string.Empty,
+                $"Tài khoản tạm khóa do đăng nhập sai quá số lần cho phép. Vui lòng thử lại sau khoảng {soPhutConLai} phút."
+            );
             return View(model);
         }
 
@@ -83,7 +95,11 @@ public class TaiKhoanController : Controller
 
             _logger.LogWarning(
                 "Đăng nhập thất bại: Email={Email}, IP={Ip}, ThoiGian={ThoiGian}, SoLanSai={SoLanSai}",
-                model.sEmail, diaChiIp, DateTime.Now, taiKhoan?.SoLanDangNhapSai ?? 0);
+                model.sEmail,
+                diaChiIp,
+                DateTime.Now,
+                taiKhoan?.SoLanDangNhapSai ?? 0
+            );
 
             ModelState.AddModelError(string.Empty, "Email hoặc mật khẩu không đúng.");
             return View(model);
@@ -91,8 +107,15 @@ public class TaiKhoanController : Controller
 
         if (!taiKhoan.bTrangThaiHoatDong)
         {
-            _logger.LogWarning("Đăng nhập bị từ chối do tài khoản bị khóa vĩnh viễn: Email={Email}, IP={Ip}", model.sEmail, diaChiIp);
-            ModelState.AddModelError(string.Empty, "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên.");
+            _logger.LogWarning(
+                "Đăng nhập bị từ chối do tài khoản bị khóa vĩnh viễn: Email={Email}, IP={Ip}",
+                model.sEmail,
+                diaChiIp
+            );
+            ModelState.AddModelError(
+                string.Empty,
+                "Tài khoản của bạn đã bị khóa. Vui lòng liên hệ quản trị viên."
+            );
             return View(model);
         }
 
@@ -105,7 +128,10 @@ public class TaiKhoanController : Controller
 
         _logger.LogInformation(
             "Đăng nhập thành công: Email={Email}, IP={Ip}, ThoiGian={ThoiGian}",
-            model.sEmail, diaChiIp, DateTime.Now);
+            model.sEmail,
+            diaChiIp,
+            DateTime.Now
+        );
 
         SignInUser(taiKhoan);
 
@@ -153,7 +179,10 @@ public class TaiKhoanController : Controller
                 var ext = Path.GetExtension(model.CvFile.FileName).ToLower();
                 if (!allowedCvExtensions.Contains(ext))
                 {
-                    ModelState.AddModelError("CvFile", "Định dạng file CV không hợp lệ. Chỉ chấp nhận các định dạng: .pdf, .doc, .docx");
+                    ModelState.AddModelError(
+                        "CvFile",
+                        "Định dạng file CV không hợp lệ. Chỉ chấp nhận các định dạng: .pdf, .doc, .docx"
+                    );
                 }
             }
         }
@@ -161,11 +190,17 @@ public class TaiKhoanController : Controller
         {
             if (string.IsNullOrWhiteSpace(model.sTenDoanhNghiep))
             {
-                ModelState.AddModelError("sTenDoanhNghiep", "Tên doanh nghiệp không được để trống.");
+                ModelState.AddModelError(
+                    "sTenDoanhNghiep",
+                    "Tên doanh nghiệp không được để trống."
+                );
             }
             if (string.IsNullOrWhiteSpace(model.sDiaChiVanPhong))
             {
-                ModelState.AddModelError("sDiaChiVanPhong", "Địa chỉ văn phòng không được để trống.");
+                ModelState.AddModelError(
+                    "sDiaChiVanPhong",
+                    "Địa chỉ văn phòng không được để trống."
+                );
             }
             if (model.ImageFile != null && model.ImageFile.Length > 0)
             {
@@ -173,7 +208,10 @@ public class TaiKhoanController : Controller
                 var ext = Path.GetExtension(model.ImageFile.FileName).ToLower();
                 if (!allowedImgExtensions.Contains(ext))
                 {
-                    ModelState.AddModelError("ImageFile", "Định dạng ảnh logo không hợp lệ. Chỉ chấp nhận: .png, .jpg, .jpeg, .gif");
+                    ModelState.AddModelError(
+                        "ImageFile",
+                        "Định dạng ảnh logo không hợp lệ. Chỉ chấp nhận: .png, .jpg, .jpeg, .gif"
+                    );
                 }
             }
         }
@@ -196,7 +234,10 @@ public class TaiKhoanController : Controller
         var vaiTro = _vaiTroRepository.GetAll().FirstOrDefault(v => v.sTenVaiTro == tenVaiTro);
         if (vaiTro == null)
         {
-            ModelState.AddModelError(string.Empty, "Lỗi hệ thống: không tìm thấy vai trò. Vui lòng liên hệ quản trị viên.");
+            ModelState.AddModelError(
+                string.Empty,
+                "Lỗi hệ thống: không tìm thấy vai trò. Vui lòng liên hệ quản trị viên."
+            );
             ViewBag.DsNganhNghe = _nganhNgheRepository.GetAll();
             return View(model);
         }
@@ -208,7 +249,7 @@ public class TaiKhoanController : Controller
             sSoDienThoai = model.sSoDienThoai,
             FK_IdVaiTro = vaiTro.PK_IdVaiTro,
             bTrangThaiHoatDong = true,
-            dNgayTaoTaiKhoan = DateTime.Now
+            dNgayTaoTaiKhoan = DateTime.Now,
         };
         _taiKhoanRepository.Add(taiKhoan);
 
@@ -218,13 +259,19 @@ public class TaiKhoanController : Controller
             {
                 FK_IdTaiKhoan = taiKhoan.PK_IdTaiKhoan,
                 sHoTen = model.sHoTen!,
-                sChuyenNganhHoc = model.sChuyenNganhHoc!
+                sChuyenNganhHoc = model.sChuyenNganhHoc!,
             };
             _sinhVienRepository.Add(sinhVien);
 
             if (model.CvFile != null && model.CvFile.Length > 0)
             {
-                var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "cvs", "default");
+                var uploadDir = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot",
+                    "uploads",
+                    "cvs",
+                    "default"
+                );
                 if (!Directory.Exists(uploadDir))
                 {
                     Directory.CreateDirectory(uploadDir);
@@ -250,13 +297,18 @@ public class TaiKhoanController : Controller
                 FK_IdTaiKhoan = taiKhoan.PK_IdTaiKhoan,
                 sTenDoanhNghiep = model.sTenDoanhNghiep!,
                 sDiaChiVanPhong = model.sDiaChiVanPhong!,
-                sMoTaTongQuan = model.sMoTaTongQuan
+                sMoTaTongQuan = model.sMoTaTongQuan,
             };
             _nhaTuyenDungRepository.Add(nhaTuyenDung);
 
             if (model.ImageFile != null && model.ImageFile.Length > 0)
             {
-                var uploadDir = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "uploads", "logos");
+                var uploadDir = Path.Combine(
+                    Directory.GetCurrentDirectory(),
+                    "wwwroot",
+                    "uploads",
+                    "logos"
+                );
                 if (!Directory.Exists(uploadDir))
                 {
                     Directory.CreateDirectory(uploadDir);
@@ -287,7 +339,11 @@ public class TaiKhoanController : Controller
     public IActionResult DangXuat()
     {
         string? email = User.FindFirstValue(ClaimTypes.Email);
-        _logger.LogInformation("Đăng xuất: Email={Email}, IP={Ip}", email, HttpContext.Connection.RemoteIpAddress?.ToString());
+        _logger.LogInformation(
+            "Đăng xuất: Email={Email}, IP={Ip}",
+            email,
+            HttpContext.Connection.RemoteIpAddress?.ToString()
+        );
         HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme).Wait();
         return RedirectToAction("Index", "Home");
     }
@@ -298,19 +354,25 @@ public class TaiKhoanController : Controller
         {
             new Claim(ClaimTypes.NameIdentifier, taiKhoan.PK_IdTaiKhoan.ToString()),
             new Claim(ClaimTypes.Email, taiKhoan.sEmail),
-            new Claim(ClaimTypes.Role, taiKhoan.VaiTro.sTenVaiTro)
+            new Claim(ClaimTypes.Role, taiKhoan.VaiTro.sTenVaiTro),
         };
 
-        var identity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+        var identity = new ClaimsIdentity(
+            claims,
+            CookieAuthenticationDefaults.AuthenticationScheme
+        );
         var principal = new ClaimsPrincipal(identity);
 
-        HttpContext.SignInAsync(
-            CookieAuthenticationDefaults.AuthenticationScheme,
-            principal,
-            new AuthenticationProperties
-            {
-                IsPersistent = true,
-                ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7)
-            }).Wait();
+        HttpContext
+            .SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                principal,
+                new AuthenticationProperties
+                {
+                    IsPersistent = true,
+                    ExpiresUtc = DateTimeOffset.UtcNow.AddDays(7),
+                }
+            )
+            .Wait();
     }
 }

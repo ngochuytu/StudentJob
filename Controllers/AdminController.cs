@@ -1,10 +1,10 @@
 namespace StudentJob.Controllers;
 
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using StudentJob.Repositories;
 using StudentJob.Models;
-using System.Security.Claims;
+using StudentJob.Repositories;
 
 [Route("admin")]
 [Authorize(Roles = "Admin")]
@@ -17,7 +17,8 @@ public class AdminController : Controller
     public AdminController(
         ITaiKhoanRepository taiKhoanRepository,
         IBaiTuyenDungRepository baiTuyenDungRepository,
-        IHoSoUngTuyenRepository hoSoUngTuyenRepository)
+        IHoSoUngTuyenRepository hoSoUngTuyenRepository
+    )
     {
         _taiKhoanRepository = taiKhoanRepository;
         _baiTuyenDungRepository = baiTuyenDungRepository;
@@ -54,15 +55,19 @@ public class AdminController : Controller
         job.sTrangThaiKiemDuyet = status;
         _baiTuyenDungRepository.Update(job);
 
-        string message = status == "Đã duyệt" 
-            ? "Phê duyệt tin tuyển dụng thành công" 
-            : "Từ chối tin tuyển dụng thành công";
+        string message =
+            status == "Đã duyệt"
+                ? "Phê duyệt tin tuyển dụng thành công"
+                : "Từ chối tin tuyển dụng thành công";
 
-        return Json(new {
-            success = true,
-            message = message,
-            data = new { status = status }
-        });
+        return Json(
+            new
+            {
+                success = true,
+                message = message,
+                data = new { status = status },
+            }
+        );
     }
 
     [HttpGet("quan-ly-tai-khoan")]
@@ -97,7 +102,9 @@ public class AdminController : Controller
 
         ViewBag.TotalApplications = applications.Count;
         ViewBag.PendingApplications = applications.Count(a => a.sTrangThaiXetDuyet == "Chờ duyệt");
-        ViewBag.ShortlistedApplications = applications.Count(a => a.sTrangThaiXetDuyet == "Hẹn phỏng vấn");
+        ViewBag.ShortlistedApplications = applications.Count(a =>
+            a.sTrangThaiXetDuyet == "Hẹn phỏng vấn"
+        );
         ViewBag.RejectedApplications = applications.Count(a => a.sTrangThaiXetDuyet == "Từ chối");
 
         return View();
@@ -113,17 +120,26 @@ public class AdminController : Controller
         }
 
         var currentUserIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        if (currentUserIdClaim != null && int.TryParse(currentUserIdClaim, out int currentUserId) && currentUserId == id)
+        if (
+            currentUserIdClaim != null
+            && int.TryParse(currentUserIdClaim, out int currentUserId)
+            && currentUserId == id
+        )
         {
-            return Json(new { success = false, message = "Bạn không thể tự khóa tài khoản của chính mình" });
+            return Json(
+                new { success = false, message = "Bạn không thể tự khóa tài khoản của chính mình" }
+            );
         }
 
         _taiKhoanRepository.UpdateTrangThai(id, active);
 
-        return Json(new {
-            success = true,
-            message = active ? "Mở khóa tài khoản thành công." : "Khóa tài khoản thành công.",
-            data = new { active = active }
-        });
+        return Json(
+            new
+            {
+                success = true,
+                message = active ? "Mở khóa tài khoản thành công." : "Khóa tài khoản thành công.",
+                data = new { active = active },
+            }
+        );
     }
 }

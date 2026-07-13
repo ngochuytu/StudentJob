@@ -15,8 +15,8 @@ public class BaiTuyenDungRepository : IBaiTuyenDungRepository
 
     public List<BaiTuyenDung> GetAll()
     {
-        return _context.DsBaiTuyenDung
-            .Include(b => b.NhaTuyenDung)
+        return _context
+            .DsBaiTuyenDung.Include(b => b.NhaTuyenDung)
             .Include(b => b.NganhNghe)
             .Include(b => b.KhuVuc)
             .OrderByDescending(b => b.dNgayTaoBai)
@@ -25,21 +25,22 @@ public class BaiTuyenDungRepository : IBaiTuyenDungRepository
 
     public List<BaiTuyenDung> GetApprovedJobs()
     {
-        return _context.DsBaiTuyenDung
-            .Include(b => b.NhaTuyenDung)
+        return _context
+            .DsBaiTuyenDung.Include(b => b.NhaTuyenDung)
             .Include(b => b.NganhNghe)
             .Include(b => b.KhuVuc)
             .Where(b =>
-                b.sTrangThaiKiemDuyet == "Đã duyệt" &&
-                b.dHanNopHoSo >= DateOnly.FromDateTime(DateTime.Today))
+                b.sTrangThaiKiemDuyet == "Đã duyệt"
+                && b.dHanNopHoSo >= DateOnly.FromDateTime(DateTime.Today)
+            )
             .OrderByDescending(b => b.dNgayTaoBai)
             .ToList();
     }
 
     public List<BaiTuyenDung> GetByNhaTuyenDungId(int nhaTuyenDungId)
     {
-        return _context.DsBaiTuyenDung
-            .Include(b => b.NganhNghe)
+        return _context
+            .DsBaiTuyenDung.Include(b => b.NganhNghe)
             .Include(b => b.KhuVuc)
             .Where(b => b.FK_IdNhaTuyenDung == nhaTuyenDungId)
             .OrderByDescending(b => b.dNgayTaoBai)
@@ -48,8 +49,8 @@ public class BaiTuyenDungRepository : IBaiTuyenDungRepository
 
     public BaiTuyenDung? GetById(int id)
     {
-        return _context.DsBaiTuyenDung
-            .Include(b => b.NhaTuyenDung)
+        return _context
+            .DsBaiTuyenDung.Include(b => b.NhaTuyenDung)
             .Include(b => b.NganhNghe)
             .Include(b => b.KhuVuc)
             .FirstOrDefault(b => b.PK_IdBaiTuyenDung == id);
@@ -57,28 +58,28 @@ public class BaiTuyenDungRepository : IBaiTuyenDungRepository
 
     public BaiTuyenDung? GetApprovedById(int id)
     {
-        return _context.DsBaiTuyenDung
-            .Include(b => b.NhaTuyenDung)
+        return _context
+            .DsBaiTuyenDung.Include(b => b.NhaTuyenDung)
             .Include(b => b.NganhNghe)
             .Include(b => b.KhuVuc)
-            .FirstOrDefault(b =>
-                b.PK_IdBaiTuyenDung == id &&
-                b.sTrangThaiKiemDuyet == "Đã duyệt");
+            .FirstOrDefault(b => b.PK_IdBaiTuyenDung == id && b.sTrangThaiKiemDuyet == "Đã duyệt");
     }
 
     public List<BaiTuyenDung> GetByDieuKien(
         string? keyword,
         string? hinhThuc,
         int? nganhNgheId,
-        int? khuVucId)
+        int? khuVucId
+    )
     {
-        var query = _context.DsBaiTuyenDung
-            .Include(b => b.NhaTuyenDung)
+        var query = _context
+            .DsBaiTuyenDung.Include(b => b.NhaTuyenDung)
             .Include(b => b.NganhNghe)
             .Include(b => b.KhuVuc)
             .Where(b =>
-                b.sTrangThaiKiemDuyet == "Đã duyệt" &&
-                b.dHanNopHoSo >= DateOnly.FromDateTime(DateTime.Today))
+                b.sTrangThaiKiemDuyet == "Đã duyệt"
+                && b.dHanNopHoSo >= DateOnly.FromDateTime(DateTime.Today)
+            )
             .AsQueryable();
 
         if (!string.IsNullOrWhiteSpace(keyword))
@@ -86,32 +87,28 @@ public class BaiTuyenDungRepository : IBaiTuyenDungRepository
             string trimmedKeyword = keyword.Trim();
 
             query = query.Where(b =>
-                b.sTieuDeCongViec.Contains(trimmedKeyword) ||
-                b.sMoTaCongViec.Contains(trimmedKeyword) ||
-                b.NhaTuyenDung.sTenDoanhNghiep.Contains(trimmedKeyword));
+                b.sTieuDeCongViec.Contains(trimmedKeyword)
+                || b.sMoTaCongViec.Contains(trimmedKeyword)
+                || b.NhaTuyenDung.sTenDoanhNghiep.Contains(trimmedKeyword)
+            );
         }
 
         if (!string.IsNullOrWhiteSpace(hinhThuc))
         {
-            query = query.Where(
-                b => b.sHinhThucLamViec == hinhThuc);
+            query = query.Where(b => b.sHinhThucLamViec == hinhThuc);
         }
 
         if (nganhNgheId.HasValue)
         {
-            query = query.Where(
-                b => b.FK_IdNganhNghe == nganhNgheId.Value);
+            query = query.Where(b => b.FK_IdNganhNghe == nganhNgheId.Value);
         }
 
         if (khuVucId.HasValue)
         {
-            query = query.Where(
-                b => b.FK_IdKhuVuc == khuVucId.Value);
+            query = query.Where(b => b.FK_IdKhuVuc == khuVucId.Value);
         }
 
-        return query
-            .OrderByDescending(b => b.dNgayTaoBai)
-            .ToList();
+        return query.OrderByDescending(b => b.dNgayTaoBai).ToList();
     }
 
     public void Add(BaiTuyenDung baiTuyenDung)

@@ -11,9 +11,7 @@ public class UngTuyenInputModel
     [Display(Name = "CV ứng tuyển")]
     public IFormFile? TepCV { get; set; }
 
-    [StringLength(
-        3000,
-        ErrorMessage = "Thư xin việc không được vượt quá 3000 ký tự.")]
+    [StringLength(3000, ErrorMessage = "Thư xin việc không được vượt quá 3000 ký tự.")]
     [Display(Name = "Thư xin việc")]
     public string? sThuXinViec { get; set; }
 

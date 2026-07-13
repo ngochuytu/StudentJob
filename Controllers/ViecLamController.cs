@@ -21,7 +21,8 @@ public class ViecLamController : Controller
         IKhuVucRepository khuVucRepository,
         ISinhVienRepository sinhVienRepository,
         IHoSoUngTuyenRepository hoSoUngTuyenRepository,
-        ILuuTinRepository luuTinRepository)
+        ILuuTinRepository luuTinRepository
+    )
     {
         _baiTuyenDungRepository = baiTuyenDungRepository;
         _nganhNgheRepository = nganhNgheRepository;
@@ -46,16 +47,12 @@ public class ViecLamController : Controller
             TempData["ErrorMessage"] =
                 "Tin tuyển dụng này không còn khả dụng hoặc chưa được phê duyệt.";
 
-            return RedirectToAction(
-                "Index",
-                "Home");
+            return RedirectToAction("Index", "Home");
         }
 
-        bool daDangNhap =
-            User.Identity?.IsAuthenticated == true;
+        bool daDangNhap = User.Identity?.IsAuthenticated == true;
 
-        bool laSinhVien =
-            User.IsInRole("Sinh viên");
+        bool laSinhVien = User.IsInRole("Sinh viên");
 
         bool daUngTuyen = false;
         bool coCVMacDinh = false;
@@ -67,45 +64,35 @@ public class ViecLamController : Controller
 
             if (sinhVien != null)
             {
-                daUngTuyen =
-                    _hoSoUngTuyenRepository.HasApplied(
-                        sinhVien.PK_IdSinhVien,
-                        job.PK_IdBaiTuyenDung);
+                daUngTuyen = _hoSoUngTuyenRepository.HasApplied(
+                    sinhVien.PK_IdSinhVien,
+                    job.PK_IdBaiTuyenDung
+                );
 
-                coCVMacDinh =
-                    !string.IsNullOrWhiteSpace(
-                        sinhVien.sDuongDanCVMacDinh);
+                coCVMacDinh = !string.IsNullOrWhiteSpace(sinhVien.sDuongDanCVMacDinh);
 
-                daLuuTin =
-                    _luuTinRepository.IsSaved(
-                        sinhVien.PK_IdSinhVien,
-                        job.PK_IdBaiTuyenDung);
+                daLuuTin = _luuTinRepository.IsSaved(sinhVien.PK_IdSinhVien, job.PK_IdBaiTuyenDung);
             }
         }
 
-        var viewModel =
-            new ChiTietBaiTuyenDungViewModel
+        var viewModel = new ChiTietBaiTuyenDungViewModel
+        {
+            BaiTuyenDung = job,
+            DaDangNhap = daDangNhap,
+            LaSinhVien = laSinhVien,
+            DaUngTuyen = daUngTuyen,
+            CoCVMacDinh = coCVMacDinh,
+            DaLuuTin = daLuuTin,
+
+            DaHetHan = job.dHanNopHoSo < DateOnly.FromDateTime(DateTime.Today),
+
+            UngTuyen = new UngTuyenInputModel
             {
-                BaiTuyenDung = job,
-                DaDangNhap = daDangNhap,
-                LaSinhVien = laSinhVien,
-                DaUngTuyen = daUngTuyen,
-                CoCVMacDinh = coCVMacDinh,
-                DaLuuTin = daLuuTin,
+                FK_IdBaiTuyenDung = job.PK_IdBaiTuyenDung,
 
-                DaHetHan =
-                    job.dHanNopHoSo <
-                    DateOnly.FromDateTime(DateTime.Today),
-
-                UngTuyen = new UngTuyenInputModel
-                {
-                    FK_IdBaiTuyenDung =
-                        job.PK_IdBaiTuyenDung,
-
-                    SuDungCVMacDinh =
-                        coCVMacDinh
-                }
-            };
+                SuDungCVMacDinh = coCVMacDinh,
+            },
+        };
 
         return View(viewModel);
     }
@@ -116,34 +103,28 @@ public class ViecLamController : Controller
         [FromForm] string? keyword,
         [FromForm] string? hinhThuc,
         [FromForm] int? nganhNgheId,
-        [FromForm] int? khuVucId)
+        [FromForm] int? khuVucId
+    )
     {
-        var filteredJobs =
-            _baiTuyenDungRepository.GetByDieuKien(
-                keyword,
-                hinhThuc,
-                nganhNgheId,
-                khuVucId);
+        var filteredJobs = _baiTuyenDungRepository.GetByDieuKien(
+            keyword,
+            hinhThuc,
+            nganhNgheId,
+            khuVucId
+        );
 
-        return PartialView(
-            "_DanhSachViecLamPartial",
-            filteredJobs);
+        return PartialView("_DanhSachViecLamPartial", filteredJobs);
     }
 
     private SinhVien? GetCurrentSinhVien()
     {
-        string? taiKhoanIdClaim =
-            User.FindFirstValue(
-                ClaimTypes.NameIdentifier);
+        string? taiKhoanIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
 
-        if (!int.TryParse(
-                taiKhoanIdClaim,
-                out int taiKhoanId))
+        if (!int.TryParse(taiKhoanIdClaim, out int taiKhoanId))
         {
             return null;
         }
 
-        return _sinhVienRepository
-            .GetByTaiKhoanId(taiKhoanId);
+        return _sinhVienRepository.GetByTaiKhoanId(taiKhoanId);
     }
 }

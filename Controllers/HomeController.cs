@@ -15,7 +15,8 @@ public class HomeController : Controller
     public HomeController(
         IBaiTuyenDungRepository baiTuyenDungRepository,
         INganhNgheRepository nganhNgheRepository,
-        IKhuVucRepository khuVucRepository)
+        IKhuVucRepository khuVucRepository
+    )
     {
         _baiTuyenDungRepository = baiTuyenDungRepository;
         _nganhNgheRepository = nganhNgheRepository;

@@ -15,22 +15,20 @@ public class TaiKhoanRepository : ITaiKhoanRepository
 
     public TaiKhoan? GetByEmail(string email)
     {
-        return _context.DsTaiKhoan
-            .Include(t => t.VaiTro)
-            .FirstOrDefault(t => t.sEmail == email);
+        return _context.DsTaiKhoan.Include(t => t.VaiTro).FirstOrDefault(t => t.sEmail == email);
     }
 
     public TaiKhoan? GetById(int id)
     {
-        return _context.DsTaiKhoan
-            .Include(t => t.VaiTro)
+        return _context
+            .DsTaiKhoan.Include(t => t.VaiTro)
             .FirstOrDefault(t => t.PK_IdTaiKhoan == id);
     }
 
     public List<TaiKhoan> GetAll()
     {
-        return _context.DsTaiKhoan
-            .Include(t => t.VaiTro)
+        return _context
+            .DsTaiKhoan.Include(t => t.VaiTro)
             .Include(t => t.SinhVien)
             .Include(t => t.NhaTuyenDung)
             .OrderByDescending(t => t.dNgayTaoTaiKhoan)

@@ -15,16 +15,16 @@ public class LuuTinRepository : ILuuTinRepository
 
     public List<LuuTin> GetBySinhVienId(int sinhVienId)
     {
-        return _context.DsLuuTin
-            .Include(l => l.BaiTuyenDung)
+        return _context
+            .DsLuuTin.Include(l => l.BaiTuyenDung)
                 .ThenInclude(b => b.NhaTuyenDung)
             .Include(l => l.BaiTuyenDung)
                 .ThenInclude(b => b.NganhNghe)
             .Include(l => l.BaiTuyenDung)
                 .ThenInclude(b => b.KhuVuc)
             .Where(l =>
-                l.FK_IdSinhVien == sinhVienId &&
-                l.BaiTuyenDung.sTrangThaiKiemDuyet == "Đã duyệt")
+                l.FK_IdSinhVien == sinhVienId && l.BaiTuyenDung.sTrangThaiKiemDuyet == "Đã duyệt"
+            )
             .OrderByDescending(l => l.dNgayLuu)
             .ToList();
     }
@@ -32,15 +32,15 @@ public class LuuTinRepository : ILuuTinRepository
     public bool IsSaved(int sinhVienId, int baiTuyenDungId)
     {
         return _context.DsLuuTin.Any(l =>
-            l.FK_IdSinhVien == sinhVienId &&
-            l.FK_IdBaiTuyenDung == baiTuyenDungId);
+            l.FK_IdSinhVien == sinhVienId && l.FK_IdBaiTuyenDung == baiTuyenDungId
+        );
     }
 
     public LuuTin? Get(int sinhVienId, int baiTuyenDungId)
     {
         return _context.DsLuuTin.FirstOrDefault(l =>
-            l.FK_IdSinhVien == sinhVienId &&
-            l.FK_IdBaiTuyenDung == baiTuyenDungId);
+            l.FK_IdSinhVien == sinhVienId && l.FK_IdBaiTuyenDung == baiTuyenDungId
+        );
     }
 
     public void Add(LuuTin luuTin)
