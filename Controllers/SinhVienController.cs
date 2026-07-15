@@ -70,7 +70,6 @@ public class SinhVienController : Controller
     }
 
     [HttpPost("api/luu-tin")]
-    [ValidateAntiForgeryToken]
     public IActionResult LuuTin(int baiTuyenDungId)
     {
         var sinhVien = GetCurrentSinhVien();
@@ -135,7 +134,6 @@ public class SinhVienController : Controller
     }
 
     [HttpPost("api/bo-luu-tin")]
-    [ValidateAntiForgeryToken]
     public IActionResult BoLuuTin(int baiTuyenDungId)
     {
         var sinhVien = GetCurrentSinhVien();
@@ -177,7 +175,6 @@ public class SinhVienController : Controller
     }
 
     [HttpPost("api/ung-tuyen")]
-    [ValidateAntiForgeryToken]
     public IActionResult UngTuyen(UngTuyenInputModel model)
     {
         if (!ModelState.IsValid)

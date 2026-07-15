@@ -19,7 +19,6 @@
         </div>
     </div>
 }
-@Html.AntiForgeryToken()
 <section class="hero-section text-center position-relative overflow-hidden mb-5">
     <div class="container position-relative" style="z-index: 2;">
         <div class="row justify-content-center">
@@ -159,15 +158,10 @@
                 if (nganhNgheId) params.append('nganhNgheId', nganhNgheId);
                 if (khuVucId) params.append('khuVucId', khuVucId);
 
-                const tokenInput = document.querySelector(
-                'input[name="__RequestVerificationToken"]'
-            );
-
             const response = await fetch('/viec-lam/api/filter', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'RequestVerificationToken': tokenInput.value
+                    'Content-Type': 'application/x-www-form-urlencoded'
                 },
                 body: params
             });

@@ -31,8 +31,6 @@
                         <form asp-controller="NhaTuyenDung"
                               asp-action="TaoTin"
                               method="post">
-                            @Html.AntiForgeryToken()
-
                             <partial name="_BaiTuyenDungForm" model="Model" />
 
                             <div class="d-flex flex-column flex-sm-row justify-content-end gap-3 mt-4 pt-4 border-top">

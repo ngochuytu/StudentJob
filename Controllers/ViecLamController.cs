@@ -98,7 +98,6 @@ public class ViecLamController : Controller
     }
 
     [HttpPost("api/filter")]
-    [ValidateAntiForgeryToken]
     public IActionResult Filter(
         [FromForm] string? keyword,
         [FromForm] string? hinhThuc,

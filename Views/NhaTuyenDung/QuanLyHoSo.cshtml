@@ -1,5 +1,4 @@
 @model List<StudentJob.Models.HoSoUngTuyen>
-@Html.AntiForgeryToken()
 @{
     ViewData["Title"] = "Quản lý hồ sơ ứng tuyển";
 
@@ -309,7 +308,6 @@
                 const id = document.getElementById("modalIdInput").value;
                 const status = document.getElementById("modalStatusSelect").value;
                 const feedback = document.getElementById("modalFeedbackTextarea").value;
-                const token = document.querySelector('input[name="__RequestVerificationToken"]').value;
 
                 const formData = new FormData();
                 formData.append("PK_IdHoSoUngTuyen", id);
@@ -322,9 +320,6 @@
                 try {
                     const response = await fetch("/nha-tuyen-dung/api/update-trang-thai-ho-so", {
                         method: "POST",
-                        headers: {
-                            "RequestVerificationToken": token
-                        },
                         body: formData
                     });
 

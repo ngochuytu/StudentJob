@@ -49,7 +49,6 @@ public class TaiKhoanController : Controller
     }
 
     [HttpPost("dang-nhap")]
-    [ValidateAntiForgeryToken]
     public IActionResult DangNhap(DangNhapViewModel model, string? returnUrl = null)
     {
         if (!ModelState.IsValid)
@@ -160,7 +159,6 @@ public class TaiKhoanController : Controller
     }
 
     [HttpPost("dang-ky")]
-    [ValidateAntiForgeryToken]
     public IActionResult DangKy(DangKyViewModel model)
     {
         if (model.LoaiTaiKhoan == "SinhVien")
@@ -335,7 +333,6 @@ public class TaiKhoanController : Controller
     }
 
     [HttpPost("dang-xuat")]
-    [ValidateAntiForgeryToken]
     public IActionResult DangXuat()
     {
         string? email = User.FindFirstValue(ClaimTypes.Email);

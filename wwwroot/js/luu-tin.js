@@ -10,11 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const jobId = saveButton.dataset.jobId;
         const isSaved = saveButton.dataset.isSaved === "true";
 
-        const tokenInput = document.querySelector(
-            'input[name="__RequestVerificationToken"]'
-        );
-
-        if (!jobId || !tokenInput) {
+        if (!jobId) {
             showAlert(
                 "danger",
                 "Không thể xác định dữ liệu lưu tin."
@@ -36,8 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const response = await fetch(endpoint, {
                 method: "POST",
                 headers: {
-                    RequestVerificationToken:
-                        tokenInput.value,
                     Accept: "application/json"
                 },
                 body: formData

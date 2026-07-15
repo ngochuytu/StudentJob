@@ -36,10 +36,6 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const tokenInput = form.querySelector(
-            'input[name="__RequestVerificationToken"]'
-        );
-
         const jobIdInput = form.querySelector(
             'input[name="UngTuyen.FK_IdBaiTuyenDung"]'
         );
@@ -48,7 +44,7 @@ document.addEventListener("DOMContentLoaded", () => {
             'textarea[name="UngTuyen.sThuXinViec"]'
         );
 
-        if (!tokenInput || !jobIdInput) {
+        if (!jobIdInput) {
             showAlert(
                 "danger",
                 "Không thể xác định dữ liệu nộp hồ sơ."
@@ -91,8 +87,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     method: "POST",
                     headers: {
-                        RequestVerificationToken:
-                            tokenInput.value,
                         Accept: "application/json"
                     },
                     body: formData

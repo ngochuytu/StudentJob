@@ -20,11 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const jobId = button.dataset.jobId;
 
-        const tokenInput = document.querySelector(
-            'input[name="__RequestVerificationToken"]'
-        );
-
-        if (!jobId || !tokenInput) {
+        if (!jobId) {
             showAlert(
                 "danger",
                 "Không thể xác định tin tuyển dụng."
@@ -56,8 +52,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 {
                     method: "POST",
                     headers: {
-                        RequestVerificationToken:
-                            tokenInput.value,
                         Accept: "application/json"
                     },
                     body: formData

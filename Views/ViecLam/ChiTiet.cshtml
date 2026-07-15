@@ -177,8 +177,6 @@
 
                     @if (Model.DaDangNhap && Model.LaSinhVien)
                     {
-                        @Html.AntiForgeryToken()
-
                         <button type="button"
                                 id="saveJobButton"
                                 class="btn @(Model.DaLuuTin ? "btn-primary" : "btn-outline-primary") w-100 rounded-pill fw-bold py-3 mb-3"
@@ -292,7 +290,6 @@
 
                     <form id="applicationForm"
                           enctype="multipart/form-data">
-                        @Html.AntiForgeryToken()
 
                         <input asp-for="UngTuyen.FK_IdBaiTuyenDung"
                                type="hidden" />

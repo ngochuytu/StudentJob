@@ -45,20 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            const tokenInput = document.querySelector(
-                'input[name="__RequestVerificationToken"]'
-            );
-
-            if (!tokenInput?.value) {
-                showAlert(
-                    "danger",
-                    "Không tìm thấy mã xác thực biểu mẫu. Vui lòng tải lại trang."
-                );
-
-                deleteModal.hide();
-                return;
-            }
-
             setDeleteButtonLoading(true);
 
             try {
@@ -67,9 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     {
                         method: "POST",
                         headers: {
-                            Accept: "application/json",
-                            RequestVerificationToken:
-                                tokenInput.value
+                            Accept: "application/json"
                         }
                     }
                 );

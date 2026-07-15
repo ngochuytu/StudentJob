@@ -66,7 +66,6 @@ public class NhaTuyenDungController : Controller
     }
 
     [HttpPost("tao-tin")]
-    [ValidateAntiForgeryToken]
     public IActionResult TaoTin(BaiTuyenDungInputModel model)
     {
         var nhaTuyenDung = GetCurrentNhaTuyenDung();
@@ -150,7 +149,6 @@ public class NhaTuyenDungController : Controller
     }
 
     [HttpPost("chinh-sua/{id:int}")]
-    [ValidateAntiForgeryToken]
     public IActionResult ChinhSuaTin(int id, BaiTuyenDungInputModel model)
     {
         var nhaTuyenDung = GetCurrentNhaTuyenDung();
@@ -211,7 +209,6 @@ public class NhaTuyenDungController : Controller
     }
 
     [HttpPost("api/xoa-tin/{id:int}")]
-    [ValidateAntiForgeryToken]
     public IActionResult XoaTin(int id)
     {
         var nhaTuyenDung = GetCurrentNhaTuyenDung();
@@ -275,7 +272,6 @@ public class NhaTuyenDungController : Controller
     }
 
     [HttpPost("api/update-trang-thai-ho-so")]
-    [ValidateAntiForgeryToken]
     public IActionResult UpdateTrangThaiHoSo([FromForm] CapNhatTrangThaiHoSoInputModel model)
     {
         var nhaTuyenDung = GetCurrentNhaTuyenDung();
